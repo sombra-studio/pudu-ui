@@ -12,12 +12,13 @@ class Params:
 
 class Widget:
     def __init__(self, params: Params = Params()):
-        self.x: float = params.x
-        self.y: float = params.y
-        self.width: float = params.width
-        self.height: float = params.height
+        self._x: float = params.x
+        self._y: float = params.y
+        self._width: float = params.width
+        self._height: float = params.height
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
+        self._visible: bool = True
 
     def focus(self):
         if self.focusable:

@@ -1,20 +1,29 @@
+from enum import Enum, auto
+
 from . import Widget
 
 
+class State(Enum):
+    LOADING = auto()
+    ACTIVE = auto()
+    PAUSED = auto()
+    CLOSING = auto()
+
+
 class Screen:
-    def __init__(self, name: str):
+    def __init__(
+        self, name: str, on_load=lambda: None, on_close=lambda: None
+    ):
         self.name: str = name
-        self.active: bool = True
-        self.widgets: list[Widget]
+        self.state: State = State.LOADING
+        self.widgets: list[Widget] = []
+        self.on_load = on_load
+        self.on_close = on_close
 
     def load(self):
-        pass
-
-    def on_loaded(self, f, *args, **kwargs):
-        f(*args, **kwargs)
+        self.state = State.LOADING
+        self.on_load()
 
     def close(self):
-        pass
-
-    def on_close(self, f, *args, **kwargs):
-        f(*args, **kwargs)
+        self.state = State.CLOSING
+        self.on_close()
