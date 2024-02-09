@@ -16,9 +16,9 @@ class Widget:
         self._y: float = params.y
         self._width: float = params.width
         self._height: float = params.height
+        self._visible: bool = True
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
-        self._visible: bool = True
 
     def focus(self):
         if self.focusable:

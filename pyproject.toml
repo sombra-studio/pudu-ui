@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pudu_ui"
+version = "0.0.1"
+authors = [
+  { name="Jesus Henriquez", email="1151071+HenrYxZ@users.noreply.github.com" },
+]
+description = "UI library for Python based in pyglet"
+readme = "README.md"
+dependencies = [
+  "pyglet",
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: User Interfaces",
+]
+
+[project.urls]
+Homepage = "https://github.com/sombra-studio/pudu-ui"
+Issues = "https://github.com/sombra-studio/pudu-ui/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pudu_ui"]

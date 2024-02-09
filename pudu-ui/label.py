@@ -36,9 +36,16 @@ class Label(Widget):
 
     @property
     def x(self):
-        return self._x
+        return self.impl.x
 
     @x.setter
     def x(self, value):
-        self._x = value
         self.impl.x = value
+
+    @property
+    def y(self):
+        return self.impl.y
+
+    @y.setter
+    def y(self, value):
+        self.impl.y = value
