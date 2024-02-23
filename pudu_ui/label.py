@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pyglet.graphics import Batch, Group
 import pyglet
 
@@ -11,7 +11,7 @@ from .widget import Params, Widget
 @dataclass
 class LabelParams(Params):
     value: str = ""
-    style: FontStyle = styles.P1
+    style: FontStyle = field(default_factory=styles.P1)
 
 
 class Label(Widget):

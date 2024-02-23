@@ -12,5 +12,7 @@ class FontStyle:
     background_color: tuple[int, int, int, int] = None
 
 
-P1 = FontStyle(font_size=23, font_name="Arial")
-P2 = FontStyle(font_size=18, font_name="Arial")
+def P1():
+    return FontStyle(font_size=23, font_name="Arial")
+def P2():
+    return FontStyle(font_size=18, font_name="Arial")
