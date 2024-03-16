@@ -1,8 +1,6 @@
-import pyglet
-
-
 import pudu_ui
 from pudu_ui import Label, LabelParams
+import pyglet
 
 
 class HelloScreen(pudu_ui.Screen):

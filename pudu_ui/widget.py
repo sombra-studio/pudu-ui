@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pyglet.event import EventDispatcher
 
 
 @dataclass
@@ -7,18 +8,43 @@ class Params:
     y: float = 0.0
     width: float = 100.0
     height: float = 100.0
+    scale_x: float = 1.0
+    scale_y: float = 1.0
     focusable: bool = False
 
 
-class Widget:
-    def __init__(self, params: Params = Params()):
+class Widget(EventDispatcher):
+    def __init__(self, params: Params = Params(), parent=None):
         self._x: float = params.x
         self._y: float = params.y
-        self._width: float = params.width
-        self._height: float = params.height
+        self.width: float = params.width
+        self.height: float = params.height
+        self._scale_x: float = params.scale_x
+        self._scale_y: float = params.scale_y
         self._visible: bool = True
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
+        self.parent: Widget = parent
+
+    @property
+    def x(self) -> float:
+        return self._x
+
+    @x.setter
+    def x(self, value: float):
+        self._x = value
+        if self.parent is not None:
+            self._x += self.parent.x
+
+    @property
+    def y(self) -> float:
+        return self._y
+
+    @y.setter
+    def y(self, value: float):
+        self._y = value
+        if self.parent is not None:
+            self._y += self.parent.y
 
     def focus(self):
         if self.focusable:
@@ -27,3 +53,8 @@ class Widget:
     def unfocus(self):
         if self.focusable:
             self.is_on_focus = False
+
+    def is_inside(self, x: float, y: float) -> bool:
+        return (
+            self.x <= x <= self.x + self.width and self.y <= y <= self.height
+        )

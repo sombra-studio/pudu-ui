@@ -12,7 +12,23 @@ class FontStyle:
     background_color: tuple[int, int, int, int] = None
 
 
-def P1():
+# Header Styles
+
+def h1():
     return FontStyle(font_size=23, font_name="Arial")
-def P2():
+
+
+# Paragraph Styles
+
+def p1():
+    return FontStyle(font_size=23, font_name="Arial")
+
+
+def p2():
     return FontStyle(font_size=18, font_name="Arial")
+
+
+# Buttons Styles
+
+def b1():
+    return FontStyle(font_size=23, font_name="Arial")
