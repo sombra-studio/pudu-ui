@@ -1,6 +1,6 @@
 # ORDER OF IMPORTS MATTER
 
-import navigation
+from . import navigation
 
 from .screen import Screen
 

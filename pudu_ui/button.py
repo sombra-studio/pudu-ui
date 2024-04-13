@@ -1,11 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pyglet.shapes import Rectangle
 import pyglet
 
 from pudu_ui import Widget
 from pudu_ui.label import Label, LabelParams
 from pudu_ui.widget import Params
-from pudu_ui.styles import FontStyle
+from pudu_ui.styles import FontStyle, p1
 import pudu_ui
 
 
@@ -27,7 +27,7 @@ class ButtonParams(Params):
     color: [int, int, int, int] = (255, 255, 255, 255)
     hover_color: [int, int, int, int] = (230, 230, 230, 255)
     press_color: [int, int, int, int] = (200, 200, 200, 255)
-    style: FontStyle = pudu_ui.styles.b1()
+    style: FontStyle = field(default_factory=p1)
 
 
 class Button(Widget):

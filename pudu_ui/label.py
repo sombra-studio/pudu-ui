@@ -11,7 +11,7 @@ from .widget import Params, Widget
 @dataclass
 class LabelParams(Params):
     value: str = ""
-    style: FontStyle = field(default_factory=styles.P1)
+    style: FontStyle = field(default_factory=styles.p1)
 
 
 class Label(Widget):
