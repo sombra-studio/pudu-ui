@@ -35,18 +35,18 @@ class Button(Widget):
         self,
         params: ButtonParams,
         batch: pyglet.graphics.Batch,
-        group: pyglet.graphics.Group
+        group: pyglet.graphics.Group = None
     ):
         # TODO: Add focus
         super().__init__(params)
         self.label_value: str = params.label
         self.on_press = params.on_press
-        self.background: Rectangle = self.create_background()
         self.color: [int, int, int, int] = params.color
         self.hover_color: [int, int, int, int] = params.hover_color
         self.press_color: [int, int, int, int] = params.press_color
         self.batch: pyglet.graphics.Batch = batch
         self.group: pyglet.graphics.Group = group
+        self.background: Rectangle = self.create_background()
         # define label params
         label_x = self.x + self.width / 2.0
         label_y = self.y + self.height / 2.0

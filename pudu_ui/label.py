@@ -49,3 +49,11 @@ class Label(Widget):
     @y.setter
     def y(self, value):
         self.impl.y = value
+
+    @property
+    def value(self):
+        return self.impl.text
+
+    @value.setter
+    def value(self, text):
+        self.impl.text = text

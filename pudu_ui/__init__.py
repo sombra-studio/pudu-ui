@@ -2,6 +2,8 @@
 
 from . import navigation
 
+from . import controller
+
 from .screen import Screen
 
 from .widget import Widget, Params
