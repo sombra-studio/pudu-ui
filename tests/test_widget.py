@@ -7,6 +7,7 @@ class WidgetTestCase(unittest.TestCase):
     def setUp(self):
         params: Params = Params(x=400, y=200, width=100.0, height=100.0)
         self.widget: Widget = Widget(params)
+
     def test_is_inside(self):
         x: float = 473
         y: float = 234

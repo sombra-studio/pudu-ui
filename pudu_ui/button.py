@@ -23,7 +23,7 @@ class ButtonParams(Params):
     """
     label: str = ""
     on_press: object = lambda: None
-    color: [int, int, int, int] = (36, 36, 36, 255)
+    color: [int, int, int, int] = (56, 56, 56, 255)
     hover_color: [int, int, int, int] = (72, 72, 72, 255)
     press_color: [int, int, int, int] = (107, 107, 107, 255)
     style: FontStyle = field(default_factory=p1)

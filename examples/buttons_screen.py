@@ -65,10 +65,8 @@ class NumberController(pudu_ui.controller.Controller):
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="Test")
 batch = pyglet.graphics.Batch()
 controller = NumberController(name="example controller", batch=batch)
-window.push_handlers(
-    controller.screen.add_button, controller.screen.subtract_button
-)
-
+window.push_handlers(controller.screen.add_button)
+window.push_handlers(controller.screen.subtract_button)
 
 @window.event
 def on_draw():

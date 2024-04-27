@@ -54,13 +54,11 @@ class Widget:
             self.is_on_focus = False
 
     def is_inside(self, x: float, y: float) -> bool:
-        print(f"x: {x}, self.x: {self.x}, y: {y}, self.y: {self.y}, "
-              f"w: {self.width} , h: {self.height}")
         return (
             (self.x <= x <= self.x + self.width) and
             (self.y <= y <= self.y + self.height)
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Widget(x: {self.x}, y: {self.y}. width: {self.width}, height:"\
             f" {self.height})"
