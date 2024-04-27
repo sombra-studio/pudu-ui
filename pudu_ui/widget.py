@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pyglet.event import EventDispatcher
 
 
 @dataclass
@@ -13,7 +12,7 @@ class Params:
     focusable: bool = False
 
 
-class Widget(EventDispatcher):
+class Widget:
     def __init__(self, params: Params = Params(), parent=None):
         self._x: float = params.x
         self._y: float = params.y
@@ -55,6 +54,13 @@ class Widget(EventDispatcher):
             self.is_on_focus = False
 
     def is_inside(self, x: float, y: float) -> bool:
+        print(f"x: {x}, self.x: {self.x}, y: {y}, self.y: {self.y}, "
+              f"w: {self.width} , h: {self.height}")
         return (
-            self.x <= x <= self.x + self.width and self.y <= y <= self.height
+            (self.x <= x <= self.x + self.width) and
+            (self.y <= y <= self.y + self.height)
         )
+
+    def __repr__(self):
+        return f"Widget(x: {self.x}, y: {self.y}. width: {self.width}, height:"\
+            f" {self.height})"

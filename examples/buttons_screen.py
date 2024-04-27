@@ -27,6 +27,9 @@ class ButtonsScreen(pudu_ui.Screen):
         button_params.label = "-"
         self.subtract_button = Button(button_params, batch=batch)
 
+        # Register input event handlers
+        # self.push_handlers(self.add_button, self.subtract_button)
+
     def handle_event(self, event_type: int, data: int):
         """
         The view should not do any logic work, and should not have reference
@@ -49,6 +52,7 @@ class NumberController(pudu_ui.controller.Controller):
         self.screen.add_button.on_press = self.add
         self.screen.subtract_button.on_press = self.subtract
 
+        # self.push_handlers(self.screen)
     def add(self):
         self.number += 1
         self.screen.handle_event(DATA_UPDATE, self.number)
@@ -61,6 +65,9 @@ class NumberController(pudu_ui.controller.Controller):
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="Test")
 batch = pyglet.graphics.Batch()
 controller = NumberController(name="example controller", batch=batch)
+window.push_handlers(
+    controller.screen.add_button, controller.screen.subtract_button
+)
 
 
 @window.event
