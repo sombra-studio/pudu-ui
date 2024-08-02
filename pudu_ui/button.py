@@ -5,7 +5,9 @@ import pyglet
 from pudu_ui import Widget
 from pudu_ui.label import Label, LabelParams
 from pudu_ui.widget import Params
-from pudu_ui.styles import FontStyle, p1
+from pudu_ui.styles import FontStyle
+from pudu_ui.styles import colors
+from pudu_ui.styles.fonts import p1
 
 
 @dataclass
@@ -55,8 +57,11 @@ class Button(Widget):
             self.width,
             self.height,
             value=self.label_value,
+            anchor_x='center',
+            anchor_y='top',
             style=params.style
         )
+        label_params.style.color = colors.WHITE
         self.label: Label = Label(label_params, batch=batch, group=group)
 
     def create_background(self) -> Rectangle:
@@ -71,12 +76,14 @@ class Button(Widget):
         )
         return rect
 
+    # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):
         if self.is_inside(x, y):
             self.background.color = self.press_color
             self.on_press()
             return pyglet.event.EVENT_HANDLED
 
+    # Override function
     def on_mouse_release(self, x, y, buttons, modifiers):
         if not self.is_inside(x, y):
             self.background.color = self.color
@@ -84,6 +91,7 @@ class Button(Widget):
         else:
             self.background.color = self.hover_color
 
+    # Override function
     def on_mouse_motion(self, x, y, dx, dy):
         if self.is_inside(x, y):
             self.background.color = self.hover_color

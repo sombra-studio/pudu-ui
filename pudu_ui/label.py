@@ -1,17 +1,21 @@
 from dataclasses import dataclass, field
 from pyglet.graphics import Batch, Group
 import pyglet
+from typing import Literal
 
 
-from .styles import FontStyle
-from . import styles
-from .widget import Params, Widget
+from pudu_ui.styles import FontStyle
+from pudu_ui import styles
+from pudu_ui.widget import Params, Widget
 
 
 @dataclass
 class LabelParams(Params):
     value: str = ""
-    style: FontStyle = field(default_factory=styles.p1)
+    anchor_x: Literal['left', 'center', 'right'] = 'left'
+    anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
+    rotation: float = 0.0
+    style: FontStyle = field(default_factory=styles.fonts.p1)
 
 
 class Label(Widget):
@@ -25,6 +29,9 @@ class Label(Widget):
             y=params.y,
             width=params.width,
             height=params.height,
+            anchor_x=params.anchor_x,
+            anchor_y=params.anchor_y,
+            rotation=params.rotation,
             font_name=params.style.font_name,
             font_size=params.style.font_size,
             bold=params.style.bold,
