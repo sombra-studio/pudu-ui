@@ -15,8 +15,6 @@ class HelloScreen(pudu_ui.Screen):
     ):
         super().__init__(
             "hello",
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
             batch=batch,
             group=group
         )

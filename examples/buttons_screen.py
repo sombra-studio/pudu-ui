@@ -15,8 +15,6 @@ class ButtonsScreen(pudu_ui.Screen):
     ):
         super().__init__(
             "hello",
-            SCREEN_WIDTH,
-            SCREEN_HEIGHT,
             batch=batch
         )
         label_params = LabelParams(x=SCREEN_WIDTH / 2, y=400)

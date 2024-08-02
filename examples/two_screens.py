@@ -13,8 +13,8 @@ class FirstScreen(pudu_ui.Screen):
             group=group
         )
         button_params = pudu_ui.ButtonParams(
-            x=100, y=3 * self.height // 4,
-            label=f"Go to 2nd screen",
+            x=100, y=(3 * self.height) // 4,
+            label="Continue",
             on_press=lambda: None
         )
         self.button = pudu_ui.Button(
