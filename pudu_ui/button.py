@@ -54,11 +54,9 @@ class Button(Widget):
         label_params = LabelParams(
             label_x,
             label_y,
-            self.width,
-            self.height,
             value=self.label_value,
             anchor_x='center',
-            anchor_y='top',
+            anchor_y='center',
             style=params.style
         )
         label_params.style.color = colors.WHITE

@@ -14,6 +14,8 @@ class LabelParams(Params):
     value: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
+    width: float = None
+    height: float = None
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
 
