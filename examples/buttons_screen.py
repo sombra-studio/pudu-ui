@@ -19,14 +19,13 @@ class ButtonsScreen(pudu_ui.Screen):
         )
         label_params = LabelParams(x=SCREEN_WIDTH / 2, y=400)
         self.label = Label(label_params, batch=batch)
+
         button_params = ButtonParams(x=100, y=200, label="+")
         self.add_button = Button(button_params, batch=batch)
+
         button_params.x = 400
         button_params.label = "-"
         self.subtract_button = Button(button_params, batch=batch)
-
-        # Register input event handlers
-        # self.push_handlers(self.add_button, self.subtract_button)
 
     def handle_event(self, event_type: int, data: int):
         """
@@ -50,7 +49,6 @@ class NumberController(pudu_ui.controller.Controller):
         self.screen.add_button.on_press = self.add
         self.screen.subtract_button.on_press = self.subtract
 
-        # self.push_handlers(self.screen)
     def add(self):
         self.number += 1
         self.screen.handle_event(DATA_UPDATE, self.number)
