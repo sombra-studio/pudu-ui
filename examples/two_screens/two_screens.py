@@ -1,5 +1,4 @@
-from pudu_ui import ButtonParams, Button, LabelParams, Label
-import pudu_ui
+from controllers.two_screens_controller import TwoScreensController
 import pyglet
 
 
@@ -21,11 +20,5 @@ class App(pyglet.window.Window):
 
 if __name__ == '__main__':
     app = App()
-    # create first screen
-
-    # create second screen
-
-    # add mapping s1 - s2
-
-    # add nav s2 - s1
+    controller = TwoScreensController(app.batch, None)
     pyglet.app.run()
