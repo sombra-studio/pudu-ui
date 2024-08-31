@@ -80,6 +80,7 @@ class Button(Widget):
             self.background.color = self.press_color
             self.on_press()
             return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED
 
     # Override function
     def on_mouse_release(self, x, y, buttons, modifiers):
@@ -88,6 +89,7 @@ class Button(Widget):
             return pyglet.event.EVENT_HANDLED
         else:
             self.background.color = self.hover_color
+            return pyglet.event.EVENT_UNHANDLED
 
     # Override function
     def on_mouse_motion(self, x, y, dx, dy):
@@ -95,3 +97,4 @@ class Button(Widget):
             self.background.color = self.hover_color
         else:
             self.background.color = self.color
+        return pyglet.event.EVENT_UNHANDLED

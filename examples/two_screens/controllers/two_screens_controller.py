@@ -27,3 +27,19 @@ class TwoScreensController(Controller):
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.go
         print("backing")
+
+    # Override function
+    def on_mouse_press(self, x, y, buttons, modifiers):
+        return self.current_screen.button.on_mouse_press(
+            x, y, buttons, modifiers
+        )
+
+    # Override function
+    def on_mouse_release(self, x, y, buttons, modifiers):
+        return self.current_screen.button.on_mouse_release(
+            x, y, buttons, modifiers
+        )
+
+    # Override function
+    def on_mouse_motion(self, x, y, dx, dy):
+        return self.current_screen.button.on_mouse_motion(x, y, dx, dy)

@@ -2,8 +2,6 @@ import pyglet
 
 
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT
-
-
 from controllers.two_screens_controller import TwoScreensController
 
 
@@ -22,5 +20,5 @@ class App(pyglet.window.Window):
 if __name__ == '__main__':
     app = App()
     controller = TwoScreensController(app.batch, None)
-    app.push_handlers(controller.current_screen.button)
+    app.push_handlers(controller)
     pyglet.app.run()
