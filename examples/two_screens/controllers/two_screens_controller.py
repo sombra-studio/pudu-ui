@@ -1,8 +1,8 @@
 from pudu_ui.controller import Controller
 
 
-from ..screens.first_screen import FirstScreen
-from ..screens.second_screen import SecondScreen
+from screens.first_screen import FirstScreen
+from screens.second_screen import SecondScreen
 
 
 class TwoScreensController(Controller):
@@ -19,9 +19,11 @@ class TwoScreensController(Controller):
         self.current_screen = SecondScreen(batch=self.batch, group=self.group)
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.back
+        print("going")
 
     def back(self):
         # go back to first screen
         self.current_screen = FirstScreen(batch=self.batch, group=self.group)
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.go
+        print("backing")

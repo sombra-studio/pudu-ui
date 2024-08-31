@@ -1,7 +1,9 @@
-from examples.two_screens.two_screens import WINDOW_HEIGHT, WINDOW_WIDTH
 from pudu_ui import ButtonParams, Button, LabelParams, Label
 import pudu_ui
 import pyglet
+
+
+from constants import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class FirstScreen(pudu_ui.Screen):
