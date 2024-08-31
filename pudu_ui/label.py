@@ -4,7 +4,7 @@ import pyglet
 from typing import Literal
 
 
-from pudu_ui.styles import FontStyle
+from pudu_ui.styles.fonts import FontStyle
 from pudu_ui import styles
 from pudu_ui.widget import Params, Widget
 

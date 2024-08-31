@@ -20,6 +20,7 @@ class TwoScreensController(Controller):
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.back
         print("going")
+        # self.batch.invalidate()
 
     def back(self):
         # go back to first screen
@@ -27,6 +28,7 @@ class TwoScreensController(Controller):
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.go
         print("backing")
+        # self.batch.invalidate()
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):

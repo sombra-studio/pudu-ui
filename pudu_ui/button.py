@@ -5,7 +5,7 @@ import pyglet
 from pudu_ui import Widget
 from pudu_ui.label import Label, LabelParams
 from pudu_ui.widget import Params
-from pudu_ui.styles import FontStyle
+from pudu_ui.styles.fonts import FontStyle
 from pudu_ui.styles import colors
 from pudu_ui.styles.fonts import p1
 
