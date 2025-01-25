@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pyglet.text import Weight
 from typing import Union
 
 
@@ -6,7 +7,7 @@ from typing import Union
 class FontStyle:
     font_size: Union[float, int, str]
     font_name: str
-    bold: bool = False
+    weight: Weight = Weight.NORMAL
     italic: bool = False
     color: tuple[int, int, int, int] = (0, 0, 0, 255)
     background_color: tuple[int, int, int, int] = None

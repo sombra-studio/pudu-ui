@@ -14,8 +14,8 @@ class LabelParams(Params):
     value: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
-    width: float = None
-    height: float = None
+    width: int = None
+    height: int = None
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
 
@@ -36,7 +36,7 @@ class Label(Widget):
             rotation=params.rotation,
             font_name=params.style.font_name,
             font_size=params.style.font_size,
-            bold=params.style.bold,
+            weight=params.style.weight,
             italic=params.style.italic,
             color=params.style.color,
             batch=batch,
