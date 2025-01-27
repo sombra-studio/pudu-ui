@@ -19,6 +19,6 @@ class App(pyglet.window.Window):
 
 if __name__ == '__main__':
     app = App()
-    controller = TwoScreensController(app.batch, None)
+    controller = TwoScreensController(app.batch)
     app.push_handlers(controller)
     pyglet.app.run()

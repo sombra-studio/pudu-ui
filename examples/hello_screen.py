@@ -10,16 +10,14 @@ SCREEN_HEIGHT = 480
 class HelloScreen(pudu_ui.Screen):
     def __init__(
         self,
-        batch: pyglet.graphics.Batch = pyglet.graphics.get_default_batch(),
-        group: pyglet.graphics.Group = pyglet.graphics.Group()
+        batch: pyglet.graphics.Batch = pyglet.graphics.get_default_batch()
     ):
         super().__init__(
             "hello",
-            batch=batch,
-            group=group
+            batch=batch
         )
-        params = LabelParams(x=50, y=100, value="Hello World")
-        self.label = Label(params, batch=batch, group=group)
+        params = LabelParams(x=50, y=100, text="Hello World")
+        self.label = Label(params, batch=batch)
 
 
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="Test")

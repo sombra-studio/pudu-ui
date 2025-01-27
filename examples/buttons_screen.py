@@ -17,15 +17,26 @@ class ButtonsScreen(pudu_ui.Screen):
             "hello",
             batch=batch
         )
-        label_params = LabelParams(x=SCREEN_WIDTH / 2, y=400)
+        front_group = pyglet.graphics.Group(1)
+        back_group = pyglet.graphics.Group()
+
+        button_params = ButtonParams(x=100, y=200, text="+")
+        self.add_button = Button(
+            button_params, batch, front_group, back_group
+        )
+
+        y = self.add_button.y + self.add_button.height / 2.0
+        label_params = LabelParams(
+            x=SCREEN_WIDTH / 2, y=y,
+            anchor_x='center', anchor_y='center'
+        )
         self.label = Label(label_params, batch=batch)
 
-        button_params = ButtonParams(x=100, y=200, label="+")
-        self.add_button = Button(button_params, batch=batch)
-
         button_params.x = 400
-        button_params.label = "-"
-        self.subtract_button = Button(button_params, batch=batch)
+        button_params.text = "-"
+        self.subtract_button = Button(
+            button_params, batch, front_group, back_group
+        )
 
     def handle_event(self, event_type: int, data: int):
         """
@@ -37,7 +48,8 @@ class ButtonsScreen(pudu_ui.Screen):
             data: the new number that will be displayed in the label
         """
         if event_type == DATA_UPDATE:
-            self.label.value = str(data)
+            self.label.text = str(data)
+            self.label.invalidate()
 
 
 class NumberController(pudu_ui.controller.Controller):
@@ -45,7 +57,8 @@ class NumberController(pudu_ui.controller.Controller):
         super().__init__(name)
         self.number: int = 0
         self.screen = ButtonsScreen(batch=batch)
-        self.screen.label.value = str(self.number)
+        self.screen.label.text = str(self.number)
+        self.screen.label.invalidate()
         self.screen.add_button.on_press = self.add
         self.screen.subtract_button.on_press = self.subtract
 
@@ -71,5 +84,12 @@ def on_draw():
     batch.draw()
 
 
+def update(dt):
+    # need to call update on label, so that it's value is recomputed after
+    # invalidating
+    controller.screen.label.update(dt)
+
+
 if __name__ == '__main__':
+    pyglet.clock.schedule_interval(update, 1.0 / 60.0)
     pyglet.app.run()

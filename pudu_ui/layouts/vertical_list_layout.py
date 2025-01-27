@@ -9,6 +9,10 @@ class VerticalListLayout(ListLayout):
             item_height = available_height / n
         else:
             item_height = self.item_height
+        if not self.item_width:
+            item_width = self.width
+        else:
+            item_width = self.item_width
 
         curr_x = self.x
         if self.reversed:
@@ -23,5 +27,6 @@ class VerticalListLayout(ListLayout):
             if self.reversed:
                 offset *= -1
             curr_y -= offset
-            item.height = item_height
+            item.width = item_width
+            # item.height = item_height
             item.invalidate()

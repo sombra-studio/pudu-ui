@@ -42,6 +42,7 @@ class Label(Widget):
             batch=batch,
             group=group
         )
+        self.text = params.text
 
     def recompute(self):
         print("recomputing label")
@@ -49,4 +50,5 @@ class Label(Widget):
         self.impl.y = self.y
         self.impl.width = self.width
         self.impl.height = self.height
+        self.impl.text = self.text
         print(self)
