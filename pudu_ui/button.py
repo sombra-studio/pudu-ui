@@ -16,14 +16,14 @@ class ButtonParams(Params):
     Here you can define parameters for initialising a button.
 
     Args:
-        label: The label that will be displayed in the button (optional)
+        text: The text that will be displayed in the button (optional)
         on_press: The callback function for when the button is pressed
         color: The RGBA 8bit color for the background
         hover_color: The color when hovering the button
         press_color: The color when the button is pressed
         style: The font style for the label
     """
-    label: str = ""
+    text: str = ""
     on_press: object = lambda: None
     color: [int, int, int, int] = (56, 56, 56, 255)
     hover_color: [int, int, int, int] = (72, 72, 72, 255)
@@ -40,7 +40,7 @@ class Button(Widget):
     ):
         # TODO: Add focus
         super().__init__(params)
-        self.label_value: str = params.label
+        self.text: str = params.text
         self.on_press = params.on_press
         self.color: [int, int, int, int] = params.color
         self.hover_color: [int, int, int, int] = params.hover_color
@@ -54,7 +54,9 @@ class Button(Widget):
         label_params = LabelParams(
             label_x,
             label_y,
-            value=self.label_value,
+            width=self.width,
+            height=self.height,
+            text=self.text,
             anchor_x='center',
             anchor_y='center',
             style=params.style
@@ -73,6 +75,26 @@ class Button(Widget):
             group=self.group
         )
         return rect
+
+    def recompute(self):
+        # Recompute background
+        self.background.x = self.x
+        self.background.y = self.y
+        self.background.width = self.width
+        self.background.height = self.height
+
+        # Recompute label
+        label_x = self.x + self.width / 2.0
+        label_y = self.y + self.height / 2.0
+        self.label.x = label_x
+        self.label.y = label_y
+        self.label.width = self.width
+        self.label.height = self.height
+        self.label.invalidate()
+
+    def update(self, dt: float):
+        self.label.update(dt)
+        super().update(dt)
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):

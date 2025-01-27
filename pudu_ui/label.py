@@ -11,7 +11,7 @@ from pudu_ui.widget import Params, Widget
 
 @dataclass
 class LabelParams(Params):
-    value: str = ""
+    text: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
     width: int = None
@@ -26,7 +26,7 @@ class Label(Widget):
     ):
         super().__init__(params)
         self.impl = pyglet.text.Label(
-            text=params.value,
+            text=params.text,
             x=params.x,
             y=params.y,
             width=params.width,
@@ -43,26 +43,10 @@ class Label(Widget):
             group=group
         )
 
-    @property
-    def x(self):
-        return self.impl.x
-
-    @x.setter
-    def x(self, value):
-        self.impl.x = value
-
-    @property
-    def y(self):
-        return self.impl.y
-
-    @y.setter
-    def y(self, value):
-        self.impl.y = value
-
-    @property
-    def value(self):
-        return self.impl.text
-
-    @value.setter
-    def value(self, text):
-        self.impl.text = text
+    def recompute(self):
+        print("recomputing label")
+        self.impl.x = self.x
+        self.impl.y = self.y
+        self.impl.width = self.width
+        self.impl.height = self.height
+        print(self)

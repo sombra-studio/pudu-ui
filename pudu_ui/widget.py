@@ -5,8 +5,8 @@ from dataclasses import dataclass
 class Params:
     x: float = 0.0
     y: float = 0.0
-    width: float = 100.0
-    height: float = 100.0
+    width: int = 100
+    height: int = 100
     scale_x: float = 1.0
     scale_y: float = 1.0
     focusable: bool = False
@@ -14,44 +14,45 @@ class Params:
 
 class Widget:
     def __init__(self, params: Params = Params(), parent=None):
-        self._x: float = params.x
-        self._y: float = params.y
-        self.width: float = params.width
-        self.height: float = params.height
+        self.x: float = params.x
+        self.y: float = params.y
+        self.width: int = params.width
+        self.height: int = params.height
         self._scale_x: float = params.scale_x
         self._scale_y: float = params.scale_y
         self._visible: bool = True
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
+        self.index: int = 0
         self.parent: Widget = parent
+        self.is_valid: bool = True
 
-    @property
-    def x(self) -> float:
-        return self._x
+    def on_focus(self):
+        pass
 
-    @x.setter
-    def x(self, value: float):
-        self._x = value
-        if self.parent is not None:
-            self._x += self.parent.x
-
-    @property
-    def y(self) -> float:
-        return self._y
-
-    @y.setter
-    def y(self, value: float):
-        self._y = value
-        if self.parent is not None:
-            self._y += self.parent.y
+    def on_unfocus(self):
+        pass
 
     def focus(self):
         if self.focusable:
             self.is_on_focus = True
+            self.on_focus()
 
     def unfocus(self):
         if self.focusable:
             self.is_on_focus = False
+            self.on_unfocus()
+
+    def invalidate(self):
+        self.is_valid = False
+
+    def recompute(self):
+        pass
+
+    def update(self, dt: float):
+        if not self.is_valid:
+            self.recompute()
+            self.is_valid = True
 
     def is_inside(self, x: float, y: float) -> bool:
         return (
