@@ -56,8 +56,6 @@ class Button(Widget):
         label_params = LabelParams(
             label_x,
             label_y,
-            width=self.width,
-            height=self.height,
             text=self.text,
             anchor_x='center',
             anchor_y='center',
@@ -90,8 +88,6 @@ class Button(Widget):
         label_y = self.y + self.height / 2.0
         self.label.x = label_x
         self.label.y = label_y
-        self.label.width = self.width
-        self.label.height = self.height
         self.label.invalidate()
 
     def update(self, dt: float):

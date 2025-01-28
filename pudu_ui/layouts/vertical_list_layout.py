@@ -16,17 +16,17 @@ class VerticalListLayout(ListLayout):
 
         curr_x = self.x
         if self.reversed:
-            curr_y = self.y + self.height - self.item_height
-        else:
             curr_y = self.y
+        else:
+            curr_y = self.y + self.height - item_height
 
         for item in self.items:
             item.x = curr_x
             item.y = curr_y
-            offset = self.item_height + self.inter_item_spacing
+            offset = item_height + self.inter_item_spacing
             if self.reversed:
                 offset *= -1
             curr_y -= offset
             item.width = item_width
-            # item.height = item_height
+            item.height = item_height
             item.invalidate()

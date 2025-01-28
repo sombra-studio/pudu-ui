@@ -10,20 +10,21 @@ SCREEN_HEIGHT = 480
 class SimpleMenuScreen(pudu_ui.Screen):
     def __init__(
         self,
-        batch: pyglet.graphics.Batch = pyglet.graphics.get_default_batch(),
-        group: pyglet.graphics.Group = pyglet.graphics.Group()
+        batch: pyglet.graphics.Batch = pyglet.graphics.get_default_batch()
     ):
         super().__init__(
             "menu",
-            batch=batch,
-            group=group
+            batch=batch
         )
+        vertical_margin = 50
+        height = SCREEN_HEIGHT - 2 * vertical_margin
+        width = 250
+
         list_params = ListLayoutParams(
-            x=300.0,
-            y=200.0,
+            x=SCREEN_WIDTH / 2.0 - (width / 2.0),
+            y=vertical_margin,
             width=250,
-            height=500,
-            item_height=80,
+            height=height,
             inter_item_spacing=25
         )
         self.layout = VerticalListLayout(list_params)
@@ -32,12 +33,15 @@ class SimpleMenuScreen(pudu_ui.Screen):
         button_params = ButtonParams()
 
         self.buttons = []
+        front_group = pyglet.graphics.Group(1)
+        back_group = pyglet.graphics.Group()
 
         for name in button_names:
-            button_params.label = name
-            button = Button(button_params, batch, group)
+            button_params.text = name
+            button = Button(button_params, batch, front_group, back_group)
             self.buttons.append(button)
             self.layout.add(button)
+            window.push_handlers(button)
 
     def update(self, dt: float):
         self.layout.update(dt)

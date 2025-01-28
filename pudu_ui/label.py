@@ -45,10 +45,6 @@ class Label(Widget):
         self.text = params.text
 
     def recompute(self):
-        print("recomputing label")
         self.impl.x = self.x
         self.impl.y = self.y
-        self.impl.width = self.width
-        self.impl.height = self.height
         self.impl.text = self.text
-        print(self)
