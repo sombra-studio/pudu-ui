@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from enum import Enum, auto
 from pyglet.graphics import Batch, Group
 import pyglet
 from typing import Literal
@@ -9,6 +10,12 @@ from pudu_ui import styles
 from pudu_ui.widget import Params, Widget
 
 
+class LabelResizeType(Enum):
+    WRAP = auto()
+    FIT = auto()
+    NONE = auto()
+
+
 @dataclass
 class LabelParams(Params):
     text: str = ""
@@ -16,6 +23,7 @@ class LabelParams(Params):
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
     width: int = None
     height: int = None
+    resize_type: LabelResizeType = LabelResizeType.NONE
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
 
@@ -43,8 +51,17 @@ class Label(Widget):
             group=group
         )
         self.text = params.text
+        self.resize_type = params.resize_type
+        if self.resize_type == LabelResizeType.WRAP:
+            self.resize()
 
     def recompute(self):
         self.impl.x = self.x
         self.impl.y = self.y
         self.impl.text = self.text
+
+    def resize(self):
+        while self.width and self.impl.content_width > self.width:
+            self.impl.font_size -= 1
+        while self.height and self.impl.content_height > self.height:
+            self.impl.font_size -= 1

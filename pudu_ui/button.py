@@ -3,7 +3,7 @@ from pyglet.shapes import Rectangle
 import pyglet
 
 from pudu_ui import Widget
-from pudu_ui.label import Label, LabelParams
+from pudu_ui.label import Label, LabelParams, LabelResizeType
 from pudu_ui.widget import Params
 from pudu_ui.styles.fonts import FontStyle
 from pudu_ui.styles import colors
@@ -56,9 +56,11 @@ class Button(Widget):
         label_params = LabelParams(
             label_x,
             label_y,
+            width=self.width,
             text=self.text,
             anchor_x='center',
             anchor_y='center',
+            resize_type=LabelResizeType.WRAP,
             style=params.style
         )
         label_params.style.color = colors.WHITE
