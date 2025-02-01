@@ -1,5 +1,5 @@
 import pudu_ui
-from pudu_ui.button import Button, ButtonParams
+from pudu_ui import Button, ButtonParams
 from pudu_ui.layouts import ListLayoutParams, VerticalListLayout
 import pyglet
 
@@ -17,13 +17,13 @@ class SimpleMenuScreen(pudu_ui.Screen):
             batch=batch
         )
         vertical_margin = 50
-        height = SCREEN_HEIGHT - 2 * vertical_margin
         width = 250
+        height = SCREEN_HEIGHT - 2 * vertical_margin
 
         list_params = ListLayoutParams(
             x=SCREEN_WIDTH / 2.0 - (width / 2.0),
             y=vertical_margin,
-            width=250,
+            width=width,
             height=height,
             inter_item_spacing=25
         )

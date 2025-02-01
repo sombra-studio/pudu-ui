@@ -10,4 +10,4 @@ from .widget import Widget, Params
 
 from .label import Label, LabelParams
 
-from .button import Button, ButtonParams
+from .buttons import Button, ButtonParams
