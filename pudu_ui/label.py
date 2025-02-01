@@ -50,6 +50,7 @@ class Label(Widget):
             batch=batch,
             group=group
         )
+        self.style = params.style
         self.text = params.text
         self.resize_type = params.resize_type
         if self.resize_type == LabelResizeType.WRAP:
@@ -59,6 +60,10 @@ class Label(Widget):
         self.impl.x = self.x
         self.impl.y = self.y
         self.impl.text = self.text
+        # in case width or height was changed, we use the target style
+        self.impl.font_size = self.style.font_size
+        self.resize()
+
 
     def resize(self):
         while self.width and self.impl.content_width > self.width:

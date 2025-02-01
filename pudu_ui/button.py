@@ -90,6 +90,7 @@ class Button(Widget):
         label_y = self.y + self.height / 2.0
         self.label.x = label_x
         self.label.y = label_y
+        self.label.width = self.width
         self.label.invalidate()
 
     def update(self, dt: float):
