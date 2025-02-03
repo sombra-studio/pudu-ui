@@ -33,12 +33,10 @@ class SimpleMenuScreen(pudu_ui.Screen):
         button_params = ButtonParams()
 
         self.buttons = []
-        front_group = pyglet.graphics.Group(1)
-        back_group = pyglet.graphics.Group()
 
         for name in button_names:
             button_params.text = name
-            button = Button(button_params, batch, front_group, back_group)
+            button = Button(button_params, batch=batch)
             self.buttons.append(button)
             self.layout.add(button)
             window.push_handlers(button)

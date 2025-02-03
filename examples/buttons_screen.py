@@ -17,13 +17,9 @@ class ButtonsScreen(pudu_ui.Screen):
             "hello",
             batch=batch
         )
-        front_group = pyglet.graphics.Group(1)
-        back_group = pyglet.graphics.Group()
 
         button_params = ButtonParams(x=100, y=200, text="+")
-        self.add_button = Button(
-            button_params, batch, front_group, back_group
-        )
+        self.add_button = Button(button_params, batch=batch)
 
         y = self.add_button.y + self.add_button.height / 2.0
         label_params = LabelParams(
@@ -34,9 +30,7 @@ class ButtonsScreen(pudu_ui.Screen):
 
         button_params.x = 400
         button_params.text = "-"
-        self.subtract_button = Button(
-            button_params, batch, front_group, back_group
-        )
+        self.subtract_button = Button(button_params, batch=batch)
 
     def handle_event(self, event_type: int, data: int):
         """

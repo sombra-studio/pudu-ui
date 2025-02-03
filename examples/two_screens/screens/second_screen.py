@@ -9,12 +9,9 @@ from constants import WINDOW_WIDTH, WINDOW_HEIGHT
 
 class SecondScreen(pudu_ui.Screen):
     def __init__(
-        self,
-        batch: pyglet.graphics.Batch
+        self, batch: pyglet.graphics.Batch
     ):
         super().__init__(name="S2", batch=batch)
-        front_group = pyglet.graphics.Group(1)
-        back_group = pyglet.graphics.Group()
 
         font_style:styles.fonts.FontStyle = styles.fonts.p1()
         font_style.color = styles.colors.WHITE
@@ -23,11 +20,9 @@ class SecondScreen(pudu_ui.Screen):
             text="Second Screen",
             style=font_style
         )
-        self.label = Label(label_params, batch=batch, group=front_group)
+        self.label = Label(label_params, batch=batch)
 
         button_params = ButtonParams(
             x=100, y=(3 * WINDOW_HEIGHT) // 4, text="Back"
         )
-        self.button = Button(
-            button_params, batch, front_group, back_group
-        )
+        self.button = Button(button_params, batch=batch)
