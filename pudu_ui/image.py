@@ -26,17 +26,25 @@ def default_image_params():
     return ImageParams()
 
 class Image(Widget):
-    def __init__(self, params: ImageParams, batch: Batch, group: Group):
+    def __init__(
+        self,
+        params: ImageParams,
+        batch: Batch = None,
+        group: Group = None
+    ):
         super().__init__(params)
         img = pyglet.resource.image(params.image_path)
-        img.anchor_x = 'center'
-        img.anchor_y = 'center'
         center_x = img.width / 2.0
         center_y = img.height / 2.0
+        img.anchor_x = center_x
+        img.anchor_y = center_y
+
         diff_width = img.width - params.width
         diff_height = img.height - params.height
         self.image_path = params.image_path
         self.color = params.color
+        sprite_x = params.x
+        sprite_y = params.y
 
         if params.scale_type == ImageScaleType.CROP:
             # Handle image cropping
@@ -55,16 +63,20 @@ class Image(Widget):
         elif params.scale_type == ImageScaleType.FIT:
             # Handle image fitting
             if diff_width > 0 or diff_height > 0:
-                pudu_ui.utils.fit_screen(
+                w1, h1 = pudu_ui.utils.fit_screen(
                     params.width, params.height, img.width, img.height
                 )
+                img.width = w1
+                img.height = h1
+                sprite_x += (params.width - w1) / 2.0
+                sprite_y += (params.height - h1) / 2.0
         else:
             # Handle image filling
             img.width = params.width
             img.height = params.height
 
         self.sprite = Sprite(
-            img, x=params.x, y=params.y, batch=batch, group=group
+            img, x=sprite_x, y=sprite_y, batch=batch, group=group
         )
 
     def recompute(self):

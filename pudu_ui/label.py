@@ -1,3 +1,4 @@
+from copy import copy
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from pyglet.graphics import Batch, Group
@@ -49,7 +50,7 @@ class Label(Widget):
             batch=batch,
             group=group
         )
-        self.style = params.style
+        self.style = copy(params.style)
         self.text = params.text
         self.resize_type = params.resize_type
         if self.resize_type == LabelResizeType.WRAP:
