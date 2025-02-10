@@ -37,6 +37,8 @@ class Image(Widget):
         self.color = params.color
         sprite_x = params.x
         sprite_y = params.y
+        self.sprite_offset_x = 0.0
+        self.sprite_offset_y = 0.0
 
         if params.image_path:
             img = pyglet.resource.image(params.image_path)
@@ -50,8 +52,10 @@ class Image(Widget):
                     (img.height - self.height) > 0
                 ):
                     img = self.fit(img)
-                    sprite_x += (self.width - img.width) / 2.0
-                    sprite_y += (self.height - img.height) / 2.0
+                    self.sprite_offset_x = (self.width - img.width) / 2.0
+                    self.sprite_offset_y = (self.height - img.height) / 2.0
+                    sprite_x += self.sprite_offset_x
+                    sprite_y += self.sprite_offset_y
             # Handle image filling
             else:
                 img.width = self.width
@@ -98,7 +102,7 @@ class Image(Widget):
         return img
 
     def recompute(self):
-        self.sprite.x = self.x
-        self.sprite.y = self.y
+        self.sprite.x = self.x + self.sprite_offset_x
+        self.sprite.y = self.y + self.sprite_offset_y
         self.sprite.color = self.color
         # Not handling image change after init for now
