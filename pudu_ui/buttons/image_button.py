@@ -11,7 +11,6 @@ class ImageButtonParams(ButtonParams):
     image_params: ImageParams = field(default_factory=default_image_params)
 
 
-
 class ImageButton(Button):
     def __init__(
         self, params: ImageButtonParams, batch: Batch, group: Group

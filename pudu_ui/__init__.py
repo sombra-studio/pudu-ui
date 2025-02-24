@@ -6,9 +6,13 @@ from . import navigation
 
 from . import controller
 
-from .screen import Screen
+from .colors import Color
 
 from .widget import Widget, Params
+
+from . import primitives
+
+from .screen import Screen
 
 from .label import Label, LabelParams
 
