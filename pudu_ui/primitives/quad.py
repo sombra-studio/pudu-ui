@@ -23,15 +23,17 @@ class Quad:
         x2 = x + width
         y2 = y + height
         positions = (x, y, x2, y, x2, y2, x, y2)
+        indices = (0, 1, 2, 0, 2, 3)
         self.program: pyglet.graphics.shader.ShaderProgram = program
-        # self.program['color'] = (
-        #     color.r / 255.0, color.g / 255.0, color.b / 255.0, color.a / 255.0
-        # )
+        self.program['color'] = (
+            color.r / 255.0, color.g / 255.0, color.b / 255.0, color.a / 255.0
+        )
         self.batch: pyglet.graphics.Batch = batch
         self.group: pyglet.graphics.Group = group
-        self.vertex_list = self.program.vertex_list(
+        self.vertex_list = self.program.vertex_list_indexed(
             count=4,
             mode=pyglet.gl.GL_TRIANGLES,
+            indices=indices,
             batch=batch,
             group=group,
             position=('f', positions)

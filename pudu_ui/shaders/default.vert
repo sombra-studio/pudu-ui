@@ -1,7 +1,12 @@
-#version 150 core
+#version 330 core
 
 in vec2 position;
 
+uniform WindowBlock {
+    mat4 projection;
+    mat4 view;
+} window;
+
 void main() {
-    gl_Position = vec4(position, 0, 1);
+    gl_Position = window.projection * window.view * vec4(position, 1, 1);
 }

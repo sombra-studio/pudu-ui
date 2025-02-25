@@ -3,6 +3,9 @@ import pyglet
 
 
 window = pyglet.window.Window()
+window.projection = pyglet.math.Mat4.orthogonal_projection(
+    0, window.width, 0, window.height, 0.1, 100
+)
 batch = pyglet.graphics.Batch()
 with open("../pudu_ui/shaders/default.vert") as vf:
     with open("../pudu_ui/shaders/frame.frag") as ff:
