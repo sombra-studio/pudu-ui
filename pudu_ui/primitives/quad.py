@@ -1,7 +1,24 @@
+from pyglet.graphics.shader import Shader, ShaderProgram
 import pyglet
 
 
 import pudu_ui
+
+
+with open("shaders/default.vert") as f:
+    default_vertex_src = f.read()
+
+with open("shaders/frame.frag") as f:
+    default_fragment_src = f.read()
+
+with open("shaders/frame_rounded.frag") as f:
+    rounded_fragment_src = f.read()
+
+default_vs = Shader(default_vertex_src, 'vertex')
+default_fs = Shader(default_fragment_src, 'fragment')
+# rounded_fs = Shader(rounded_fragment_src, 'fragment')
+default_program = ShaderProgram(default_vs, default_fs)
+# rounded_program = ShaderProgram(default_vs, rounded_fs)
 
 
 class Quad:
@@ -12,7 +29,7 @@ class Quad:
         width: int,
         height: int,
         color: pudu_ui.Color,
-        program: pyglet.graphics.shader.ShaderProgram,
+        program: pyglet.graphics.shader.ShaderProgram = default_program,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
@@ -38,6 +55,25 @@ class Quad:
             group=group,
             position=('f', positions)
         )
+
+class RoundedQuad(Quad):
+    def __init__(
+        self,
+        x: float,
+        y: float,
+        width: int,
+        height: int,
+        color: pudu_ui.Color,
+        radius_top_left: float,
+        radius_top_right: float,
+        radius_bottom_left: float,
+        radius_bottom_right: float,
+        program: pyglet.graphics.shader.ShaderProgram,
+        batch: pyglet.graphics.Batch = None,
+        group: pyglet.graphics.Group = None
+    ):
+        pass
+
 
 
 class TexturedQuad:
