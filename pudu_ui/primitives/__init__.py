@@ -1,2 +1,2 @@
-from .quad import Quad, TexturedQuad
+from . import quad
 from .frame import FrameParams, Frame
