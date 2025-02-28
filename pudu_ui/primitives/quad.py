@@ -78,20 +78,23 @@ class SolidColorQuad(Quad):
         y: float,
         width: int,
         height: int,
-        color: pudu_ui.Color,
+        color: pudu_ui.Color = pudu_ui.colors.PURPLE,
+        opacity: float = 255,
         program: pyglet.graphics.shader.ShaderProgram = default_program,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
         self.color = color
+        self.opacity = opacity
         super().__init__(x, y, width, height, program, batch, group)
 
     def set_uniforms(self):
         color = self.color
         self.program['color'] = (
-            color.r / 255.0, color.g / 255.0, color.b / 255.0, color.a /
-            255.0
+            color.r / 255.0, color.g / 255.0, color.b / 255.0,
+            self.opacity / 255.0
         )
+
 
 class RoundedSolidColorQuad(SolidColorQuad):
     def __init__(
@@ -100,7 +103,8 @@ class RoundedSolidColorQuad(SolidColorQuad):
         y: float,
         width: int,
         height: int,
-        color: pudu_ui.Color,
+        color: pudu_ui.Color = pudu_ui.colors.PURPLE,
+        opacity: float = 255,
         radius_top_left: float = DEFAULT_BORDER_RADIUS,
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
@@ -113,7 +117,9 @@ class RoundedSolidColorQuad(SolidColorQuad):
         self.radius_top_right = radius_top_right
         self.radius_bottom_left = radius_bottom_left
         self.radius_bottom_right = radius_bottom_right
-        super().__init__(x, y, width, height, color, program, batch, group)
+        super().__init__(
+            x, y, width, height, color, opacity, program, batch, group
+        )
 
     def set_uniforms(self):
         super().set_uniforms()

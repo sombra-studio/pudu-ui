@@ -6,7 +6,6 @@ class Color:
     r: int = 0
     g: int = 0
     b: int = 0
-    a: int = 255
 
 
 WHITE = Color(r=255, g=255, b=255)
