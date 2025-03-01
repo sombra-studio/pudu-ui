@@ -7,8 +7,6 @@ class Params:
     y: float = 0.0
     width: int = 100
     height: int = 100
-    scale_x: float = 1.0
-    scale_y: float = 1.0
     focusable: bool = False
 
 
@@ -18,8 +16,6 @@ class Widget:
         self.y: float = params.y
         self.width: int = params.width
         self.height: int = params.height
-        self._scale_x: float = params.scale_x
-        self._scale_y: float = params.scale_y
         self._visible: bool = True
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
