@@ -1,6 +1,5 @@
 #version 330
 
-uniform vec4 color;
 uniform float radius_v3; // top-left
 uniform float radius_v2; // top-right
 uniform float radius_v0; // bottom-left
@@ -10,6 +9,9 @@ uniform vec2 pos_v2;
 uniform vec2 pos_v0;
 uniform vec2 pos_v1;
 
+uniform float opacity;
+
+in vec3 frag_color;
 out vec4 final_color;
 
 
@@ -51,5 +53,5 @@ void main() {
         }
     }
 
-    final_color = color;
+    final_color = vec4(frag_color, opacity);
 }
