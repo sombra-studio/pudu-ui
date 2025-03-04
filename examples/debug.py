@@ -3,21 +3,49 @@ import pyglet
 
 
 window = pyglet.window.Window()
-window.projection = pyglet.math.Mat4.orthogonal_projection(
-    0, window.width, 0, window.height, 0.1, 100
-)
+# window.projection = pyglet.math.Mat4.orthogonal_projection(
+#     0, window.width, 0, window.height, 0.1, 100
+# )
 batch = pyglet.graphics.Batch()
-# quad = pudu_ui.primitives.quad.RoundedSolidColorQuad(
-quad = pudu_ui.primitives.quad.RoundedQuad(
+# quad = pudu_ui.primitives.quad.RoundedQuad(
+#     x=50, y=100,
+#     width=300,
+#     height=120,
+#     batch=batch
+# )
+params = pudu_ui.primitives.FrameParams(
     x=50, y=100,
     width=300,
     height=120,
-    batch=batch
+    color_type=pudu_ui.colors.ColorType.GRADIENT
 )
+frames = [pudu_ui.primitives.Frame(params, batch=batch)]
+
+params.x += 400
+params.color_type = pudu_ui.colors.ColorType.SOLID
+frames.append(pudu_ui.primitives.Frame(params, batch=batch))
+
+params.y += 200
+params.radius_top_left = 24
+params.radius_bottom_left = 24
+params.background_color = pudu_ui.colors.MEDIUM_BLUE
+frames.append(pudu_ui.primitives.Frame(params, batch=batch))
+
+params.x -= 400
+params.radius_top_right = 24
+params.radius_bottom_right = 24
+params.color_type = pudu_ui.colors.ColorType.GRADIENT
+params.gradient_direction = pudu_ui.colors.GradientDirection.HORIZONTAL
+bg_gradient = pudu_ui.colors.ColorGradient(
+    pudu_ui.colors.MEDIUM_BLUE, pudu_ui.colors.LIGHT_BLUE_GREEN
+)
+params.background_gradient = bg_gradient
+frames.append(pudu_ui.primitives.Frame(params, batch=batch))
 
 
 @window.event
 def on_draw():
+    pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
     batch.draw()
 

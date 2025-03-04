@@ -2,13 +2,14 @@ from pyglet.graphics.vertexdomain import IndexedVertexList
 from pyglet.graphics.shader import Shader, ShaderProgram
 from pyglet.math import Vec2
 import pyglet
+from collections.abc import Sequence
 
 
 from pudu_ui import Color
 import pudu_ui
 
 
-DEFAULT_BORDER_RADIUS = 12
+DEFAULT_BORDER_RADIUS = 24
 NUM_VERTICES = 4
 
 
@@ -24,11 +25,14 @@ with open("shaders/frame_rounded.frag") as f:
 default_vs = Shader(default_vertex_src, 'vertex')
 default_fs = Shader(default_fragment_src, 'fragment')
 rounded_fs = Shader(rounded_fragment_src, 'fragment')
-default_program = ShaderProgram(default_vs, default_fs)
-rounded_program = ShaderProgram(default_vs, rounded_fs)
+def default_program():
+    return ShaderProgram(default_vs, default_fs)
+
+def rounded_program():
+    return ShaderProgram(default_vs, rounded_fs)
+
 default_colors = (
-    # pudu_ui.colors.LIGHTER_PURPLE, pudu_ui.colors.LIGHTER_PURPLE,
-    pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
+    pudu_ui.colors.BLACK, pudu_ui.colors.BLACK,
     pudu_ui.colors.PURPLE, pudu_ui.colors.PURPLE
 )
 
@@ -40,7 +44,7 @@ class Quad:
         y: float,
         width: int,
         height: int,
-        program: pyglet.graphics.shader.ShaderProgram = default_program,
+        program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
@@ -48,20 +52,17 @@ class Quad:
         self.y: float = y
         self.width: int = width
         self.height: int = height
-        x2 = x + width
-        y2 = y + height
-        self.positions = (x, y, x2, y, x2, y2, x, y2)
-        indices = (0, 1, 2, 0, 2, 3)
+        self.positions = self.get_vertices()
+        self.indices = (0, 1, 2, 0, 2, 3)
+        if not program:
+            program = default_program()
         self.program: pyglet.graphics.shader.ShaderProgram = program
         self.data = {}
         self.set_data()
         self.set_uniforms()
         self.batch: pyglet.graphics.Batch = batch
         self.group: pyglet.graphics.Group = group
-        self.vertex_list = self.create_vertex_list(indices, **self.data)
-
-    def set_data(self):
-        self.data['position'] = ('f', self.positions)
+        self.vertex_list = self.create_vertex_list(self.indices, **self.data)
 
     def create_vertex_list(self, indices, **data) -> IndexedVertexList:
         vertex_list = self.program.vertex_list_indexed(
@@ -73,6 +74,20 @@ class Quad:
             **data
         )
         return vertex_list
+
+    def get_vertices(self) -> Sequence[float]:
+        x = self.x
+        y = self.y
+        x2 = x + self.width
+        y2 = y + self.height
+        vertices = (x, y, x2, y, x2, y2, x, y2)
+        return vertices
+
+    def recompute(self):
+        self.vertex_list.position[:] = self.get_vertices()
+
+    def set_data(self):
+        self.data['position'] = ('f', self.positions)
 
     def set_uniforms(self):
         pass
@@ -87,7 +102,7 @@ class SolidColorQuad(Quad):
         height: int,
         color: Color = pudu_ui.colors.PURPLE,
         opacity: float = 255,
-        program: pyglet.graphics.shader.ShaderProgram = default_program,
+        program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
@@ -119,7 +134,7 @@ class RoundedSolidColorQuad(SolidColorQuad):
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
-        program: pyglet.graphics.shader.ShaderProgram = rounded_program,
+        program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
@@ -168,7 +183,7 @@ class RoundedQuad(Quad):
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
-        program: pyglet.graphics.shader.ShaderProgram = rounded_program,
+        program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
@@ -178,6 +193,9 @@ class RoundedQuad(Quad):
         self.radius_top_right = radius_top_right
         self.radius_bottom_left = radius_bottom_left
         self.radius_bottom_right = radius_bottom_right
+        if not program:
+            program = rounded_program()
+        self.program: pyglet.graphics.shader.ShaderProgram = program
         super().__init__(
             x, y, width, height, program, batch, group
         )
