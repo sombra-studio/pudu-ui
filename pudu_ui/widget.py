@@ -24,6 +24,7 @@ class Widget:
         self.index: int = 0
         self.parent: Widget = parent
         self.is_valid: bool = True
+        self.children: list[Widget] = []
 
     def on_focus(self):
         pass
@@ -38,20 +39,28 @@ class Widget:
         if self.focusable:
             self.is_on_focus = True
             self.on_focus()
+            for child in self.children:
+                child.focus()
 
     def unfocus(self):
         if self.focusable:
             self.is_on_focus = False
             self.is_on_hover = False
             self.on_unfocus()
+            for child in self.children:
+                child.unfocus()
 
     def hover(self):
         if self.focusable:
             self.is_on_hover = True
             self.on_hover()
+            for child in self.children:
+                child.hover()
 
     def invalidate(self):
         self.is_valid = False
+        for child in self.children:
+            child.invalidate()
 
     def recompute(self):
         pass
