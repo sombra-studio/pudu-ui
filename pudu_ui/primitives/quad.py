@@ -13,13 +13,13 @@ DEFAULT_BORDER_RADIUS = 24
 NUM_VERTICES = 4
 
 
-with open("shaders/quad.vert") as f:
+with open("pudu_ui/shaders/quad.vert") as f:
     default_vertex_src = f.read()
 
-with open("shaders/frame.frag") as f:
+with open("pudu_ui/shaders/frame.frag") as f:
     default_fragment_src = f.read()
 
-with open("shaders/frame_rounded.frag") as f:
+with open("pudu_ui/shaders/frame_rounded.frag") as f:
     rounded_fragment_src = f.read()
 
 default_vs = Shader(default_vertex_src, 'vertex')
