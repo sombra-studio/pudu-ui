@@ -10,6 +10,8 @@ from .colors import Color
 
 from .widget import Widget, Params
 
+from . import styles
+
 from . import primitives
 
 from .screen import Screen
