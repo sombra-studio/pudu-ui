@@ -45,7 +45,6 @@ class Widget:
     def unfocus(self):
         if self.focusable:
             self.is_on_focus = False
-            self.is_on_hover = False
             self.on_unfocus()
             for child in self.children:
                 child.unfocus()
@@ -82,6 +81,9 @@ class Widget:
                 self.hover()
         else:
             if self.is_on_hover and not self.is_on_focus:
+                self.is_on_hover = False
+                for child in self.children:
+                    child.is_on_hover = False
                 self.unfocus()
         return pyglet.event.EVENT_UNHANDLED
 
