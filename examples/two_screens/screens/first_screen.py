@@ -1,5 +1,5 @@
 from pudu_ui import ButtonParams, Button, LabelParams, Label
-from pudu_ui import styles
+from pudu_ui import colors
 import pudu_ui
 import pyglet
 
@@ -13,8 +13,8 @@ class FirstScreen(pudu_ui.Screen):
     ):
         super().__init__(name="S1", batch=batch)
 
-        font_style: styles.fonts.FontStyle = styles.fonts.p1()
-        font_style.color = styles.colors.WHITE
+        font_style: pudu_ui.styles.fonts.FontStyle = pudu_ui.styles.fonts.p1()
+        font_style.color = colors.WHITE
         label_params = LabelParams(
             x=(WINDOW_WIDTH // 2), y=(WINDOW_HEIGHT // 4),
             text="First Screen",

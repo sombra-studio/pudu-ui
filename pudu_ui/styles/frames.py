@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from pudu_ui import colors
-from pudu_ui import Color
-from pudu_ui.colors import ColorType, ColorGradient, GradientDirection
+from pudu_ui.colors import Color, ColorType, ColorGradient, GradientDirection
 
 
 #------------------------------------------------------------------------------

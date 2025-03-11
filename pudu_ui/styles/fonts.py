@@ -1,6 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from pudu_ui.colors import Color, BLACK
 from pyglet.text import Weight
 from typing import Union
+
+
+#------------------------------------------------------------------------------
+# Factory functions
+
+def default_font_color():
+    return BLACK
+
+#------------------------------------------------------------------------------
 
 
 @dataclass
@@ -9,8 +19,8 @@ class FontStyle:
     font_name: str
     weight: Weight = Weight.NORMAL
     italic: bool = False
-    color: tuple[int, int, int, int] = (0, 0, 0, 255)
-    background_color: tuple[int, int, int, int] = None
+    color: Color  = field(default_factory=default_font_color)
+    opacity: int = 255
 
 
 # Header Styles

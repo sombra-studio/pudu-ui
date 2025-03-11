@@ -11,8 +11,8 @@ from pudu_ui import styles, Params, Widget
 
 
 class LabelResizeType(Enum):
-    WRAP = auto()
     FIT = auto()
+    FILL = auto()
     NONE = auto()
 
 
@@ -33,6 +33,8 @@ class Label(Widget):
         self, params: LabelParams, batch: Batch = None, group: Group = None
     ):
         super().__init__(params)
+        self.color = params.style.color
+        self.opacity = params.style.opacity
         self.impl = pyglet.text.Label(
             text=params.text,
             x=params.x,
@@ -46,15 +48,18 @@ class Label(Widget):
             font_size=params.style.font_size,
             weight=params.style.weight,
             italic=params.style.italic,
-            color=params.style.color,
+            color=self.get_color_tuple(),
             batch=batch,
             group=group
         )
         self.style = copy(params.style)
         self.text = params.text
         self.resize_type = params.resize_type
-        if self.resize_type == LabelResizeType.WRAP:
-            self.resize()
+        self.recompute()
+
+    def get_color_tuple(self):
+        color = self.color
+        return color.r, color.g, color.b, self.opacity
 
     def recompute(self):
         self.impl.x = self.x
@@ -62,10 +67,22 @@ class Label(Widget):
         self.impl.text = self.text
         # in case width or height was changed, we use the target style
         self.impl.font_size = self.style.font_size
-        self.resize()
+        if self.resize_type == LabelResizeType.FIT:
+            self.fit()
+        elif self.resize_type == LabelResizeType.FILL:
+            self.fill()
 
+    def fill(self):
+        while (
+            self.width and self.height and
+            not (
+                self.impl.content_width >= self.width or
+                self.impl.content_height >= self.height
+            )
+        ):
+            self.impl.font_size += 1
 
-    def resize(self):
+    def fit(self):
         while self.width and self.impl.content_width > self.width:
             self.impl.font_size -= 1
         while self.height and self.impl.content_height > self.height:
