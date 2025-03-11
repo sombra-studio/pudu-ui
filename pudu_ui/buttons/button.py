@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from dataclasses import dataclass, field
 import pyglet
 
@@ -30,10 +31,9 @@ class ButtonParams(FrameParams):
         style: The style for the button
     """
     text: str = ""
-    on_press: object = lambda: None
+    on_press: Callable[[...], None] = lambda: None
     style: ButtonStyle = field(default_factory=default_button_style)
     press_color: Color = field(default_factory=default_press_color)
-
 
 
 class Button(Widget):
