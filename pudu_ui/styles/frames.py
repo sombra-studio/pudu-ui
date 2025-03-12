@@ -1,10 +1,13 @@
 from dataclasses import dataclass, field
 from pudu_ui import colors
-from pudu_ui.colors import Color, ColorType, ColorGradient, GradientDirection
+from pudu_ui.colors import Color, GradientDirection
 
 
 #------------------------------------------------------------------------------
 # Factory functions
+def end_gradient_color():
+    return colors.DARK_PURPLE
+
 def background_color():
     return colors.PURPLE
 
@@ -14,15 +17,6 @@ def focus_color():
 def hover_color():
     return colors.LIGHTER_PURPLE
 
-def bg_gradient():
-    return colors.DEFAULT_FRAME_GRADIENT
-
-def focus_gradient():
-    return colors.FOCUS_FRAME_GRADIENT
-
-def hover_gradient():
-    return colors.HOVER_FRAME_GRADIENT
-
 def default_frame_style():
     return FrameStyle()
 
@@ -31,13 +25,8 @@ def default_frame_style():
 
 @dataclass
 class FrameStyle:
-    background_color: Color = field(default_factory=background_color)
-    focus_color: Color = field(default_factory=focus_color)
-    hover_color: Color = field(default_factory=hover_color)
-    color_type: ColorType = ColorType.SOLID
-    background_gradient: ColorGradient = field(default_factory=bg_gradient)
-    focus_gradient: ColorGradient = field(default_factory=focus_gradient)
-    hover_gradient: ColorGradient = field(default_factory=hover_gradient)
+    start_color: Color = field(default_factory=background_color)
+    end_color: Color = None
     opacity: int = 255
     radius_top_left: float = 0
     radius_top_right: float = 0

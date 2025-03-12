@@ -10,28 +10,25 @@ params = pudu_ui.primitives.FrameParams(
     width=300,
     height=120
 )
-params.style.color_type = pudu_ui.colors.ColorType.GRADIENT
 frames = [pudu_ui.primitives.Frame(params, batch=batch)]
 
 params.x += 400
-params.style.color_type = pudu_ui.colors.ColorType.SOLID
+params.style.end_color = pudu_ui.colors.DARK_PURPLE
 frames.append(pudu_ui.primitives.Frame(params, batch=batch))
 
 params.y += 200
 params.style.radius_top_left = 24
 params.style.radius_bottom_left = 24
-params.style.background_color = pudu_ui.colors.MEDIUM_BLUE
+params.style.start_color = pudu_ui.colors.MEDIUM_BLUE
+params.style.end_color = pudu_ui.colors.MEDIUM_BLUE
 frames.append(pudu_ui.primitives.Frame(params, batch=batch))
 
 params.x -= 400
 params.style.radius_top_right = 24
 params.style.radius_bottom_right = 24
-params.style.color_type = pudu_ui.colors.ColorType.GRADIENT
 params.style.gradient_direction = pudu_ui.colors.GradientDirection.HORIZONTAL
-bg_gradient = pudu_ui.colors.ColorGradient(
-    pudu_ui.colors.MEDIUM_BLUE, pudu_ui.colors.LIGHT_BLUE_GREEN
-)
-params.style.background_gradient = bg_gradient
+params.style.start_color = pudu_ui.colors.LIGHT_BLUE_GREEN
+params.style.end_color = pudu_ui.colors.MEDIUM_BLUE
 frames.append(pudu_ui.primitives.Frame(params, batch=batch))
 
 

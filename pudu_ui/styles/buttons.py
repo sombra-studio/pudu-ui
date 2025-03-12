@@ -19,6 +19,10 @@ def default_button_style():
     style.font_style.color = PRIMARY_BTN_FONT_COLOR
     return style
 
+def dft_btn_hover_style():
+    style = default_button_style()
+
+
 #------------------------------------------------------------------------------
 
 
