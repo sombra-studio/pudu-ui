@@ -1,2 +1,2 @@
-from .quad import RoundedQuad, SolidColorQuad
+from .quad import RoundedQuad
 from .frame import FrameParams, Frame

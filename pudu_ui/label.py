@@ -1,4 +1,4 @@
-from copy import copy
+from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from pyglet.graphics import Batch, Group
@@ -33,6 +33,7 @@ class Label(Widget):
         self, params: LabelParams, batch: Batch = None, group: Group = None
     ):
         super().__init__(params)
+        self.style = deepcopy(params.style)
         self.color = params.style.color
         self.opacity = params.style.opacity
         self.impl = pyglet.text.Label(
@@ -52,10 +53,21 @@ class Label(Widget):
             batch=batch,
             group=group
         )
-        self.style = copy(params.style)
         self.text = params.text
         self.resize_type = params.resize_type
         self.recompute()
+
+    def change_style(self, style: FontStyle):
+        if self.style == style:
+            return
+        self.style = deepcopy(style)
+        self.color = style.color
+        self.opacity = style.opacity
+        self.impl.font_name = style.font_name
+        self.impl.font_size = style.font_size
+        self.impl.width = style.weight
+        self.impl.italic = style.italic
+        self.impl.color = self.get_color_tuple()
 
     def get_color_tuple(self):
         color = self.color

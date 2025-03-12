@@ -6,17 +6,10 @@ import pyglet
 from pudu_ui import Widget
 from pudu_ui.primitives import Frame, FrameParams
 from pudu_ui.label import Label, LabelParams, LabelResizeType
-from pudu_ui.styles.buttons import ButtonStyle, default_button_style
-from pudu_ui.colors import Color, PRIMARY_BTN_PRESS_BG_COLOR
-
-
-#------------------------------------------------------------------------------
-# Factory functions
-
-def default_press_color():
-    return PRIMARY_BTN_PRESS_BG_COLOR
-
-#------------------------------------------------------------------------------
+from pudu_ui.styles.buttons import (
+    ButtonStyle, default_button_style, dft_btn_hover_style,
+    dft_btn_focus_style, dft_btn_press_style
+)
 
 
 @dataclass
@@ -33,8 +26,10 @@ class ButtonParams(FrameParams):
     text: str = ""
     on_press: Callable[[...], None] = lambda: None
     style: ButtonStyle = field(default_factory=default_button_style)
-
-    press_color: Color = field(default_factory=default_press_color)
+    hover_style: ButtonStyle = field(default_factory=dft_btn_hover_style)
+    focus_style: ButtonStyle = field(default_factory=dft_btn_focus_style)
+    press_style: ButtonStyle = field(default_factory=dft_btn_press_style)
+    focusable: bool = True
 
 
 class Button(Widget):
@@ -44,7 +39,6 @@ class Button(Widget):
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
-        # TODO: Add focus
         super().__init__(params)
         self.text: str = params.text
         self.on_press = params.on_press
@@ -56,9 +50,33 @@ class Button(Widget):
         self.back_group: pyglet.graphics.Group = pyglet.graphics.Group(
             parent=group
         )
+        self.style = params.style
+        self.hover_style = params.hover_style
+        self.focus_style = params.focus_style
+        self.press_style = params.press_style
 
-        self.background: Frame = self.create_background()
-        # define label params
+        # Create background Frame
+        self.background = self.create_background()
+
+        # Create Label
+        self.label = self.create_label()
+
+    def change_style(self, style: ButtonStyle):
+        self.background.change_style(style.frame_style)
+        self.label.change_style(style.font_style)
+
+    def create_background(self) -> Frame:
+        frame_params = FrameParams(
+            self.x, self.y, self.width, self.height,
+            focusable=self.focusable,
+            style=self.style.frame_style
+        )
+        frame = Frame(
+            frame_params, batch=self.batch, group=self.back_group
+        )
+        return frame
+
+    def create_label(self) -> Label:
         label_x = self.x + self.width / 2.0
         label_y = self.y + self.height / 2.0
         label_params = LabelParams(
@@ -69,20 +87,12 @@ class Button(Widget):
             anchor_x='center',
             anchor_y='center',
             resize_type=LabelResizeType.FIT,
-            style=params.style.font_style
+            style=self.style.font_style
         )
-        self.label: Label = Label(
-            label_params, batch=batch, group=self.front_group
+        label = Label(
+            label_params, batch=self.batch, group=self.front_group
         )
-
-    def change_background_color(self, new_color: Color):
-        self.background.change_quad_colors(
-            (new_color, new_color, new_color, new_color)
-        )
-
-    def create_background(self, params: FrameParams) -> Frame:
-        frame = Frame(params, batch=self.batch, group=self.back_group)
-        return frame
+        return label
 
     def recompute(self):
         # Recompute background
@@ -100,10 +110,6 @@ class Button(Widget):
         self.label.width = self.width
         self.label.invalidate()
 
-    def set_data(self, data: dict):
-        self.text = data['text']
-        self.invalidate()
-
     def update(self, dt: float):
         self.background.update(dt)
         self.label.update(dt)
@@ -112,7 +118,7 @@ class Button(Widget):
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):
         if self.is_inside(x, y):
-            self.change_background_color(self.press_color)
+            self.change_style(self.press_style)
             self.is_on_press = True
             self.on_press()
             return pyglet.event.EVENT_HANDLED
@@ -124,8 +130,8 @@ class Button(Widget):
             return pyglet.event.EVENT_UNHANDLED
         self.is_on_press = False
         if not self.is_inside(x, y):
-            self.change_background_color(self.background_color)
+            self.change_style(self.style)
             return pyglet.event.EVENT_HANDLED
         else:
-            self.change_background_color(self.hover_color)
+            self.change_style(self.hover_style)
             return pyglet.event.EVENT_HANDLED

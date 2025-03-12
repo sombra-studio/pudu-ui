@@ -5,11 +5,11 @@ from pudu_ui.colors import Color, GradientDirection
 
 #------------------------------------------------------------------------------
 # Factory functions
-def end_gradient_color():
-    return colors.DARK_PURPLE
-
 def background_color():
     return colors.PURPLE
+
+def background_end_color():
+    return colors.DARK_PURPLE
 
 def focus_color():
     return colors.LIGHT_PURPLE
