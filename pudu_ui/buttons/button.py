@@ -51,7 +51,7 @@ class Button(Widget):
             1, parent=group
         )
         self.back_group: pyglet.graphics.Group = pyglet.graphics.Group(
-            2, parent=group
+            parent=group
         )
         self.style = params.style
         self.hover_style = params.hover_style

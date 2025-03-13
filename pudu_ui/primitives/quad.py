@@ -91,13 +91,16 @@ class Quad:
         self.vertex_list = self.create_vertex_list(self.indices, **self.data)
 
     def create_vertex_list(self, indices, **data) -> IndexedVertexList:
+        group = pyglet.graphics.ShaderGroup(
+            self.program, parent=self.group
+        )
         vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
             mode=pyglet.gl.GL_TRIANGLES,
             indices=indices,
             batch=self.batch,
             # TODO: FIX ERROR WITH GIVING A GROUP
-            # group=self.group,
+            group=group,
             **data
         )
         return vertex_list
