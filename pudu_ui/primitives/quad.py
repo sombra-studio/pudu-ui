@@ -74,7 +74,8 @@ class Quad:
             mode=pyglet.gl.GL_TRIANGLES,
             indices=indices,
             batch=self.batch,
-            group=self.group,
+            # TODO: FIX ERROR WITH GIVING A GROUP
+            # group=self.group,
             **data
         )
         return vertex_list

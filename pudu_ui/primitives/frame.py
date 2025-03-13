@@ -24,10 +24,6 @@ class Frame(Widget):
     ):
         super().__init__(params)
         self.style = deepcopy(params.style)
-        # If we just want a solid color, leave end_color as None, and it will
-        # take the same value as start_color
-        if not self.style.end_color:
-            self.style.end_color = self.style.start_color
         self.quad = pudu_ui.primitives.RoundedQuad(
             params.x,
             params.y,
@@ -44,6 +40,10 @@ class Frame(Widget):
         )
 
     def get_colors_tuple(self):
+        # If we just want a solid color, leave end_color as None, and it will
+        # take the same value as start_color
+        if not self.style.end_color:
+            self.style.end_color = self.style.start_color
         colors = (
             self.style.end_color,
             self.style.end_color,

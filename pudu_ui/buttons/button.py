@@ -1,9 +1,10 @@
 from collections.abc import Callable
 from dataclasses import dataclass, field
 import pyglet
+from pyglet.window import mouse
 
 
-from pudu_ui import Widget
+from pudu_ui import Params, Widget
 from pudu_ui.primitives import Frame, FrameParams
 from pudu_ui.label import Label, LabelParams, LabelResizeType
 from pudu_ui.styles.buttons import (
@@ -13,15 +14,17 @@ from pudu_ui.styles.buttons import (
 
 
 @dataclass
-class ButtonParams(FrameParams):
+class ButtonParams(Params):
     """
-    Here you can define parameters for initialising a button. It inherits all
-    parameters from FrameParams
+    Here you can define parameters for initialising a button.
 
     Args:
         text: The text that will be displayed in the button (optional)
         on_press: The callback function for when the button is pressed
-        style: The style for the button
+        style: The style for the button when unfocused
+        hover_style: The style for the button when hovered
+        focus_style: The style for the button when focused
+        press_style: The style for the button when pressed
     """
     text: str = ""
     on_press: Callable[[...], None] = lambda: None
@@ -48,7 +51,7 @@ class Button(Widget):
             1, parent=group
         )
         self.back_group: pyglet.graphics.Group = pyglet.graphics.Group(
-            parent=group
+            2, parent=group
         )
         self.style = params.style
         self.hover_style = params.hover_style
@@ -64,11 +67,12 @@ class Button(Widget):
     def change_style(self, style: ButtonStyle):
         self.background.change_style(style.frame_style)
         self.label.change_style(style.font_style)
+        print("changing style")
 
     def create_background(self) -> Frame:
         frame_params = FrameParams(
-            self.x, self.y, self.width, self.height,
-            focusable=self.focusable,
+            self.x, self.y,
+            self.width, self.height,
             style=self.style.frame_style
         )
         frame = Frame(
@@ -94,6 +98,27 @@ class Button(Widget):
         )
         return label
 
+    def on_unfocus(self):
+        self.change_style(self.style)
+
+    def on_hover(self):
+        self.change_style(self.hover_style)
+
+    def on_focus(self):
+        self.change_style(self.focus_style)
+
+    def press(self):
+        self.change_style(self.press_style)
+        self.is_on_press = True
+        self.on_press()
+
+    def release(self, is_inside: bool):
+        self.is_on_press = False
+        if not is_inside:
+            self.change_style(self.style)
+        else:
+            self.change_style(self.hover_style)
+
     def recompute(self):
         # Recompute background
         self.background.x = self.x
@@ -117,21 +142,14 @@ class Button(Widget):
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):
-        if self.is_inside(x, y):
-            self.change_style(self.press_style)
-            self.is_on_press = True
-            self.on_press()
+        if self.is_inside(x, y) and buttons & mouse.LEFT:
+            self.press()
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED
 
     # Override function
     def on_mouse_release(self, x, y, buttons, modifiers):
-        if not self.is_on_press:
+        if not self.is_on_press or not (buttons & mouse.LEFT):
             return pyglet.event.EVENT_UNHANDLED
-        self.is_on_press = False
-        if not self.is_inside(x, y):
-            self.change_style(self.style)
-            return pyglet.event.EVENT_HANDLED
-        else:
-            self.change_style(self.hover_style)
-            return pyglet.event.EVENT_HANDLED
+        self.release(self.is_inside(x, y))
+        return pyglet.event.EVENT_HANDLED

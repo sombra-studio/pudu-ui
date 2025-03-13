@@ -14,7 +14,7 @@ class FirstScreen(pudu_ui.Screen):
         super().__init__(name="S1", batch=batch)
 
         font_style: pudu_ui.styles.fonts.FontStyle = pudu_ui.styles.fonts.p1()
-        font_style.color = colors.WHITE
+        font_style.color = pudu_ui.colors.WHITE
         label_params = LabelParams(
             x=(WINDOW_WIDTH // 2), y=(WINDOW_HEIGHT // 4),
             text="First Screen",

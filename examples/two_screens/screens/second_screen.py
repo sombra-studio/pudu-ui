@@ -14,7 +14,7 @@ class SecondScreen(pudu_ui.Screen):
         super().__init__(name="S2", batch=batch)
 
         font_style:styles.fonts.FontStyle = styles.fonts.p1()
-        font_style.color = styles.colors.WHITE
+        font_style.color = pudu_ui.colors.WHITE
         label_params = LabelParams(
             x=(WINDOW_WIDTH // 2), y=(WINDOW_HEIGHT // 4),
             text="Second Screen",
