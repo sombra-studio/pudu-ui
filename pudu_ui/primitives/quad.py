@@ -16,28 +16,37 @@ NUM_VERTICES = 4
 with open("pudu_ui/shaders/quad.vert") as f:
     default_vertex_src = f.read()
 
-with open("pudu_ui/shaders/frame.frag") as f:
-    default_fragment_src = f.read()
+with open("pudu_ui/shaders/textured.vert") as f:
+    textured_vertex_src = f.read()
 
 with open("pudu_ui/shaders/frame_rounded.frag") as f:
     rounded_fragment_src = f.read()
 
+with open("pudu_ui/shaders/frame_textured.frag") as f:
+    textured_fragment_src = f.read()
+
 default_vs = Shader(default_vertex_src, 'vertex')
-default_fs = Shader(default_fragment_src, 'fragment')
+textured_vs = Shader(textured_vertex_src, 'vertex')
 rounded_fs = Shader(rounded_fragment_src, 'fragment')
-
-
-def default_program():
-    return ShaderProgram(default_vs, default_fs)
+textured_fs = Shader(textured_fragment_src, 'fragment')
 
 
 def rounded_program():
     return ShaderProgram(default_vs, rounded_fs)
 
+def textured_program():
+    return ShaderProgram(textured_vs, textured_fs)
+
 
 default_colors = (
     pudu_ui.colors.BLACK, pudu_ui.colors.BLACK,
     pudu_ui.colors.PURPLE, pudu_ui.colors.PURPLE
+)
+
+
+default_textured_colors = (
+    pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
+    pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
 )
 
 
@@ -48,6 +57,12 @@ class Quad:
         y: float,
         width: int,
         height: int,
+        colors: tuple[Color, Color, Color, Color] = default_colors,
+        opacity: float = 255,
+        radius_top_left: float = DEFAULT_BORDER_RADIUS,
+        radius_top_right: float = DEFAULT_BORDER_RADIUS,
+        radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
+        radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
@@ -56,16 +71,23 @@ class Quad:
         self.y: float = y
         self.width: int = width
         self.height: int = height
-        self.positions = self.get_vertices()
         self.indices = (0, 1, 2, 0, 2, 3)
+        self.opacity = opacity
+        self.colors = colors
+        self.radius_top_left = radius_top_left
+        self.radius_top_right = radius_top_right
+        self.radius_bottom_left = radius_bottom_left
+        self.radius_bottom_right = radius_bottom_right
         if not program:
-            program = default_program()
+            program = rounded_program()
         self.program: pyglet.graphics.shader.ShaderProgram = program
+        self.batch: pyglet.graphics.Batch = batch
+        self.group: pyglet.graphics.Group = group
+
         self.data = {}
         self.set_data()
         self.set_uniforms()
-        self.batch: pyglet.graphics.Batch = batch
-        self.group: pyglet.graphics.Group = group
+
         self.vertex_list = self.create_vertex_list(self.indices, **self.data)
 
     def create_vertex_list(self, indices, **data) -> IndexedVertexList:
@@ -89,54 +111,22 @@ class Quad:
         return vertices
 
     def recompute(self):
-        self.vertex_list.position[:] = self.get_vertices()
+        self.set_data()
+        self.set_uniforms()
+        self.vertex_list.position[:] = self.data['position'][1]
+        self.vertex_list.vertex_color[:] = self.data['vertex_color'][1]
 
     def set_data(self):
-        self.data['position'] = ('f', self.positions)
+        # Set position
+        self.data['position'] = ('f', self.get_vertices())
 
-    def set_uniforms(self):
-        pass
-
-
-class RoundedQuad(Quad):
-    def __init__(
-        self,
-        x: float,
-        y: float,
-        width: int,
-        height: int,
-        colors: tuple[Color, Color, Color, Color] = default_colors,
-        opacity: float = 255,
-        radius_top_left: float = DEFAULT_BORDER_RADIUS,
-        radius_top_right: float = DEFAULT_BORDER_RADIUS,
-        radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
-        radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
-        program: pyglet.graphics.shader.ShaderProgram = None,
-        batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None
-    ):
-        self.opacity = opacity
-        self.colors = colors
-        self.radius_top_left = radius_top_left
-        self.radius_top_right = radius_top_right
-        self.radius_bottom_left = radius_bottom_left
-        self.radius_bottom_right = radius_bottom_right
-        if not program:
-            program = rounded_program()
-        self.program: pyglet.graphics.shader.ShaderProgram = program
-        super().__init__(
-            x, y, width, height, program, batch, group
-        )
-
-    def set_data(self):
-        super().set_data()
+        # Set vertex color
         vertex_color = []
         for color in self.colors:
             vertex_color += [color.r, color.g, color.b]
         self.data['vertex_color'] = ('Bn', vertex_color)
 
     def set_uniforms(self):
-        super().set_uniforms()
         self.program['opacity'] = self.opacity / 255.0
         self.program['radius_v3'] = self.radius_top_left
         self.program['radius_v2'] = self.radius_top_right
@@ -161,7 +151,41 @@ class RoundedQuad(Quad):
 
 
 class TexturedQuad(Quad):
+    def __init__(
+        self,
+        x: float,
+        y: float,
+        width: int,
+        height: int,
+        colors: tuple[Color, Color, Color, Color] = default_textured_colors,
+        opacity: float = 255,
+        radius_top_left: float = 0,
+        radius_top_right: float = 0,
+        radius_bottom_left: float = 0,
+        radius_bottom_right: float = 0,
+        program: pyglet.graphics.shader.ShaderProgram = None,
+        batch: pyglet.graphics.Batch = None,
+        group: pyglet.graphics.Group = None
+    ):
+        if not program:
+            program = textured_program()
+        self.program: pyglet.graphics.shader.ShaderProgram = program
+        super().__init__(
+            x, y, width, height,
+            colors=colors, opacity=opacity, radius_top_left=radius_top_left,
+            radius_top_right=radius_top_right,
+            radius_bottom_left=radius_bottom_left,
+            radius_bottom_right=radius_bottom_right,
+            program=program,
+            batch=batch,
+            group=group
+        )
+
     def set_data(self):
         super().set_data()
         tex_coords = (0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0)
-        self.data['tex_coords'] = tex_coords
+        self.data['tex_coords'] = ('f', tex_coords)
+
+    def recompute(self):
+        super().recompute()
+        self.vertex_list.tex_coords[:] = self.data['tex_coords'][1]

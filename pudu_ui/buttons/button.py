@@ -67,7 +67,6 @@ class Button(Widget):
     def change_style(self, style: ButtonStyle):
         self.background.change_style(style.frame_style)
         self.label.change_style(style.font_style)
-        print("changing style")
 
     def create_background(self) -> Frame:
         frame_params = FrameParams(

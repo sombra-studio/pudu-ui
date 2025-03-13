@@ -24,7 +24,7 @@ class Frame(Widget):
     ):
         super().__init__(params)
         self.style = deepcopy(params.style)
-        self.quad = pudu_ui.primitives.RoundedQuad(
+        self.quad = pudu_ui.primitives.Quad(
             params.x,
             params.y,
             params.width,
@@ -80,3 +80,10 @@ class Frame(Widget):
         self.quad.radius_bottom_right = style.radius_bottom_right
         self.quad.opacity = style.opacity
         self.quad.set_uniforms()
+
+    def recompute(self):
+        self.quad.x = self.x
+        self.quad.y = self.y
+        self.quad.width = self.width
+        self.quad.height = self.height
+        self.quad.recompute()
