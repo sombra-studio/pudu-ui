@@ -4,38 +4,78 @@ from pyglet.gl import glClearColor
 from pudu_ui.image import ImageParams, Image, ImageScaleType
 from pudu_ui.layouts import HorizontalListLayout, ListLayoutParams
 
-ITEM_WIDTH = 300
-ITEM_HEIGHT = 300
+ITEM_WIDTH = 250
+ITEM_HEIGHT = 250
+INTER_ITEM_SPACING = 50
+LAYOUTS_VERTICAL_SPACING = 80 + ITEM_HEIGHT
 
-window = pyglet.window.Window()
+window = pyglet.window.Window(height=1000)
 batch = pyglet.graphics.Batch()
 glClearColor(1.0, 1.0, 1.0, 1.0)
 
 # Define Pudu Widgets
-img_params = ImageParams(
-    width=ITEM_WIDTH, height=ITEM_HEIGHT, scale_type=ImageScaleType.FIT
-)
-img_params.image_path = "resources/mummy3.jpg"
-img1 = Image(img_params, batch=batch)
+img_paths = [
+    "resources/mummy3.jpg", "resources/nationaltreasure.jpg",
+    "resources/Pirates-of-the-Caribbean-Chest-Fight.png"
+]
+imgs = []
+list_layouts = []
 
-img_params.image_path = "resources/nationaltreasure.jpg"
-img2 = Image(img_params, batch=batch)
-
-img_params.image_path = "resources/Pirates-of-the-Caribbean-Chest-Fight.png"
-img3 = Image(img_params, batch=batch)
+# Use images with FIT
+imgs.append([])
+img_params = ImageParams(scale_type=ImageScaleType.FIT)
+for img_path in img_paths:
+    img_params.image_path = img_path
+    new_img = Image(img_params, batch=batch)
+    imgs[-1].append(new_img)
 
 list_params = ListLayoutParams(
-    x=100, y=540 / 2 - ITEM_HEIGHT / 2,
-    width=3 * ITEM_WIDTH, height=ITEM_HEIGHT
+    x=80, y=50,
+    width=3 * ITEM_WIDTH, height=ITEM_HEIGHT,
+    item_width=ITEM_WIDTH, item_height=ITEM_HEIGHT,
+    inter_item_spacing=INTER_ITEM_SPACING
 )
-list_layout = HorizontalListLayout(list_params)
 
+new_list_layout = HorizontalListLayout(list_params)
+list_layouts.append(new_list_layout)
+for img in imgs[-1]:
+    list_layouts[-1].add(img)
+
+# Use images with FILL
+imgs.append([])
+img_params = ImageParams(scale_type=ImageScaleType.FILL)
+for img_path in img_paths:
+    img_params.image_path = img_path
+    new_img = Image(img_params, batch=batch)
+    imgs[-1].append(new_img)
+
+list_params.y += LAYOUTS_VERTICAL_SPACING
+new_list_layout = HorizontalListLayout(list_params)
+list_layouts.append(new_list_layout)
+for img in imgs[-1]:
+    list_layouts[-1].add(img)
+
+
+# Use images with CROP
+imgs.append([])
+img_params = ImageParams(scale_type=ImageScaleType.CROP)
+for img_path in img_paths:
+    img_params.image_path = img_path
+    new_img = Image(img_params, batch=batch)
+    imgs[-1].append(new_img)
+
+list_params.y += LAYOUTS_VERTICAL_SPACING
+new_list_layout = HorizontalListLayout(list_params)
+list_layouts.append(new_list_layout)
+for img in imgs[-1]:
+    list_layouts[-1].add(img)
 
 def update(dt: float):
-    list_layout.update(dt)
-    img1.update(dt)
-    img2.update(dt)
-    img3.update(dt)
+    for list_layout in list_layouts:
+        list_layout.update(dt)
+    for img_list in imgs:
+        for img_widget in img_list:
+            img_widget.update(dt)
 
 
 @window.event
@@ -45,10 +85,6 @@ def on_draw():
 
 
 def main():
-    list_layout.add(img1)
-    list_layout.add(img2)
-    list_layout.add(img3)
-
     pyglet.clock.schedule_interval(update, 1 / 60)
     pyglet.app.run()
 
