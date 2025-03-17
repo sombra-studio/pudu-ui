@@ -1,7 +1,6 @@
-from copy import deepcopy
 from enum import Enum
 from dataclasses import dataclass
-from pyglet.image import AbstractImage, ImageData
+from pyglet.image import AbstractImage
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 import pyglet
@@ -46,11 +45,12 @@ class Image(Widget):
         else:
             self.img = pudu_ui.utils.create_gray_img(self.width, self.height)
 
-        img = self.rescale(self.img)
+        img = self.rescale()
+        self.sprite = Sprite(img, x=self.x, y=self.y, batch=batch, group=group)
 
-        self.sprite = Sprite(
-            img, x=self.x, y=self.y, batch=batch, group=group
-        )
+    def copy_img(self) -> AbstractImage:
+        img = self.img.get_region(0, 0, self.img.width, self.img.height)
+        return img
 
     def crop(self) -> AbstractImage:
         center_x = int(self.img.width / 2.0)
@@ -61,25 +61,19 @@ class Image(Widget):
         if diff_width > 0 and diff_height > 0:
             x = int(center_x - self.width / 2.0)
             y = int(center_y - self.height / 2.0)
-            return self.img.get_region(
-                x, y, self.width, self.height
-            )
+            return self.img.get_region(x, y, self.width, self.height)
         elif diff_width > 0:
             x = int(center_x - self.width / 2.0)
             y = int(center_y - self.img.height / 2.0)
-            return self.img.get_region(
-                x, y, self.width, self.img.height
-            )
+            return self.img.get_region(x, y, self.width, self.img.height)
         elif diff_height > 0:
             x = int(center_x - self.img.width / 2.0)
             y = int(center_y - self.height / 2.0)
-            return self.img.get_region(
-                x, y, self.img.width, self.height
-            )
-        return self.img
+            return self.img.get_region(x, y, self.img.width, self.height)
+        return self.copy_img()
 
     def fit(self) -> AbstractImage:
-        img = deepcopy(self.img)
+        img = self.copy_img()
         if (
             (self.img.width - self.width) > 0 or
             (self.img.height - self.height) > 0
@@ -91,34 +85,27 @@ class Image(Widget):
             img.height = h1
             self.sprite_offset_x = (self.width - img.width) / 2.0
             self.sprite_offset_y = (self.height - img.height) / 2.0
-            self.x += self.sprite_offset_x
-            self.y += self.sprite_offset_y
         return img
 
     def fill(self) -> AbstractImage:
-        img = deepcopy(self.img)
+        img = self.copy_img()
         img.width = self.width
         img.height = self.height
         return img
 
     def recompute(self):
-        self.sprite.x = self.x + self.sprite_offset_x
-        self.sprite.y = self.y + self.sprite_offset_y
+        new_image = self.rescale()
+        self.sprite.update(
+            self.x + self.sprite_offset_x,
+            self.y + self.sprite_offset_y
+        )
         self.sprite.color = self.color
-        self.sprite.width = self.width
-        self.sprite.height = self.height
-        # Not handling image change after init for now
+        self.sprite.image = new_image
 
-    def rescale(self, img: AbstractImage) -> AbstractImage:
-        # Handle image cropping
+    def rescale(self) -> AbstractImage:
         if self.scale_type == ImageScaleType.CROP:
             return self.crop()
-        # Handle image fitting
         elif self.scale_type == ImageScaleType.FIT:
-
-
-
-                return img
-        # Handle image filling
+            return self.fit()
         else:
             return self.fill()
