@@ -18,6 +18,6 @@ from .screen import Screen
 
 from .label import Label, LabelParams
 
-from .buttons import Button, ButtonParams
+from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 
 from . import layouts

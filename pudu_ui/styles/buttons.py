@@ -45,3 +45,9 @@ def dft_btn_press_style():
 class ButtonStyle:
     frame_style: FrameStyle = field(default_factory=default_frame_style)
     font_style: FontStyle = field(default_factory=p1)
+
+    def set_solid_color(self, color: Color):
+        self.frame_style.set_solid_color(color)
+
+    def set_uniform_radius(self, radius: float):
+        self.frame_style.set_uniform_radius(radius)

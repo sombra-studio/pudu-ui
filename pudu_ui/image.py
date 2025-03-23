@@ -19,7 +19,7 @@ class ImageScaleType(Enum):
 @dataclass
 class ImageParams(Params):
     image_path: str = ""
-    scale_type: ImageScaleType = ImageScaleType.CROP
+    scale_type: ImageScaleType = ImageScaleType.FIT
     color: tuple[int, int, int, int] = (255, 255, 255, 255)
 
 
