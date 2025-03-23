@@ -1,13 +1,17 @@
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pyglet.image import AbstractImage
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 import pyglet
 
 
-from pudu_ui import Params, Widget
+from pudu_ui import Color, Params, Widget
 import pudu_ui
+
+
+def default_color() -> Color:
+    return pudu_ui.colors.WHITE
 
 
 class ImageScaleType(Enum):
@@ -20,7 +24,8 @@ class ImageScaleType(Enum):
 class ImageParams(Params):
     image_path: str = ""
     scale_type: ImageScaleType = ImageScaleType.FIT
-    color: tuple[int, int, int, int] = (255, 255, 255, 255)
+    color: Color = field(default_factory=default_color)
+    opacity: int = 255
 
 
 def default_image_params():
@@ -37,6 +42,7 @@ class Image(Widget):
         self.image_path = params.image_path
         self.scale_type = params.scale_type
         self.color = params.color
+        self.opacity = params.opacity
         self.sprite_offset_x = 0.0
         self.sprite_offset_y = 0.0
 
@@ -94,12 +100,13 @@ class Image(Widget):
         return img
 
     def recompute(self):
+        print("recomputed image")
         new_image = self.rescale()
         self.sprite.update(
             self.x + self.sprite_offset_x,
             self.y + self.sprite_offset_y
         )
-        self.sprite.color = self.color
+        self.sprite.color = (*self.color.as_tuple(), self.opacity)
         self.sprite.image = new_image
 
     def rescale(self) -> AbstractImage:

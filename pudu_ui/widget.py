@@ -27,13 +27,13 @@ class Widget:
         self.children: list[Widget] = []
 
     def on_focus(self):
-        pass
+        self.invalidate()
 
     def on_unfocus(self):
-        pass
+        self.invalidate()
 
     def on_hover(self):
-        pass
+        self.invalidate()
 
     def focus(self):
         if self.focusable:

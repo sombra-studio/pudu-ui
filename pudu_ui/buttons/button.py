@@ -98,16 +98,20 @@ class Button(Widget):
         return label
 
     def on_unfocus(self):
+        super().on_unfocus()
         self.change_style(self.style)
 
     def on_hover(self):
+        super().on_hover()
         self.change_style(self.hover_style)
 
     def on_focus(self):
+        super().on_focus()
         self.change_style(self.focus_style)
 
     def press(self):
         self.change_style(self.press_style)
+        self.invalidate()
         self.is_on_press = True
         self.on_press()
 
@@ -135,9 +139,9 @@ class Button(Widget):
         self.label.invalidate()
 
     def update(self, dt: float):
+        super().update(dt)
         self.background.update(dt)
         self.label.update(dt)
-        super().update(dt)
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):
