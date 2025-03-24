@@ -53,8 +53,12 @@ class Image(Widget):
 
         img = self.rescale()
         self.sprite = Sprite(
-            img, x=self.x, y=self.y, batch=batch, group=group
+            img,
+            x=self.x + self.sprite_offset_x,
+            y=self.y + self.sprite_offset_y,
+            batch=batch, group=group
         )
+        self.sprite.color = (*self.color.as_tuple(), self.opacity)
 
     def copy_img(self) -> AbstractImage:
         img = self.img.get_region(0, 0, self.img.width, self.img.height)

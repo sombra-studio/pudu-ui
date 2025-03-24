@@ -4,6 +4,7 @@ import pyglet
 
 IMG_SIZE = 25
 BTN_SIZE = 50
+RADIUS = BTN_SIZE / 2.0
 
 window = pyglet.window.Window(caption="Pudu UI")
 batch = pyglet.graphics.Batch()
@@ -13,22 +14,23 @@ img_paths = [
     "resources/plus-solid.png",
     "resources/thumbs-up-solid.png",
 ]
+buttons = []
 
 params = pudu_ui.ImageButtonParams(x=50, y=100, width=BTN_SIZE, height=BTN_SIZE)
-params.style.set_uniform_radius(params.width / 2.0)
-params.hover_style.set_uniform_radius(params.width / 2.0)
-params.focus_style.set_uniform_radius(params.width / 2.0)
-params.press_style.set_uniform_radius(params.width / 2.0)
+params.style.set_uniform_radius(RADIUS)
+params.hover_style.set_uniform_radius(RADIUS)
+params.focus_style.set_uniform_radius(RADIUS)
+params.press_style.set_uniform_radius(RADIUS)
 params.image_params.width = IMG_SIZE
 params.image_params.height = IMG_SIZE
-buttons = []
 
 for img_path in img_paths:
     params.image_params.image_path = img_path
+    # doing this for now that we don't have parent-child relations implemented
+    params.image_params.x = params.x + params.width / 2.0 - IMG_SIZE / 2.0
+    params.image_params.y = params.y + params.height / 2.0 - IMG_SIZE / 2.0
     img_button = pudu_ui.ImageButton(params, batch=batch)
-    img_button.image.x = img_button.x + img_button.width / 2.0 - IMG_SIZE / 2.0
-    img_button.image.y = img_button.y + img_button.height / 2.0 - IMG_SIZE / 2.0
-    img_button.invalidate()
+
     params.x += 25 + BTN_SIZE
     buttons.append(img_button)
 
