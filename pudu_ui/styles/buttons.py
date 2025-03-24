@@ -12,10 +12,7 @@ DEFAULT_BTN_CORNER_RADIUS = 24
 
 def default_button_style():
     style = ButtonStyle()
-    style.frame_style.radius_top_left = DEFAULT_BTN_CORNER_RADIUS
-    style.frame_style.radius_top_right = DEFAULT_BTN_CORNER_RADIUS
-    style.frame_style.radius_bottom_left = DEFAULT_BTN_CORNER_RADIUS
-    style.frame_style.radius_bottom_right = DEFAULT_BTN_CORNER_RADIUS
+    style.frame_style.set_uniform_radius(DEFAULT_BTN_CORNER_RADIUS)
     style.font_style.color = PRIMARY_BTN_FONT_COLOR
     return style
 
@@ -38,6 +35,34 @@ def dft_btn_press_style():
     return style
 
 
+# Image Buttons
+
+def dft_img_btn_style():
+    style = ImageButtonStyle()
+    return style
+
+
+def dft_img_btn_hover_style():
+    style = dft_img_btn_style()
+    style.color = LIGHTER_GRAY
+    return style
+
+
+def dft_img_btn_focus_style():
+    style = dft_img_btn_style()
+    style.color = LIGHTER_GRAY
+    return style
+
+
+def dft_img_btn_press_style():
+    style = dft_img_btn_style()
+    style.color = WHITE
+    return style
+
+
+def default_image_color() -> Color:
+    return LIGHT_GRAY
+
 #------------------------------------------------------------------------------
 
 
@@ -51,3 +76,8 @@ class ButtonStyle:
 
     def set_uniform_radius(self, radius: float):
         self.frame_style.set_uniform_radius(radius)
+
+
+@dataclass
+class ImageButtonStyle(ButtonStyle):
+    color: Color = field(default_factory=default_image_color)

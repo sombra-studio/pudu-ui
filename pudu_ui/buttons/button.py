@@ -121,6 +121,7 @@ class Button(Widget):
             self.change_style(self.style)
         else:
             self.change_style(self.hover_style)
+        self.invalidate()
 
     def recompute(self):
         # Recompute background

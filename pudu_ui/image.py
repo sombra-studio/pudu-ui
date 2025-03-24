@@ -52,7 +52,9 @@ class Image(Widget):
             self.img = pudu_ui.utils.create_gray_img(self.width, self.height)
 
         img = self.rescale()
-        self.sprite = Sprite(img, x=self.x, y=self.y, batch=batch, group=group)
+        self.sprite = Sprite(
+            img, x=self.x, y=self.y, batch=batch, group=group
+        )
 
     def copy_img(self) -> AbstractImage:
         img = self.img.get_region(0, 0, self.img.width, self.img.height)
@@ -100,7 +102,6 @@ class Image(Widget):
         return img
 
     def recompute(self):
-        print("recomputed image")
         new_image = self.rescale()
         self.sprite.update(
             self.x + self.sprite_offset_x,

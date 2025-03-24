@@ -28,7 +28,7 @@ for img_path in img_paths:
     img_button = pudu_ui.ImageButton(params, batch=batch)
     img_button.image.x = img_button.x + img_button.width / 2.0 - IMG_SIZE / 2.0
     img_button.image.y = img_button.y + img_button.height / 2.0 - IMG_SIZE / 2.0
-    img_button.image.invalidate()
+    img_button.invalidate()
     params.x += 25 + BTN_SIZE
     buttons.append(img_button)
 
