@@ -43,19 +43,22 @@ def dft_img_btn_style():
 
 
 def dft_img_btn_hover_style():
-    style = dft_img_btn_style()
+    style = ImageButtonStyle()
+    style.frame_style.start_color = PRIMARY_BTN_HOVER_BG_COLOR
     style.color = LIGHTER_GRAY
     return style
 
 
 def dft_img_btn_focus_style():
     style = dft_img_btn_style()
+    style.frame_style.start_color = PRIMARY_BTN_FOCUS_BG_COLOR
     style.color = LIGHTER_GRAY
     return style
 
 
 def dft_img_btn_press_style():
     style = dft_img_btn_style()
+    style.frame_style.start_color = PRIMARY_BTN_PRESS_BG_COLOR
     style.color = WHITE
     return style
 
