@@ -27,7 +27,7 @@ class ButtonParams(Params):
         press_style: The style for the button when pressed
     """
     text: str = ""
-    on_press: Callable[[...], None] = lambda: None
+    on_press: Callable[[...], None] = lambda l: None
     style: ButtonStyle = field(default_factory=default_button_style)
     hover_style: ButtonStyle = field(default_factory=dft_btn_hover_style)
     focus_style: ButtonStyle = field(default_factory=dft_btn_focus_style)
@@ -60,9 +60,11 @@ class Button(Widget):
 
         # Create background Frame
         self.background = self.create_background()
+        self.children.append(self.background)
 
         # Create Label
         self.label = self.create_label()
+        self.children.append(self.label)
 
     def change_style(self, style: ButtonStyle):
         self.background.change_style(style.frame_style)
@@ -75,7 +77,7 @@ class Button(Widget):
             style=self.style.frame_style
         )
         frame = Frame(
-            frame_params, batch=self.batch, group=self.back_group
+            frame_params, batch=self.batch, group=self.back_group, parent=self
         )
         return frame
 
@@ -93,7 +95,7 @@ class Button(Widget):
             style=self.style.font_style
         )
         label = Label(
-            label_params, batch=self.batch, group=self.front_group
+            label_params, batch=self.batch, group=self.front_group, parent=self
         )
         return label
 
@@ -113,7 +115,7 @@ class Button(Widget):
         self.change_style(self.press_style)
         self.invalidate()
         self.is_on_press = True
-        self.on_press()
+        self.on_press(self)
 
     def release(self, is_inside: bool):
         self.is_on_press = False

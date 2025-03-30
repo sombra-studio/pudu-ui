@@ -35,7 +35,8 @@ class ImageButton(Button):
         super().__init__(params, batch=batch, group=group)
         params.image_params.color = params.style.color
         self.image = Image(
-            params.image_params, batch=batch, group=self.front_group
+            params.image_params, batch=batch, group=self.front_group,
+            parent=self
         )
         self.children.append(self.image)
 

@@ -30,7 +30,8 @@ class LabelParams(Params):
 
 class Label(Widget):
     def __init__(
-        self, params: LabelParams, batch: Batch = None, group: Group = None
+        self, params: LabelParams, batch: Batch = None, group: Group = None,
+        parent: Widget | None = None
     ):
         super().__init__(params)
         self.style = deepcopy(params.style)

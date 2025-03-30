@@ -70,9 +70,15 @@ class Widget:
             self.is_valid = True
 
     def is_inside(self, x: float, y: float) -> bool:
+        x_offset = self.parent.x if self.parent else 0
+        y_offset = self.parent.y if self.parent else 0
+        left = self.x + x_offset
+        right = left + self.width
+        bottom = self.y + y_offset
+        top = bottom + self.height
+
         return (
-            (self.x <= x <= self.x + self.width) and
-            (self.y <= y <= self.y + self.height)
+            (left <= x <= right) and (bottom <= y <= top)
         )
 
     def on_mouse_motion(self, x, y, dx, dy) -> bool:

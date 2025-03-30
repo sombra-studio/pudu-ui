@@ -36,13 +36,16 @@ class Image(Widget):
         self,
         params: ImageParams,
         batch: Batch = None,
-        group: Group = None
+        group: Group = None,
+        parent: Widget | None = None
     ):
         super().__init__(params)
         self.image_path = params.image_path
         self.scale_type = params.scale_type
         self.color = params.color
         self.opacity = params.opacity
+        self.parent = parent
+
         self.sprite_offset_x = 0.0
         self.sprite_offset_y = 0.0
 
@@ -52,11 +55,9 @@ class Image(Widget):
             self.img = pudu_ui.utils.create_gray_img(self.width, self.height)
 
         img = self.rescale()
+        sprite_x, sprite_y = self.get_sprite_position()
         self.sprite = Sprite(
-            img,
-            x=self.x + self.sprite_offset_x,
-            y=self.y + self.sprite_offset_y,
-            batch=batch, group=group
+            img, x=sprite_x, y=sprite_y, batch=batch, group=group
         )
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
 
@@ -105,12 +106,18 @@ class Image(Widget):
         img.height = self.height
         return img
 
+    def get_sprite_position(self) -> [float, float]:
+        x_offset = self.parent.x if self.parent else 0
+        y_offset = self.parent.y if self.parent else 0
+        return (
+            self.x + x_offset + self.sprite_offset_x,
+            self.y + y_offset + self.sprite_offset_y
+        )
+
     def recompute(self):
         new_image = self.rescale()
-        self.sprite.update(
-            self.x + self.sprite_offset_x,
-            self.y + self.sprite_offset_y
-        )
+        sprite_x, sprite_y = self.get_sprite_position()
+        self.sprite.update(sprite_x, sprite_y)
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
         self.sprite.image = new_image
 

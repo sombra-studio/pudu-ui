@@ -20,13 +20,14 @@ class FrameParams(Params):
 
 class Frame(Widget):
     def __init__(
-        self, params: FrameParams, batch: Batch = None, group: Group = None
+        self, params: FrameParams, batch: Batch = None, group: Group = None,
+        parent: Widget | None = None
     ):
-        super().__init__(params)
+        super().__init__(params, parent=parent)
         self.style = deepcopy(params.style)
         self.quad = pudu_ui.primitives.Quad(
-            params.x,
-            params.y,
+            0.0,
+            0.0,
             params.width,
             params.height,
             colors=self.get_colors_tuple(),
@@ -36,7 +37,8 @@ class Frame(Widget):
             radius_bottom_left=params.style.radius_bottom_left,
             radius_bottom_right=params.style.radius_bottom_right,
             batch=batch,
-            group=group
+            group=group,
+            parent=parent
         )
 
     def get_colors_tuple(self):
@@ -57,11 +59,11 @@ class Frame(Widget):
 
     def change_quad_colors(self, colors: tuple[Color, Color, Color, Color]):
         self.quad.colors = colors
-        self.quad.set_data()
+        self.quad.set_attributes()
         # data comes like a tuple with (format, data_list)
         # data['vertex_color'] will be like ('Bn', [100, 23, 90, 120, 80, ...])
         # so we only care about the second part here
-        new_colors = self.quad.data['vertex_color'][1]
+        new_colors = self.quad.attributes['vertex_color'][1]
         self.quad.vertex_list.vertex_color[:] = new_colors
 
     def change_style(self, style: FrameStyle):
@@ -82,8 +84,6 @@ class Frame(Widget):
         self.quad.set_uniforms()
 
     def recompute(self):
-        self.quad.x = self.x
-        self.quad.y = self.y
         self.quad.width = self.width
         self.quad.height = self.height
         self.quad.recompute()
