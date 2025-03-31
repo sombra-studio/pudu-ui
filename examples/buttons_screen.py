@@ -9,28 +9,24 @@ DATA_UPDATE = 0
 
 
 class ButtonsScreen(pudu_ui.Screen):
-    def __init__(
-        self,
-        batch: pyglet.graphics.Batch = pyglet.graphics.get_default_batch()
-    ):
-        super().__init__(
-            "hello",
-            batch=batch
-        )
+    def __init__(self):
+        super().__init__("buttons")
 
-        button_params = ButtonParams(x=100, y=200, text="+")
-        self.add_button = Button(button_params, batch=batch)
+        button_params = ButtonParams(text="+")
+        button_params.x = SCREEN_WIDTH / 4 - button_params.width / 2
+        button_params.y = SCREEN_HEIGHT / 2 - button_params.height / 2
+        self.add_button = Button(button_params, batch=self.batch)
 
-        y = self.add_button.y + self.add_button.height / 2.0
+        y = button_params.y + button_params.height / 2.0
         label_params = LabelParams(
             x=SCREEN_WIDTH / 2, y=y,
             anchor_x='center', anchor_y='center'
         )
-        self.label = Label(label_params, batch=batch)
+        self.label = Label(label_params, batch=self.batch)
 
-        button_params.x = 400
+        button_params.x = SCREEN_WIDTH - button_params.x - button_params.width
         button_params.text = "-"
-        self.subtract_button = Button(button_params, batch=batch)
+        self.subtract_button = Button(button_params, batch=self.batch)
 
     def handle_event(self, event_type: int, data: int):
         """
@@ -47,27 +43,26 @@ class ButtonsScreen(pudu_ui.Screen):
 
 
 class NumberController(pudu_ui.controller.Controller):
-    def __init__(self, name: str, batch: pyglet.graphics.Batch):
+    def __init__(self, name: str):
         super().__init__(name)
         self.number: int = 0
-        self.screen = ButtonsScreen(batch=batch)
+        self.screen = ButtonsScreen()
         self.screen.label.text = str(self.number)
         self.screen.label.invalidate()
         self.screen.add_button.on_press = self.add
         self.screen.subtract_button.on_press = self.subtract
 
-    def add(self):
+    def add(self, _):
         self.number += 1
         self.screen.handle_event(DATA_UPDATE, self.number)
 
-    def subtract(self):
+    def subtract(self, _):
         self.number -= 1
         self.screen.handle_event(DATA_UPDATE, self.number)
 
 
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="Test")
-batch = pyglet.graphics.Batch()
-controller = NumberController(name="example controller", batch=batch)
+controller = NumberController(name="example controller")
 window.push_handlers(controller.screen.add_button)
 window.push_handlers(controller.screen.subtract_button)
 
@@ -75,7 +70,7 @@ window.push_handlers(controller.screen.subtract_button)
 def on_draw():
     pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
-    batch.draw()
+    controller.screen.draw()
 
 
 def update(dt):
