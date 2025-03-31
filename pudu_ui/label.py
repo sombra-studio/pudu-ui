@@ -37,10 +37,15 @@ class Label(Widget):
         self.style = deepcopy(params.style)
         self.color = params.style.color
         self.opacity = params.style.opacity
+        self.parent = parent
+        self.text = params.text
+        self.resize_type = params.resize_type
+
+        x, y = self.get_position()
         self.impl = pyglet.text.Label(
             text=params.text,
-            x=params.x,
-            y=params.y,
+            x=x,
+            y=y,
             width=params.width,
             height=params.height,
             anchor_x=params.anchor_x,
@@ -54,8 +59,7 @@ class Label(Widget):
             batch=batch,
             group=group
         )
-        self.text = params.text
-        self.resize_type = params.resize_type
+
         self.recompute()
 
     def change_style(self, style: FontStyle):
@@ -70,13 +74,14 @@ class Label(Widget):
         self.impl.italic = style.italic
         self.impl.color = self.get_color_tuple()
 
-    def get_color_tuple(self):
+    def get_color_tuple(self)-> tuple[int, int, int, int]:
         color = self.color
         return color.r, color.g, color.b, self.opacity
 
     def recompute(self):
-        self.impl.x = self.x
-        self.impl.y = self.y
+        x, y = self.get_position()
+        self.impl.x = x
+        self.impl.y = y
         self.impl.text = self.text
         # in case width or height was changed, we use the target style
         self.impl.font_size = self.style.font_size

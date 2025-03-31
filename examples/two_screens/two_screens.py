@@ -10,15 +10,14 @@ class App(pyglet.window.Window):
         super().__init__(
             width=WINDOW_WIDTH, height=WINDOW_HEIGHT, caption="two screens"
         )
-        self.batch = pyglet.graphics.Batch()
 
     def on_draw(self):
         self.clear()
-        self.batch.draw()
+        controller.current_screen.draw()
 
 
 if __name__ == '__main__':
     app = App()
-    controller = TwoScreensController(app.batch)
+    controller = TwoScreensController()
     app.push_handlers(controller)
     pyglet.app.run()

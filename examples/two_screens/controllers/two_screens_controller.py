@@ -1,33 +1,30 @@
 from pudu_ui.controller import Controller
 
 
-from screens.first_screen import FirstScreen
-from screens.second_screen import SecondScreen
+from examples.two_screens.screens.first_screen import FirstScreen
+from examples.two_screens.screens.second_screen import SecondScreen
 
 
 class TwoScreensController(Controller):
-    def __init__(self, batch):
+    def __init__(self):
         super().__init__(name="two screens controller")
-        self.batch = batch
-        self.current_screen = FirstScreen(batch=self.batch)
+        self.current_screen = FirstScreen()
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.go
 
-    def go(self):
+    def go(self, _):
         # continue to the next screen
-        self.current_screen = SecondScreen(batch=self.batch)
+        self.current_screen = SecondScreen()
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.back
         print("going")
-        # self.batch.invalidate()
 
-    def back(self):
+    def back(self, _):
         # go back to first screen
-        self.current_screen = FirstScreen(batch=self.batch)
+        self.current_screen = FirstScreen()
         # Map screen buttons to controller actions
         self.current_screen.button.on_press = self.go
         print("backing")
-        # self.batch.invalidate()
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):

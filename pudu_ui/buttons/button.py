@@ -27,7 +27,7 @@ class ButtonParams(Params):
         press_style: The style for the button when pressed
     """
     text: str = ""
-    on_press: Callable[[...], None] = lambda l: None
+    on_press: Callable[[...], None] = lambda x: None
     style: ButtonStyle = field(default_factory=default_button_style)
     hover_style: ButtonStyle = field(default_factory=dft_btn_hover_style)
     focus_style: ButtonStyle = field(default_factory=dft_btn_focus_style)
@@ -82,8 +82,8 @@ class Button(Widget):
         return frame
 
     def create_label(self) -> Label:
-        label_x = self.x + self.width / 2.0
-        label_y = self.y + self.height / 2.0
+        label_x = self.width / 2.0
+        label_y = self.height / 2.0
         label_params = LabelParams(
             label_x,
             label_y,
@@ -127,24 +127,13 @@ class Button(Widget):
 
     def recompute(self):
         # Recompute background
-        self.background.x = self.x
-        self.background.y = self.y
         self.background.width = self.width
         self.background.height = self.height
         self.background.invalidate()
 
         # Recompute label
-        label_x = self.x + self.width / 2.0
-        label_y = self.y + self.height / 2.0
-        self.label.x = label_x
-        self.label.y = label_y
         self.label.width = self.width
         self.label.invalidate()
-
-    def update(self, dt: float):
-        super().update(dt)
-        self.background.update(dt)
-        self.label.update(dt)
 
     # Override function
     def on_mouse_press(self, x, y, buttons, modifiers):

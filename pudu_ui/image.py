@@ -107,11 +107,9 @@ class Image(Widget):
         return img
 
     def get_sprite_position(self) -> [float, float]:
-        x_offset = self.parent.x if self.parent else 0
-        y_offset = self.parent.y if self.parent else 0
+        x, y = self.get_position()
         return (
-            self.x + x_offset + self.sprite_offset_x,
-            self.y + y_offset + self.sprite_offset_y
+            x + self.sprite_offset_x, y + self.sprite_offset_y
         )
 
     def recompute(self):

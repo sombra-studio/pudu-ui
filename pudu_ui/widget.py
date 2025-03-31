@@ -26,6 +26,13 @@ class Widget:
         self.is_valid: bool = True
         self.children: list[Widget] = []
 
+    def get_position(self) -> tuple[float, float]:
+        x_offset = self.parent.x if self.parent else 0.0
+        y_offset = self.parent.y if self.parent else 0.0
+        x = self.x + x_offset
+        y = self.y + y_offset
+        return x, y
+
     def on_focus(self):
         self.invalidate()
 
@@ -68,6 +75,8 @@ class Widget:
         if not self.is_valid:
             self.recompute()
             self.is_valid = True
+            for child in self.children:
+                child.update(dt)
 
     def is_inside(self, x: float, y: float) -> bool:
         x_offset = self.parent.x if self.parent else 0

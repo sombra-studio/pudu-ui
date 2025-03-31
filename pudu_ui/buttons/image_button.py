@@ -40,10 +40,6 @@ class ImageButton(Button):
         )
         self.children.append(self.image)
 
-    def update(self, dt: float):
-        super().update(dt)
-        self.image.update(dt)
-
     def change_style(self, style: ImageButtonStyle):
         super().change_style(style)
         self.image.color = style.color
