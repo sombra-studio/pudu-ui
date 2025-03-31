@@ -27,8 +27,11 @@ class Widget:
         self.children: list[Widget] = []
 
     def get_position(self) -> tuple[float, float]:
-        x_offset = self.parent.x if self.parent else 0.0
-        y_offset = self.parent.y if self.parent else 0.0
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+        else:
+            x_offset = 0.0
+            y_offset = 0.0
         x = self.x + x_offset
         y = self.y + y_offset
         return x, y

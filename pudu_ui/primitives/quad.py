@@ -108,11 +108,18 @@ class Quad:
         )
         return vertex_list
 
-    def get_vertices(self) -> Sequence[float]:
-        x_offset = self.parent.x if self.parent else 0.0
-        y_offset = self.parent.y if self.parent else 0.0
+    def get_position(self)  -> tuple[float, float]:
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+        else:
+            x_offset = 0.0
+            y_offset = 0.0
         x = self.x + x_offset
         y = self.y + y_offset
+        return x, y
+
+    def get_vertices(self) -> Sequence[float]:
+        x, y = self.get_position()
         x2 = x + self.width
         y2 = y + self.height
         vertices = (x, y, x2, y, x2, y2, x, y2)
@@ -141,12 +148,11 @@ class Quad:
         self.program['radius_v0'] = self.radius_bottom_left
         self.program['radius_v1'] = self.radius_bottom_right
 
-        x_offset = self.parent.x if self.parent else 0.0
-        y_offset = self.parent.y if self.parent else 0.0
+        x, y = self.get_position()
 
-        left = self.x + x_offset
+        left = x
         right = left + self.width
-        bottom = self.y + y_offset
+        bottom = y
         top = bottom + self.height
 
         self.program['pos_v3'] = Vec2(

@@ -41,7 +41,6 @@ class SimpleMenuScreen(pudu_ui.Screen):
             button.update(dt)
 
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="example")
-batch = pyglet.graphics.Batch()
 screen = SimpleMenuScreen()
 
 

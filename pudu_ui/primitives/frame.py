@@ -38,7 +38,7 @@ class Frame(Widget):
             radius_bottom_right=params.style.radius_bottom_right,
             batch=batch,
             group=group,
-            parent=parent
+            parent=self
         )
 
     def get_colors_tuple(self):
@@ -84,6 +84,8 @@ class Frame(Widget):
         self.quad.set_uniforms()
 
     def recompute(self):
+        self.quad.x = self.x
+        self.quad.y = self.y
         self.quad.width = self.width
         self.quad.height = self.height
         self.quad.recompute()

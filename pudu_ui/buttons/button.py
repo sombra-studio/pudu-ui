@@ -72,9 +72,7 @@ class Button(Widget):
 
     def create_background(self) -> Frame:
         frame_params = FrameParams(
-            self.x, self.y,
-            self.width, self.height,
-            style=self.style.frame_style
+            0.0, 0.0, self.width, self.height, style=self.style.frame_style
         )
         frame = Frame(
             frame_params, batch=self.batch, group=self.back_group, parent=self
@@ -132,6 +130,10 @@ class Button(Widget):
         self.background.invalidate()
 
         # Recompute label
+        # This will keep the label centered in the button
+        self.label.x = self.width / 2.0
+        self.label.y = self.height / 2.0
+
         self.label.width = self.width
         self.label.invalidate()
 
