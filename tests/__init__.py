@@ -1,1 +1,1 @@
-from test_widget import WidgetTestCase
+from tests.test_widget import WidgetTestCase
