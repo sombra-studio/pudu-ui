@@ -84,8 +84,6 @@ class Frame(Widget):
         self.quad.set_uniforms()
 
     def recompute(self):
-        self.quad.x = self.x
-        self.quad.y = self.y
         self.quad.width = self.width
         self.quad.height = self.height
         self.quad.recompute()

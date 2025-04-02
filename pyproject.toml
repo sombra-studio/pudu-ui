@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "pudu_ui"
 version = "0.0.1"
 authors = [
-  { name="Jesus Henriquez", email="1151071+HenrYxZ@users.noreply.github.com" },
+  { name="Jesus Henriquez" },
 ]
 description = "UI library for Python based in pyglet"
 readme = "README.md"

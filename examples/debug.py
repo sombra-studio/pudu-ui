@@ -1,53 +1,38 @@
-import pudu_ui
+from pudu_ui import Screen
+from pudu_ui.layouts import ListLayoutParams, VerticalListLayout
+from pudu_ui.primitives import Frame, FrameParams
 import pyglet
 
 
-IMG_SIZE = 25
-BTN_SIZE = 50
-RADIUS = BTN_SIZE / 2.0
+class DebugScreen(Screen):
+    def __init__(self):
+        super().__init__("home")
+        list_params = ListLayoutParams(
+            x=200.0, y=200.0, width=200, height=400,
+            inter_item_spacing=25
+        )
+        self.list = VerticalListLayout(list_params)
+        num_frames = 4
+        params = FrameParams()
+        for i in range(num_frames):
+            new_frame = Frame(params, batch=self.batch)
+            self.list.add(new_frame)
+
+    def update(self, dt: float):
+        self.list.update(dt)
+
 
 window = pyglet.window.Window(caption="Pudu UI")
-batch = pyglet.graphics.Batch()
-
-img_paths = [
-    "resources/play-solid.png",
-    "resources/plus-solid.png",
-    "resources/thumbs-up-solid.png",
-]
-buttons = []
-
-params = pudu_ui.ImageButtonParams(x=50, y=100, width=BTN_SIZE, height=BTN_SIZE)
-params.style.set_uniform_radius(RADIUS)
-params.hover_style.set_uniform_radius(RADIUS)
-params.focus_style.set_uniform_radius(RADIUS)
-params.press_style.set_uniform_radius(RADIUS)
-params.image_params.width = IMG_SIZE
-params.image_params.height = IMG_SIZE
-
-for img_path in img_paths:
-    params.image_params.image_path = img_path
-    # doing this for now that we don't have parent-child relations implemented
-    params.image_params.x = params.x + params.width / 2.0 - IMG_SIZE / 2.0
-    params.image_params.y = params.y + params.height / 2.0 - IMG_SIZE / 2.0
-    img_button = pudu_ui.ImageButton(params, batch=batch)
-
-    params.x += 25 + BTN_SIZE
-    buttons.append(img_button)
-
-# Add mouse events to buttons
-for btn in buttons:
-    window.push_handlers(btn)
-
+screen = DebugScreen()
 
 @window.event
 def on_draw():
     window.clear()
-    batch.draw()
+    screen.draw()
 
 
 def update(dt: float):
-    for button in buttons:
-        button.update(dt)
+    screen.update(dt)
 
 
 if __name__ == '__main__':

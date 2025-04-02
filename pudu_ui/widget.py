@@ -22,7 +22,7 @@ class Widget:
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
         self.index: int = 0
-        self.parent: Widget = parent
+        self.parent: Widget | None = parent
         self.is_valid: bool = True
         self.children: list[Widget] = []
 

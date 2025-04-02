@@ -3,7 +3,8 @@ from pudu_ui.layouts import ListLayout
 
 class HorizontalListLayout(ListLayout):
     def recompute(self):
-        n = len(self.items)
+        # Compute item_height and item_width
+        n = len(self.children)
         if not self.item_height:
             item_height = self.height
         else:
@@ -15,13 +16,14 @@ class HorizontalListLayout(ListLayout):
         else:
             item_width = self.item_width
 
-        curr_y = self.y
+        # Compute new positions for each child
+        curr_y = 0
         if self.reversed:
-            curr_x = self.x + self.width - item_width
+            curr_x = 0 + self.width - item_width
         else:
-            curr_x = self.x
+            curr_x = 0
 
-        for item in self.items:
+        for item in self.children:
             item.x = curr_x
             item.y = curr_y
             offset = item_width + self.inter_item_spacing
