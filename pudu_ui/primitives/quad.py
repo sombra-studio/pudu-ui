@@ -3,7 +3,7 @@ from pyglet.graphics.shader import Shader, ShaderProgram
 from pyglet.math import Vec2
 import pyglet
 from collections.abc import Sequence
-
+from importlib.resources import files
 
 from pudu_ui import Color, Widget
 import pudu_ui
@@ -12,18 +12,27 @@ import pudu_ui
 DEFAULT_BORDER_RADIUS = 24
 NUM_VERTICES = 4
 
+default_vertex_src = files('pudu_ui.shaders').joinpath('quad.vert').read_text()
+# with pyglet.resource.file("shaders/quad.vert") as f:
+#     default_vertex_src = f.read()
 
-with open("pudu_ui/shaders/quad.vert") as f:
-    default_vertex_src = f.read()
+textured_vertex_src = files('pudu_ui.shaders').joinpath(
+    'textured.vert'
+).read_text()
+# with pyglet.resource.file("shaders/textured.vert") as f:
+#     textured_vertex_src = f.read()
 
-with open("pudu_ui/shaders/textured.vert") as f:
-    textured_vertex_src = f.read()
+rounded_fragment_src = files('pudu_ui.shaders').joinpath(
+    'frame_rounded.frag'
+).read_text()
+# with pyglet.resource.file("shaders/frame_rounded.frag") as f:
+#     rounded_fragment_src = f.read()
 
-with open("pudu_ui/shaders/frame_rounded.frag") as f:
-    rounded_fragment_src = f.read()
-
-with open("pudu_ui/shaders/frame_textured.frag") as f:
-    textured_fragment_src = f.read()
+textured_fragment_src = files('pudu_ui.shaders').joinpath(
+    'frame_textured.frag'
+).read_text()
+# with pyglet.resource.file("shaders/frame_textured.frag") as f:
+#     textured_fragment_src = f.read()
 
 default_vs = Shader(default_vertex_src, 'vertex')
 textured_vs = Shader(textured_vertex_src, 'vertex')
