@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "pudu_ui"
-version = "0.0.1"
+name = "pudu-ui"
+version = "0.0.2"
 authors = [
   { name="Jesus Henriquez" },
 ]
@@ -16,14 +16,17 @@ dependencies = [
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: User Interfaces",
 ]
+license = "MIT"
 
 [project.urls]
 Homepage = "https://github.com/sombra-studio/pudu-ui"
 Issues = "https://github.com/sombra-studio/pudu-ui/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["pudu_ui"]
+[tool.setuptools.packages.find]
+exclude = ["tests*", "examples*"]
+
+[tool.setuptools.package-data]
+"pudu_ui.shaders" = ["*"]
