@@ -1,10 +1,8 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from pyglet.image import AbstractImage
+from pyglet.image import AbstractImage, Texture
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
-import pyglet
-
 
 from pudu_ui import Color, Params, Widget
 import pudu_ui
@@ -22,7 +20,7 @@ class ImageScaleType(Enum):
 
 @dataclass
 class ImageParams(Params):
-    image_path: str = ""
+    texture: Texture | None = None
     scale_type: ImageScaleType = ImageScaleType.FIT
     color: Color = field(default_factory=default_color)
     opacity: int = 255
@@ -40,7 +38,6 @@ class Image(Widget):
         parent: Widget | None = None
     ):
         super().__init__(params)
-        self.image_path = params.image_path
         self.scale_type = params.scale_type
         self.color = params.color
         self.opacity = params.opacity
@@ -49,10 +46,12 @@ class Image(Widget):
         self.sprite_offset_x = 0.0
         self.sprite_offset_y = 0.0
 
-        if params.image_path:
-            self.img = pyglet.resource.image(params.image_path)
+        if params.texture:
+            self.texture = params.texture
         else:
-            self.img = pudu_ui.utils.create_gray_img(self.width, self.height)
+            self.texture = pudu_ui.utils.create_gray_img(self.width,
+                self.height
+            ).get_texture()
 
         img = self.rescale()
         sprite_x, sprite_y = self.get_sprite_position()
@@ -62,37 +61,39 @@ class Image(Widget):
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
 
     def copy_img(self) -> AbstractImage:
-        img = self.img.get_region(0, 0, self.img.width, self.img.height)
+        img = self.texture.get_region(
+            0, 0, self.texture.width, self.texture.height
+        )
         return img
 
     def crop(self) -> AbstractImage:
-        center_x = int(self.img.width / 2.0)
-        center_y = int(self.img.height / 2.0)
+        center_x = int(self.texture.width / 2.0)
+        center_y = int(self.texture.height / 2.0)
 
-        diff_width = self.img.width - self.width
-        diff_height = self.img.height - self.height
+        diff_width = self.texture.width - self.width
+        diff_height = self.texture.height - self.height
         if diff_width > 0 and diff_height > 0:
             x = int(center_x - self.width / 2.0)
             y = int(center_y - self.height / 2.0)
-            return self.img.get_region(x, y, self.width, self.height)
+            return self.texture.get_region(x, y, self.width, self.height)
         elif diff_width > 0:
             x = int(center_x - self.width / 2.0)
-            y = int(center_y - self.img.height / 2.0)
-            return self.img.get_region(x, y, self.width, self.img.height)
+            y = int(center_y - self.texture.height / 2.0)
+            return self.texture.get_region(x, y, self.width, self.texture.height)
         elif diff_height > 0:
-            x = int(center_x - self.img.width / 2.0)
+            x = int(center_x - self.texture.width / 2.0)
             y = int(center_y - self.height / 2.0)
-            return self.img.get_region(x, y, self.img.width, self.height)
+            return self.texture.get_region(x, y, self.texture.width, self.height)
         return self.copy_img()
 
     def fit(self) -> AbstractImage:
         img = self.copy_img()
         if (
-            (self.img.width - self.width) > 0 or
-            (self.img.height - self.height) > 0
+            (self.texture.width - self.width) > 0 or
+            (self.texture.height - self.height) > 0
         ):
             w1, h1 = pudu_ui.utils.fit_screen(
-                self.width, self.height, self.img.width, self.img.height
+                self.width, self.height, self.texture.width, self.texture.height
             )
             img.width = w1
             img.height = h1

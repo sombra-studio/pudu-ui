@@ -15,17 +15,23 @@ glClearColor(1.0, 1.0, 1.0, 1.0)
 
 # Define Pudu Widgets
 img_paths = [
-    "resources/mummy3.jpg", "resources/nationaltreasure.jpg",
-    "resources/Pirates-of-the-Caribbean-Chest-Fight.png"
+    "examples/resources/mummy3.jpg",
+    "examples/resources/nationaltreasure.jpg",
+    "examples/resources/Pirates-of-the-Caribbean-Chest-Fight.png"
 ]
+img_textures = []
+for img_path in img_paths:
+    img = pyglet.image.load(img_path).get_texture()
+    img_textures.append(img)
+
 imgs = []
 list_layouts = []
 
 # Use images with FIT
 imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.FIT)
-for img_path in img_paths:
-    img_params.image_path = img_path
+for img in img_textures:
+    img_params.texture = img
     new_img = Image(img_params, batch=batch)
     imgs[-1].append(new_img)
 
@@ -44,8 +50,8 @@ for img in imgs[-1]:
 # Use images with FILL
 imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.FILL)
-for img_path in img_paths:
-    img_params.image_path = img_path
+for img in img_textures:
+    img_params.texture = img
     new_img = Image(img_params, batch=batch)
     imgs[-1].append(new_img)
 
@@ -59,8 +65,8 @@ for img in imgs[-1]:
 # Use images with CROP
 imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.CROP)
-for img_path in img_paths:
-    img_params.image_path = img_path
+for img in img_textures:
+    img_params.texture = img
     new_img = Image(img_params, batch=batch)
     imgs[-1].append(new_img)
 
