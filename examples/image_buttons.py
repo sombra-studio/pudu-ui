@@ -52,7 +52,7 @@ if __name__ == '__main__':
     params.image_params.y = params.height / 2.0 - IMG_SIZE / 2.0
 
     for img_path in img_paths:
-        params.image_params.image_path = img_path
+        params.image_params.texture = pyglet.resource.image(img_path)
         img_button = pudu_ui.ImageButton(params, batch=batch)
         params.x += 25 + BTN_SIZE
         buttons.append(img_button)
