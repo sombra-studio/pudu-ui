@@ -28,10 +28,12 @@ class ImageButtonParams(ButtonParams):
 class ImageButton(Button):
     def __init__(
         self,
-        params: ImageButtonParams,
+        params: ImageButtonParams = None,
         batch: Batch = None,
         group: Group = None
     ):
+        if not params:
+            params = ImageButtonParams()
         super().__init__(params, batch=batch, group=group)
         params.image_params.color = params.style.color
         self.image = Image(

@@ -11,6 +11,8 @@ import pudu_ui
 
 DEFAULT_BORDER_RADIUS = 24
 NUM_VERTICES = 4
+DEFAULT_WIDTH = 100
+DEFAULT_HEIGHT = 50
 
 default_vertex_src = files('pudu_ui.shaders').joinpath('quad.vert').read_text()
 textured_vertex_src = files('pudu_ui.shaders').joinpath(
@@ -51,10 +53,10 @@ default_textured_colors = (
 class Quad:
     def __init__(
         self,
-        x: float,
-        y: float,
-        width: int,
-        height: int,
+        x: float = 0.0,
+        y: float = 0.0,
+        width: int = DEFAULT_WIDTH,
+        height: int = DEFAULT_HEIGHT,
         colors: tuple[Color, Color, Color, Color] = default_colors,
         opacity: float = 255,
         radius_top_left: float = DEFAULT_BORDER_RADIUS,

@@ -20,9 +20,13 @@ class FrameParams(Params):
 
 class Frame(Widget):
     def __init__(
-        self, params: FrameParams, batch: Batch = None, group: Group = None,
+        self,
+        params: FrameParams = None,
+        batch: Batch = None, group: Group = None,
         parent: Widget | None = None
     ):
+        if not params:
+            params = FrameParams()
         super().__init__(params, parent=parent)
         self.style = deepcopy(params.style)
         self.quad = pudu_ui.primitives.Quad(

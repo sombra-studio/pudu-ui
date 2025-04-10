@@ -32,11 +32,13 @@ def default_image_params():
 class Image(Widget):
     def __init__(
         self,
-        params: ImageParams,
+        params: ImageParams = None,
         batch: Batch = None,
         group: Group = None,
         parent: Widget | None = None
     ):
+        if not params:
+            params = ImageParams()
         super().__init__(params)
         self.scale_type = params.scale_type
         self.color = params.color

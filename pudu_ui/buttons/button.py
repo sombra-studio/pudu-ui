@@ -38,10 +38,12 @@ class ButtonParams(Params):
 class Button(Widget):
     def __init__(
         self,
-        params: ButtonParams,
+        params: ButtonParams = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None
     ):
+        if not params:
+            params = ButtonParams()
         super().__init__(params)
         self.text: str = params.text
         self.on_press = params.on_press

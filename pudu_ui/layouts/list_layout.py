@@ -14,8 +14,10 @@ class ListLayoutParams(Params):
 
 class ListLayout(Widget):
     def __init__(
-        self, params: ListLayoutParams
+        self, params: ListLayoutParams = None
     ):
+        if not params:
+            params = ListLayoutParams()
         super().__init__(params)
         self.item_width = params.item_width
         self.item_height = params.item_height

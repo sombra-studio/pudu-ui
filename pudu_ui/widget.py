@@ -12,7 +12,9 @@ class Params:
 
 
 class Widget:
-    def __init__(self, params: Params = Params(), parent=None):
+    def __init__(self, params: Params = None, parent=None):
+        if not params:
+            params = Params()
         self.x: float = params.x
         self.y: float = params.y
         self.width: int = params.width
