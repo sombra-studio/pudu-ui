@@ -110,3 +110,36 @@ class Widget:
     def __repr__(self) -> str:
         return f"Widget(x: {self.x}, y: {self.y}. width: {self.width}, height:"\
             f" {self.height})"
+
+
+class CollectionWidget(Widget):
+    def add(self, widget: Widget):
+        widget.index = len(self.children)
+        widget.parent = self
+        self.children.append(widget)
+        self.invalidate()
+
+    def insert(self, index: int, widget: Widget):
+        widget.index = index
+        widget.parent = self
+        self.children.insert(index, widget)
+        self.invalidate()
+
+    def remove_at(self, index: int):
+        count = len(self.children)
+        if index >= count:
+            raise IndexError(
+                f"Index {index} is out of bounds for {self.__class__.__name__}"
+                f" with count {count}"
+            )
+        reminder = self.children[index:]
+        new_idx = index
+        for elem in reminder:
+            elem.index = new_idx
+            new_idx += 1
+        removed_widget = self.children[index]
+        removed_widget.parent = None
+        removed_widget.invalidate()
+        del self.children[index]
+
+        self.invalidate()

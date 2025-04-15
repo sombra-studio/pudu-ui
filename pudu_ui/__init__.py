@@ -8,7 +8,7 @@ from . import controller
 
 from .colors import Color
 
-from .widget import Widget, Params
+from .widget import CollectionWidget, Widget, Params
 
 from . import styles
 

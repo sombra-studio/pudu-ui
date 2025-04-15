@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-from pudu_ui.widget import Params, Widget
+from pudu_ui.widget import Params, CollectionWidget
 
 
 @dataclass
@@ -12,7 +12,7 @@ class ListLayoutParams(Params):
     reversed: bool = False
 
 
-class ListLayout(Widget):
+class ListLayout(CollectionWidget):
     def __init__(
         self, params: ListLayoutParams = None
     ):
@@ -23,28 +23,3 @@ class ListLayout(Widget):
         self.item_height = params.item_height
         self.inter_item_spacing = params.inter_item_spacing
         self.reversed = params.reversed
-
-    def add(self, widget: Widget):
-        self.children.append(widget)
-        widget.parent = self
-        widget.index = len(self.children) - 1
-        self.invalidate()
-
-    def remove(self, index: int):
-        count = len(self.children)
-        if index >= count:
-            raise IndexError(
-                f"Index {index} is out of bounds for list layout with count "
-                f"{count}"
-            )
-        reminder = self.children[index:]
-        new_idx = index
-        for elem in reminder:
-            elem.index = new_idx
-            new_idx += 1
-        removed_widget = self.children[index]
-        removed_widget.parent = None
-        removed_widget.invalidate()
-        del self.children[index]
-
-        self.invalidate()
