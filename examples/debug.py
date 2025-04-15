@@ -1,25 +1,20 @@
 from pudu_ui import Screen
-from pudu_ui.layouts import ListLayoutParams, VerticalListLayout
-from pudu_ui.primitives import Frame, FrameParams
+from pudu_ui.layouts import GridLayout
+from pudu_ui.primitives import Frame
 import pyglet
 
 
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__("home")
-        list_params = ListLayoutParams(
-            x=200.0, y=200.0, width=200, height=400,
-            inter_item_spacing=25
-        )
-        self.list = VerticalListLayout(list_params)
+        self.grid = GridLayout()
         num_frames = 4
-        params = FrameParams()
         for i in range(num_frames):
-            new_frame = Frame(params, batch=self.batch)
-            self.list.add(new_frame)
+            new_frame = Frame(batch=self.batch)
+            self.grid.add(new_frame)
 
     def update(self, dt: float):
-        self.list.update(dt)
+        self.grid.update(dt)
 
 
 window = pyglet.window.Window(caption="Pudu UI")
@@ -36,5 +31,5 @@ def update(dt: float):
 
 
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1 / 120.0)
+    pyglet.clock.schedule_interval(update, 1 / 60.0)
     pyglet.app.run()

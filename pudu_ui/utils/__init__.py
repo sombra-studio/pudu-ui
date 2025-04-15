@@ -8,14 +8,23 @@ def create_color_img(
     img = color_pattern.create_image(width, height)
     return img
 
+
 def create_black_img(width: int, height: int) -> pyglet.image.AbstractImage:
     return create_color_img(width, height, (0, 0, 0, 255))
+
 
 def create_white_img(width: int, height: int) -> pyglet.image.AbstractImage:
     return create_color_img(width, height, (255, 255, 255, 255))
 
+
 def create_gray_img(width: int, height: int) -> pyglet.image.AbstractImage:
     return create_color_img(width, height, (123, 123, 123, 255))
+
+
+def get_grid_pos_from_idx(index: int, columns: int) -> [int, int]:
+    j = index // columns
+    i = index % columns
+    return j, i
 
 
 def fit_screen(
@@ -31,4 +40,3 @@ def fit_screen(
     if h1 <= screen_height:
         return screen_width, h1
     return w1, screen_height
-
