@@ -1,17 +1,22 @@
 from pudu_ui import Screen
-from pudu_ui.layouts import GridLayout
-from pudu_ui.primitives import Frame
+from pudu_ui.layouts import GridLayout, GridLayoutParams
+from pudu_ui import Button, ButtonParams
 import pyglet
 
 
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__("home")
-        self.grid = GridLayout()
-        num_frames = 4
-        for i in range(num_frames):
-            new_frame = Frame(batch=self.batch)
-            self.grid.add(new_frame)
+        layout_params = GridLayoutParams(
+            width=200, height=300,
+            rows=3, columns=2, item_gap=10.0
+        )
+        self.grid = GridLayout(layout_params)
+        num_items = 6
+        for i in range(num_items):
+            params = ButtonParams(text=f"{i}")
+            new_item = Button(params, batch=self.batch)
+            self.grid.add(new_item)
 
     def update(self, dt: float):
         self.grid.update(dt)
