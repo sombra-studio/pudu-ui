@@ -1,12 +1,12 @@
 from pudu_ui import Screen
 from pudu_ui.layouts import GridLayout, GridLayoutParams
-from pudu_ui import Button, ButtonParams
+from pudu_ui import Button
 import pyglet
 
 
 class DebugScreen(Screen):
     def __init__(self):
-        super().__init__("home")
+        super().__init__(name="home")
         layout_params = GridLayoutParams(
             width=200, height=300,
             rows=3, columns=2, item_gap=10.0
@@ -14,9 +14,13 @@ class DebugScreen(Screen):
         self.grid = GridLayout(layout_params)
         num_items = 6
         for i in range(num_items):
-            params = ButtonParams(text=f"{i}")
-            new_item = Button(params, batch=self.batch)
+            new_item = Button(batch=self.batch)
             self.grid.add(new_item)
+            # Use the index given to the new item as the text of the button
+            new_item.text = f"{new_item.index}"
+
+        # Invalidate grid to apply text change in buttons
+        self.grid.invalidate()
 
     def update(self, dt: float):
         self.grid.update(dt)

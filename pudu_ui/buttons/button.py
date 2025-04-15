@@ -135,7 +135,7 @@ class Button(Widget):
         # This will keep the label centered in the button
         self.label.x = self.width / 2.0
         self.label.y = self.height / 2.0
-
+        self.label.text = self.text
         self.label.width = self.width
         self.label.invalidate()
 
