@@ -120,9 +120,13 @@ class CollectionWidget(Widget):
         self.invalidate()
 
     def insert(self, index: int, widget: Widget):
+        count = len(self.children)
         widget.index = index
         widget.parent = self
         self.children.insert(index, widget)
+        # Update the rest of children
+        for i in range(index + 1, count):
+            self.children[i].index = i
         self.invalidate()
 
     def remove_at(self, index: int):
