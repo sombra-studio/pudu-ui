@@ -1,11 +1,11 @@
 from pyglet.graphics.vertexdomain import IndexedVertexList
 from pyglet.graphics.shader import Shader, ShaderProgram
-from pyglet.math import Vec2
+from pyglet.math import Vec2, Vec3
 import pyglet
 from collections.abc import Sequence
 from importlib.resources import files
 
-from pudu_ui import Color, Widget
+from pudu_ui import Color
 import pudu_ui
 
 
@@ -49,6 +49,87 @@ default_textured_colors = (
     pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
 )
 
+class SolidBordersQuad:
+    def __init__(
+        self,
+        x: float = 0.0,
+        y: float = 0.0,
+        width: int = DEFAULT_WIDTH,
+        height: int = DEFAULT_HEIGHT,
+        color: Color = pudu_ui.colors.DEBUG_BORDER_COLOR,
+        batch: pyglet.graphics.Batch = None,
+        group: pyglet.graphics.Group = None,
+        parent = None
+    ):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.color = color
+        self.parent = parent
+        indices = (0, 1, 2, 0, 2, 3)
+
+        vertex_src = files('pudu_ui.shaders').joinpath(
+            'solid_borders.vert'
+        ).read_text()
+        fragment_src = files('pudu_ui.shaders').joinpath(
+            'solid_borders.frag'
+        ).read_text()
+        vs = Shader(vertex_src, 'vertex')
+        fs = Shader(fragment_src, 'fragment')
+        self.program = pyglet.graphics.shader.ShaderProgram(
+            vs, fs
+        )
+        self.attributes = {}
+        self.set_attributes()
+        self.set_uniforms()
+
+        shader_group = pyglet.graphics.ShaderGroup(
+            self.program, parent=group
+        )
+        self.vertex_list = self.program.vertex_list_indexed(
+            count=NUM_VERTICES,
+            mode=pyglet.gl.GL_TRIANGLES,
+            indices=indices,
+            batch=batch,
+            group=shader_group,
+            position=('f', self.get_vertices())
+        )
+
+    def get_position(self)  -> tuple[float, float]:
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+        else:
+            x_offset = 0.0
+            y_offset = 0.0
+        x = self.x + x_offset
+        y = self.y + y_offset
+        return x, y
+
+    def get_vertices(self) -> Sequence[float]:
+        x, y = self.get_position()
+        x2 = x + self.width
+        y2 = y + self.height
+        vertices = (x, y, x2, y, x2, y2, x, y2)
+        return vertices
+
+    def recompute(self):
+        self.set_attributes()
+        self.set_uniforms()
+        self.vertex_list.position[:] = self.attributes['position'][1]
+
+    def set_attributes(self):
+        # Set position
+        self.attributes['position'] = ('f', self.get_vertices())
+
+    def set_uniforms(self):
+        self.program['border_width'] = 3.0
+        self.program['color'] = Vec3(
+            self.color.r / 255.0, self.color.g / 255.0, self.color.b / 255.0
+        )
+        self.program['width'] = self.width
+        self.program['height'] = self.height
+
 
 class Quad:
     def __init__(
@@ -66,7 +147,7 @@ class Quad:
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
-        parent: Widget | None = None
+        parent = None
     ):
         self.x: float = x
         self.y: float = y
@@ -188,7 +269,8 @@ class TexturedQuad(Quad):
         radius_bottom_right: float = 0,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None
+        group: pyglet.graphics.Group = None,
+        parent = None
     ):
         if not program:
             program = textured_program()
@@ -201,7 +283,8 @@ class TexturedQuad(Quad):
             radius_bottom_right=radius_bottom_right,
             program=program,
             batch=batch,
-            group=group
+            group=group,
+            parent=parent
         )
 
     def set_attributes(self):

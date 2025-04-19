@@ -1,5 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
 import pyglet
+from pyglet.graphics import Batch, Group
+
+from pudu_ui.primitives.quad import SolidBordersQuad
+
+
+class Mode(Enum):
+    NORMAL = 0
+    DEBUG = 1
+
 
 
 @dataclass
@@ -11,8 +21,12 @@ class Params:
     focusable: bool = True
 
 
+
 class Widget:
-    def __init__(self, params: Params = None, parent=None):
+    def __init__(
+        self, params: Params = None, batch: Batch = None, group: Group = None,
+        parent=None
+    ):
         if not params:
             params = Params()
         self.x: float = params.x
@@ -27,6 +41,16 @@ class Widget:
         self.parent: Widget | None = parent
         self.is_valid: bool = True
         self.children: list[Widget] = []
+        self.mode: Mode = Mode.NORMAL
+
+        # Create borders to debug
+        debug_front_group = Group(4, group)
+        self.debug_background: SolidBordersQuad = SolidBordersQuad(
+            self.x, self.y, self.width, self.height,
+            batch=batch, group=debug_front_group,
+            parent=parent
+        )
+        self.set_debug_mode()
 
     def get_position(self) -> tuple[float, float]:
         if self.parent:
@@ -74,7 +98,11 @@ class Widget:
             child.invalidate()
 
     def recompute(self):
-        pass
+        if self.mode == Mode.DEBUG:
+            self.debug_background.width = self.width
+            self.debug_background.height = self.height
+            self.debug_background.recompute()
+            print("recomputing widget")
 
     def update(self, dt: float):
         if not self.is_valid:
@@ -106,6 +134,9 @@ class Widget:
                     child.is_on_hover = False
                 self.unfocus()
         return pyglet.event.EVENT_UNHANDLED
+
+    def set_debug_mode(self):
+        self.mode = Mode.DEBUG
 
     def __repr__(self) -> str:
         return f"Widget(x: {self.x}, y: {self.y}. width: {self.width}, height:"\

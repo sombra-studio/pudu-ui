@@ -21,8 +21,8 @@ class LabelParams(Params):
     text: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
-    width: int = None
-    height: int = None
+    width: int = 10
+    height: int = 10
     resize_type: LabelResizeType = LabelResizeType.NONE
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
@@ -36,7 +36,7 @@ class Label(Widget):
     ):
         if not params:
             params = LabelParams()
-        super().__init__(params)
+        super().__init__(params, batch=batch, group=group)
         self.style = deepcopy(params.style)
         self.color = params.style.color
         self.opacity = params.style.opacity
@@ -92,6 +92,9 @@ class Label(Widget):
             self.fit()
         elif self.resize_type == LabelResizeType.FILL:
             self.fill()
+        self.height = int(self.impl.content_height)
+        self.width = int(self.impl.content_width)
+        super().recompute()
 
     def fill(self):
         while (

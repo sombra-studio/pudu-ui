@@ -5,7 +5,7 @@ from pyglet.window import mouse
 
 
 from pudu_ui import Params, Widget
-from pudu_ui.primitives import Frame, FrameParams
+from pudu_ui import Frame, FrameParams
 from pudu_ui.label import Label, LabelParams, LabelResizeType
 from pudu_ui.styles.buttons import (
     ButtonStyle, default_button_style, dft_btn_hover_style,
