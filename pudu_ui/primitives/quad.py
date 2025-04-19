@@ -127,6 +127,9 @@ class SolidBordersQuad:
         self.program['color'] = Vec3(
             self.color.r / 255.0, self.color.g / 255.0, self.color.b / 255.0
         )
+        x, y = self.get_position()
+        self.program['x'] = x
+        self.program['y'] = y
         self.program['width'] = self.width
         self.program['height'] = self.height
 

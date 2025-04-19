@@ -46,9 +46,9 @@ class Widget:
         # Create borders to debug
         debug_front_group = Group(4, group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
-            self.x, self.y, self.width, self.height,
+            0, 0, self.width, self.height,
             batch=batch, group=debug_front_group,
-            parent=parent
+            parent=self
         )
         self.set_debug_mode()
 

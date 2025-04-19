@@ -2,6 +2,8 @@
 
 uniform float border_width;
 uniform vec3 color;
+uniform float x;
+uniform float y;
 uniform int width;
 uniform int height;
 
@@ -26,14 +28,15 @@ bool in_right_col(vec2 pos) {
 
 
 void main() {
-    vec2 pos = gl_FragCoord.xy;
+    vec2 pos = vec2(gl_FragCoord.x - x, gl_FragCoord.y - y);
 
     if (in_left_col(pos) || in_right_col(pos)) {
         final_color = vec4(color, 1.0);
     } else {
         if (in_top_row(pos) || in_bottom_row(pos)) {
             final_color = vec4(color, 1.0);
+        } else {
+            discard;
         }
-        discard;
     }
 }
