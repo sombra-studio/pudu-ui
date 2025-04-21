@@ -20,18 +20,21 @@ def default_button_style():
 def dft_btn_hover_style():
     style = default_button_style()
     style.frame_style.start_color = PRIMARY_BTN_HOVER_BG_COLOR
+    style.font_style.color = PRIMARY_BTN_HOVER_FONT_COLOR
     return style
 
 
 def dft_btn_focus_style():
     style = default_button_style()
-    style.frame_style.start_color = PRIMARY_BTN_FOCUS_BG_COLOR
+    style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
+    style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
     return style
 
 
 def dft_btn_press_style():
     style = default_button_style()
     style.frame_style.start_color = PRIMARY_BTN_PRESS_BG_COLOR
+    style.font_style.color = PRIMARY_BTN_PRESS_FONT_COLOR
     return style
 
 

@@ -9,7 +9,7 @@ class Color:
     b: int = 0
 
     def as_tuple(self):
-        return (self.r, self.g, self.b)
+        return self.r, self.g, self.b
 
 
 class GradientDirection(Enum):
@@ -39,5 +39,8 @@ PRIMARY_BTN_HOVER_BG_COLOR = LIGHT_PURPLE
 PRIMARY_BTN_FOCUS_BG_COLOR = LIGHT_PURPLE
 PRIMARY_BTN_PRESS_BG_COLOR = LIGHTER_PURPLE
 PRIMARY_BTN_FONT_COLOR = WHITE
+PRIMARY_BTN_HOVER_FONT_COLOR = LIGHTER_GRAY
+PRIMARY_BTN_FOCUS_FONT_COLOR = LIGHTER_GRAY
+PRIMARY_BTN_PRESS_FONT_COLOR = LIGHT_GRAY
 
 DEBUG_BORDER_COLOR = DARK_RED

@@ -21,8 +21,8 @@ class LabelParams(Params):
     text: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
-    width: int = 10
-    height: int = 10
+    width: int = 0
+    height: int = 0
     resize_type: LabelResizeType = LabelResizeType.NONE
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
@@ -62,8 +62,13 @@ class Label(Widget):
             batch=batch,
             group=group
         )
+        self.rescale()
 
-        self.recompute()
+        # Make sure width and height are defined after init
+        if not self.width:
+            self.width = self.impl.content_width
+        if not self.height:
+            self.height = self.impl.content_height
 
     def change_style(self, style: FontStyle):
         if self.style == style:
@@ -82,19 +87,20 @@ class Label(Widget):
         return color.r, color.g, color.b, self.opacity
 
     def recompute(self):
+        super().recompute()
         x, y = self.get_position()
         self.impl.x = x
         self.impl.y = y
         self.impl.text = self.text
         # in case width or height was changed, we use the target style
         self.impl.font_size = self.style.font_size
+        self.rescale()
+
+    def rescale(self):
         if self.resize_type == LabelResizeType.FIT:
             self.fit()
         elif self.resize_type == LabelResizeType.FILL:
             self.fill()
-        self.height = int(self.impl.content_height)
-        self.width = int(self.impl.content_width)
-        super().recompute()
 
     def fill(self):
         while (
