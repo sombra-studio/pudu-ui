@@ -21,8 +21,6 @@ class LabelParams(Params):
     text: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
-    width: int = 0
-    height: int = 0
     resize_type: LabelResizeType = LabelResizeType.NONE
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
@@ -43,6 +41,8 @@ class Label(Widget):
         self.parent = parent
         self.text = params.text
         self.resize_type = params.resize_type
+        self.anchor_x = params.anchor_x
+        self.anchor_y = params.anchor_y
 
         x, y = self.get_position()
         self.impl = pyglet.text.Label(
@@ -50,7 +50,10 @@ class Label(Widget):
             x=x,
             y=y,
             width=params.width,
-            height=params.height,
+            # pyglet has this weird thing that if you pass a height value to
+            # Label it will not center it if you give an anchor_x, so we only
+            # pass the width and the font_size and that determines everything
+            # height=params.height,
             anchor_x=params.anchor_x,
             anchor_y=params.anchor_y,
             rotation=params.rotation,
@@ -62,13 +65,7 @@ class Label(Widget):
             batch=batch,
             group=group
         )
-        self.rescale()
-
-        # Make sure width and height are defined after init
-        if not self.width:
-            self.width = self.impl.content_width
-        if not self.height:
-            self.height = self.impl.content_height
+        self.recompute()
 
     def change_style(self, style: FontStyle):
         if self.style == style:
@@ -81,13 +78,13 @@ class Label(Widget):
         self.impl.width = style.weight
         self.impl.italic = style.italic
         self.impl.color = self.get_color_tuple()
+        self.recompute()
 
     def get_color_tuple(self)-> tuple[int, int, int, int]:
         color = self.color
         return color.r, color.g, color.b, self.opacity
 
     def recompute(self):
-        super().recompute()
         x, y = self.get_position()
         self.impl.x = x
         self.impl.y = y
@@ -96,11 +93,19 @@ class Label(Widget):
         self.impl.font_size = self.style.font_size
         self.rescale()
 
+        if self.anchor_x == 'center':
+            self.debug_background.x = -(self.width / 2.0)
+        if self.anchor_y == 'center':
+            self.debug_background.y = -(self.height / 2.0)
+        super().recompute()
+
     def rescale(self):
         if self.resize_type == LabelResizeType.FIT:
             self.fit()
         elif self.resize_type == LabelResizeType.FILL:
             self.fill()
+        else:
+            self.wrap()
 
     def fill(self):
         while (
@@ -117,3 +122,7 @@ class Label(Widget):
             self.impl.font_size -= 1
         while self.height and self.impl.content_height > self.height:
             self.impl.font_size -= 1
+
+    def wrap(self):
+        self.width = int(self.impl.content_width)
+        self.height = int(self.impl.content_height)

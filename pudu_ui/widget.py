@@ -102,7 +102,6 @@ class Widget:
             self.debug_background.width = self.width
             self.debug_background.height = self.height
             self.debug_background.recompute()
-            print("recomputing widget")
 
     def update(self, dt: float):
         if not self.is_valid:

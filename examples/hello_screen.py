@@ -26,5 +26,10 @@ def on_draw():
     screen.draw()
 
 
+def update(dt: float):
+    screen.label.update(dt)
+
+
 if __name__ == '__main__':
+    pyglet.clock.schedule_interval(update, 1 / 60.0)
     pyglet.app.run()

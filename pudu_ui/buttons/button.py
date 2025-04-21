@@ -137,6 +137,7 @@ class Button(Widget):
         self.label.y = self.height / 2.0
         self.label.text = self.text
         self.label.width = self.width
+        self.label.height = self.height
         self.label.invalidate()
 
     # Override function

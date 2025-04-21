@@ -37,6 +37,6 @@ class GridLayout(CollectionWidget):
             # Reposition each item
             item.x = i * cell_width + self.item_gap
             item.y = self.height - j * cell_height - cell_height + self.item_gap
-            item.width = item_width
-            item.height = item_height
+            item.width = int(item_width)
+            item.height = int(item_height)
             item.invalidate()
