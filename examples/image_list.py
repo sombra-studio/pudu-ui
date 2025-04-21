@@ -38,7 +38,7 @@ for img in img_textures:
 
 list_params = ListLayoutParams(
     x=80, y=50,
-    width=3 * ITEM_WIDTH, height=ITEM_HEIGHT,
+    width=3 * ITEM_WIDTH + 2 * INTER_ITEM_SPACING, height=ITEM_HEIGHT,
     item_width=ITEM_WIDTH, item_height=ITEM_HEIGHT,
     inter_item_spacing=INTER_ITEM_SPACING
 )
@@ -55,7 +55,7 @@ img_params = ImageParams(scale_type=ImageScaleType.FILL)
 for img in img_textures:
     img_params.texture = img
     new_img = Image(img_params, batch=batch)
-    new_img.set_debug_mode()
+    # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
@@ -71,7 +71,7 @@ img_params = ImageParams(scale_type=ImageScaleType.CROP)
 for img in img_textures:
     img_params.texture = img
     new_img = Image(img_params, batch=batch)
-    new_img.set_debug_mode()
+    # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
@@ -93,6 +93,15 @@ def on_draw():
     window.clear()
     batch.draw()
 
+
+def on_key_press(symbol, modifiers):
+    if symbol == pyglet.window.key.S:
+        pyglet.image.get_buffer_manager().get_color_buffer().save(
+            'screenshot.png'
+        )
+
+
+window.push_handlers(on_key_press)
 
 def main():
     pyglet.clock.schedule_interval(update, 1 / 60)

@@ -42,7 +42,7 @@ class Widget:
         self.mode: Mode = Mode.NORMAL
 
         # Create borders to debug
-        self.debug_front_group = Group(4, group)
+        self.debug_front_group = Group(4, parent=group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
             batch=batch, group=self.debug_front_group,
@@ -96,10 +96,9 @@ class Widget:
             child.invalidate()
 
     def recompute(self):
-        if self.mode == Mode.DEBUG:
-            self.debug_background.width = self.width
-            self.debug_background.height = self.height
-            self.debug_background.recompute()
+        self.debug_background.width = self.width
+        self.debug_background.height = self.height
+        self.debug_background.recompute()
 
     def update(self, dt: float):
         if not self.is_valid:
@@ -134,7 +133,7 @@ class Widget:
 
     def set_normal_mode(self):
         self.mode = Mode.NORMAL
-        self.debug_front_group.visible = False
+        # self.debug_front_group.visible = False
 
     def set_debug_mode(self):
         self.mode = Mode.DEBUG
@@ -143,7 +142,7 @@ class Widget:
 
     def __repr__(self) -> str:
         return (
-            f"{self.__class__.__name__}(x: {self.x}, y: {self.y}. width:"
+            f"{self.__class__.__name__}(x: {self.x}, y: {self.y}, width:"
             f" {self.width}, height: {self.height})"
         )
 
