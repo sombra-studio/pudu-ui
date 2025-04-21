@@ -20,6 +20,8 @@ from .label import Label, LabelParams
 
 from .frame import FrameParams, Frame
 
+from . import image
+
 from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 
 from . import layouts

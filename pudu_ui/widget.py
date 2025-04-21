@@ -11,7 +11,6 @@ class Mode(Enum):
     DEBUG = 1
 
 
-
 @dataclass
 class Params:
     x: float = 0.0
@@ -19,7 +18,6 @@ class Params:
     width: int = 100
     height: int = 100
     focusable: bool = True
-
 
 
 class Widget:
@@ -44,13 +42,13 @@ class Widget:
         self.mode: Mode = Mode.NORMAL
 
         # Create borders to debug
-        debug_front_group = Group(4, group)
+        self.debug_front_group = Group(4, group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
-            batch=batch, group=debug_front_group,
+            batch=batch, group=self.debug_front_group,
             parent=self
         )
-        self.set_debug_mode()
+        self.set_normal_mode()
 
     def get_position(self) -> tuple[float, float]:
         if self.parent:
@@ -134,12 +132,20 @@ class Widget:
                 self.unfocus()
         return pyglet.event.EVENT_UNHANDLED
 
+    def set_normal_mode(self):
+        self.mode = Mode.NORMAL
+        self.debug_front_group.visible = False
+
     def set_debug_mode(self):
         self.mode = Mode.DEBUG
+        self.debug_front_group.visible = True
+
 
     def __repr__(self) -> str:
-        return f"Widget(x: {self.x}, y: {self.y}. width: {self.width}, height:"\
-            f" {self.height})"
+        return (
+            f"{self.__class__.__name__}(x: {self.x}, y: {self.y}. width:"
+            f" {self.width}, height: {self.height})"
+        )
 
 
 class CollectionWidget(Widget):

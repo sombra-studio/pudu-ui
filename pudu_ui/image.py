@@ -16,6 +16,7 @@ class ImageScaleType(Enum):
     CROP = 0
     FIT = 1
     FILL = 2
+    WRAP = 3
 
 
 @dataclass
@@ -39,7 +40,7 @@ class Image(Widget):
     ):
         if not params:
             params = ImageParams()
-        super().__init__(params)
+        super().__init__(params, batch=batch, group=group, parent=parent)
         self.scale_type = params.scale_type
         self.color = params.color
         self.opacity = params.opacity
@@ -109,13 +110,24 @@ class Image(Widget):
         img.height = self.height
         return img
 
-    def get_sprite_position(self) -> [float, float]:
+    def wrap(self) -> AbstractImage:
+        self.sprite_offset_x = 0
+        self.sprite_offset_y = 0
+        img = self.copy_img()
+        if self.width != img.width or self.height != img.height:
+            self.width = img.width
+            self.height = img.height
+            self.recompute()
+        return img
+
+    def get_sprite_position(self) -> tuple[float, float]:
         x, y = self.get_position()
         return (
             x + self.sprite_offset_x, y + self.sprite_offset_y
         )
 
     def recompute(self):
+        super().recompute()
         new_image = self.rescale()
         sprite_x, sprite_y = self.get_sprite_position()
         self.sprite.update(sprite_x, sprite_y)
@@ -127,5 +139,7 @@ class Image(Widget):
             return self.crop()
         elif self.scale_type == ImageScaleType.FIT:
             return self.fit()
-        else:
+        elif self.scale_type == ImageScaleType.FILL:
             return self.fill()
+        else:
+            return self.wrap()

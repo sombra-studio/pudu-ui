@@ -3,6 +3,7 @@ from pudu_ui.layouts import ListLayout
 
 class HorizontalListLayout(ListLayout):
     def recompute(self):
+        super().recompute()
         # Compute item_height and item_width
         n = len(self.children)
         if not self.item_height:

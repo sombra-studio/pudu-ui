@@ -40,11 +40,12 @@ class Button(Widget):
         self,
         params: ButtonParams = None,
         batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None
+        group: pyglet.graphics.Group = None,
+        parent: Widget | None = None
     ):
         if not params:
             params = ButtonParams()
-        super().__init__(params)
+        super().__init__(params, batch=batch, group=group, parent=parent)
         self.text: str = params.text
         self.on_press = params.on_press
         self.is_on_press = False
@@ -126,6 +127,7 @@ class Button(Widget):
         self.invalidate()
 
     def recompute(self):
+        super().recompute()
         # Recompute background
         self.background.width = self.width
         self.background.height = self.height

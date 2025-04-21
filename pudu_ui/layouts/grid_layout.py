@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from pyglet.graphics import Batch, Group
 
-
-from pudu_ui import CollectionWidget, Params
+from pudu_ui import CollectionWidget, Params, Widget
 from pudu_ui import utils
 
 
@@ -17,16 +17,21 @@ class GridLayoutParams(Params):
 
 
 class GridLayout(CollectionWidget):
-    def __init__(self, params: GridLayoutParams = None):
+    def __init__(
+        self, params: GridLayoutParams = None,
+        batch: Batch = None, group: Group = None,
+        parent: Widget | None = None
+    ):
         if not params:
             params = GridLayoutParams()
-        super().__init__(params)
+        super().__init__(params, batch=batch, group=group, parent=parent)
 
         self.rows = params.rows
         self.columns = params.columns
         self.item_gap = params.item_gap
 
     def recompute(self):
+        super().recompute()
         cell_width = int(self.width / self.columns)
         cell_height = int(self.height / self.rows)
         item_width = int(cell_width - 2 * self.item_gap)

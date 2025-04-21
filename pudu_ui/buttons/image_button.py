@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 from pyglet.graphics import Batch, Group
 
 
-from pudu_ui.buttons import Button, ButtonParams
+from pudu_ui import Widget
+from pudu_ui.buttons.button import Button, ButtonParams
 from pudu_ui.image import ImageParams, Image, default_image_params
 from pudu_ui.styles.buttons import (
     dft_img_btn_style, dft_img_btn_hover_style, dft_img_btn_focus_style,
@@ -30,11 +31,12 @@ class ImageButton(Button):
         self,
         params: ImageButtonParams = None,
         batch: Batch = None,
-        group: Group = None
+        group: Group = None,
+        parent: Widget | None = None
     ):
         if not params:
             params = ImageButtonParams()
-        super().__init__(params, batch=batch, group=group)
+        super().__init__(params, batch=batch, group=group, parent=parent)
         params.image_params.color = params.style.color
         self.image = Image(
             params.image_params, batch=batch, group=self.front_group,

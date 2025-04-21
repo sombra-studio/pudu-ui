@@ -27,7 +27,7 @@ class Frame(Widget):
     ):
         if not params:
             params = FrameParams()
-        super().__init__(params, parent=parent)
+        super().__init__(params, batch=batch, group=group, parent=parent)
         self.style = deepcopy(params.style)
         self.quad = pudu_ui.primitives.Quad(
             0.0,
@@ -88,6 +88,7 @@ class Frame(Widget):
         self.quad.set_uniforms()
 
     def recompute(self):
+        super().recompute()
         self.quad.width = self.width
         self.quad.height = self.height
         self.quad.recompute()

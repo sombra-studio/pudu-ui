@@ -33,6 +33,7 @@ img_params = ImageParams(scale_type=ImageScaleType.FIT)
 for img in img_textures:
     img_params.texture = img
     new_img = Image(img_params, batch=batch)
+    # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params = ListLayoutParams(
@@ -42,7 +43,8 @@ list_params = ListLayoutParams(
     inter_item_spacing=INTER_ITEM_SPACING
 )
 
-new_list_layout = HorizontalListLayout(list_params)
+new_list_layout = HorizontalListLayout(list_params, batch=batch)
+new_list_layout.set_debug_mode()
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
@@ -53,10 +55,11 @@ img_params = ImageParams(scale_type=ImageScaleType.FILL)
 for img in img_textures:
     img_params.texture = img
     new_img = Image(img_params, batch=batch)
+    new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = HorizontalListLayout(list_params)
+new_list_layout = HorizontalListLayout(list_params, batch=batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
@@ -68,10 +71,11 @@ img_params = ImageParams(scale_type=ImageScaleType.CROP)
 for img in img_textures:
     img_params.texture = img
     new_img = Image(img_params, batch=batch)
+    new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = HorizontalListLayout(list_params)
+new_list_layout = HorizontalListLayout(list_params, batch=batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
