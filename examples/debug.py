@@ -10,7 +10,7 @@ class DebugScreen(Screen):
             width=200, height=300,
             rows=3, columns=2, item_gap=10.0
         )
-        self.grid = GridLayout(layout_params)
+        self.grid = GridLayout(layout_params, batch=self.batch)
         num_items = 6
         for i in range(num_items):
             new_item = Button(batch=self.batch)
@@ -20,6 +20,9 @@ class DebugScreen(Screen):
 
         # Invalidate grid to apply text change in buttons
         self.grid.invalidate()
+        #self.grid.set_debug_mode()
+        for item in self.grid.children:
+            item.set_debug_mode()
 
     def update(self, dt: float):
         self.grid.update(dt)

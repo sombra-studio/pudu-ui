@@ -85,7 +85,7 @@ class SolidBordersQuad:
         self.set_uniforms()
 
         shader_group = pyglet.graphics.ShaderGroup(
-            self.program, parent=group
+           program=self.program, parent=group
         )
         self.vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,

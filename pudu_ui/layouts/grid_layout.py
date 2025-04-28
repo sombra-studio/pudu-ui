@@ -19,7 +19,7 @@ class GridLayoutParams(Params):
 class GridLayout(CollectionWidget):
     def __init__(
         self, params: GridLayoutParams = None,
-        batch: Batch = None, group: Group = None,
+        batch: Batch | None = None, group: Group | None = None,
         parent: Widget | None = None
     ):
         if not params:

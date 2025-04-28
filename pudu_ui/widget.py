@@ -133,7 +133,7 @@ class Widget:
 
     def set_normal_mode(self):
         self.mode = Mode.NORMAL
-        # self.debug_front_group.visible = False
+        self.debug_front_group.visible = False
 
     def set_debug_mode(self):
         self.mode = Mode.DEBUG

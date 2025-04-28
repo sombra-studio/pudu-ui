@@ -39,8 +39,8 @@ class Button(Widget):
     def __init__(
         self,
         params: ButtonParams = None,
-        batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None,
+        batch: pyglet.graphics.Batch | None = None,
+        group: pyglet.graphics.Group | None = None,
         parent: Widget | None = None
     ):
         if not params:
