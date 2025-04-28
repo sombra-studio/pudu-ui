@@ -20,6 +20,23 @@ class Params:
     focusable: bool = True
 
 
+class WidgetGroup(Group):
+    def __init__(self, widget, order: int = 0, parent: Group | None = None) -> None:
+        super().__init__(order, parent)
+        self.widget = widget
+
+    def __eq__(self, other: Group) -> bool:
+        return (
+            self.__class__ is other.__class__ and
+            self._order == other.order and
+            self.parent == other.parent and
+            self.widget == other.widget
+        )
+
+    def __hash__(self) -> int:
+        return hash((self._order, self.parent, self.widget))
+
+
 class Widget:
     def __init__(
         self, params: Params = None, batch: Batch = None, group: Group = None,
@@ -42,7 +59,7 @@ class Widget:
         self.mode: Mode = Mode.NORMAL
 
         # Create borders to debug
-        self.debug_front_group = Group(4, parent=group)
+        self.debug_front_group = WidgetGroup(self,4, parent=group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
             batch=batch, group=self.debug_front_group,
