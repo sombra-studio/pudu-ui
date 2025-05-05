@@ -20,9 +20,9 @@ class DebugScreen(Screen):
 
         # Invalidate grid to apply text change in buttons
         self.grid.invalidate()
-        #self.grid.set_debug_mode()
-        for item in self.grid.children:
-            item.set_debug_mode()
+        self.grid.set_debug_mode()
+        #for item in self.grid.children:
+            #item.set_debug_mode()
 
     def update(self, dt: float):
         self.grid.update(dt)

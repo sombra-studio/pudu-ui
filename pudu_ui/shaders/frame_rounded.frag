@@ -1,9 +1,15 @@
 #version 330
 
+uniform float left;
+uniform float right;
+uniform float bottom;
+uniform float top;
 uniform float radius_v3; // top-left
 uniform float radius_v2; // top-right
 uniform float radius_v0; // bottom-left
 uniform float radius_v1; // bottom-right
+uniform int highlight_width;
+uniform vec3 highlight_color;
 uniform vec2 pos_v3;
 uniform vec2 pos_v2;
 uniform vec2 pos_v0;
@@ -16,74 +22,65 @@ out vec4 final_color;
 
 const float MAX_DIFF = 1.414213;
 
-
-float handle_diff(float diff) {
-    if (diff > 0) {
-        if (diff < MAX_DIFF) {
-            // TODO: sample more points
-            return 0.0;
-        } else {
-            return 0.0;
-        }
+vec3 color_rounded_corner(vec2 pos, vec2 center, float radius) {
+    float dist = distance(pos, center);
+    if (dist > radius) {
+        discard;
+    } else if (dist > (radius - highlight_width)) {
+        return highlight_color;
+    } else {
+        return frag_color;
     }
-    return 1.0;
 }
-
 
 
 void main() {
     vec2 pos = gl_FragCoord.xy;
-    float diff = 0.0;
-    float accumulated_opacity = 0.0;
+    vec3 color;
+    float middle_y = max(radius_v0, radius_v1);
+    float middle_left = max(radius_v0, radius_v3);
+    float middle_right = max(radius_v1, radius_v2);
 
-    if (pos_v3.x - radius_v3 <= pos.x && pos.x <= pos_v3.x) {
-        if (pos_v3.y <= pos.y && pos.y <= pos_v3.y + radius_v3) {
-            // check outside of top-left circle
-            diff = distance(pos, pos_v3) - radius_v3;
-            float calculated_opacity = handle_diff(diff);
-            if (calculated_opacity == 0.0) {
-                discard;
-            }
-            accumulated_opacity = max(accumulated_opacity, calculated_opacity);
+    // Segment top left
+    if (
+        pos_v3.x - radius_v3 <= pos.x &&
+        pos.x <= pos_v3.x &&
+        pos_v3.y <= pos.y &&
+        pos.y <= pos_v3.y + radius_v3
+    ) {
+        color = color_rounded_corner(pos, pos_v3, radius_v3);
+    // Segment top center
+    } else if (
+        pos.x > pos_v3.x && pos.x < pos_v2.x && pos.y > (top - highlight_width)
+    ) {
+        color = highlight_color;
+    // Segment top right
+    } else if (
+        pos_v2.x <= pos.x &&
+        pos.x <= pos_v2.x + radius_v2 &&
+        pos_v2.y <= pos.y &&
+        pos.y <= pos_v2.y + radius_v2
+    ) {
+        color = color_rounded_corner(pos, pos_v2, radius_v2);
+    // Segment middle left
+    } else if (
+        pos.y > middle_y &&
+        pos.x <= middle_left
+    ) {
+        if (pos.x - left <= highlight_width) {
+            color = highlight_color;
+        } else {
+            color = frag_color;
         }
-    }
-
-    if (pos_v2.x <= pos.x && pos.x <= pos_v2.x + radius_v2) {
-        if (pos_v2.y <= pos.y && pos.y <= pos_v2.y + radius_v2) {
-            // check outside of top-right circle
-            diff = distance(pos, pos_v2) - radius_v2;
-            float calculated_opacity = handle_diff(diff);
-            if (calculated_opacity == 0.0) {
-                discard;
-            }
-            accumulated_opacity = max(accumulated_opacity, calculated_opacity);
-        }
-    }
-
-    if (pos_v0.x - radius_v0 <= pos.x && pos.x <= pos_v0.x) {
+    } else if (pos_v0.x - radius_v0 <= pos.x && pos.x <= pos_v0.x) {
         if (pos_v0.y - radius_v0 <= pos.y && pos.y <= pos_v0.y) {
-            // check outside of bottom-left circle
-            diff = distance(pos, pos_v0) - radius_v0;
-            float calculated_opacity = handle_diff(diff);
-            if (calculated_opacity == 0.0) {
-                discard;
-            }
-            accumulated_opacity = max(accumulated_opacity, calculated_opacity);
+            color = color_rounded_corner(pos, pos_v0, radius_v0);
         }
-    }
-
-    if (pos_v1.x <= pos.x && pos.x <= pos_v1.x + radius_v1) {
+    } else if (pos_v1.x <= pos.x && pos.x <= pos_v1.x + radius_v1) {
         if (pos_v1.y - radius_v1 <= pos.y && pos.y <= pos_v1.y) {
-            // check outside of bottom-right circle
-            diff = distance(pos, pos_v1) - radius_v1;
-            float calculated_opacity = handle_diff(diff);
-            if (calculated_opacity == 0.0) {
-                discard;
-            }
-            accumulated_opacity = max(accumulated_opacity, calculated_opacity);
+            color = color_rounded_corner(pos, pos_v1, radius_v1);
         }
     }
 
-    float final_opacity = accumulated_opacity * opacity;
-    final_color = vec4(frag_color, final_opacity);
+    final_color = vec4(color, opacity);
 }

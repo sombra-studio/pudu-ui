@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pyglet.graphics.vertexdomain import IndexedVertexList
 from pyglet.graphics.shader import Shader, ShaderProgram
 from pyglet.math import Vec2, Vec3
@@ -48,6 +49,9 @@ default_textured_colors = (
     pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
     pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
 )
+
+
+
 
 class SolidBordersQuad:
     def __init__(
@@ -147,6 +151,8 @@ class Quad:
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
+        highlight_width: int = 3,
+        highlight_color: Color = pudu_ui.colors.WHITE,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -163,6 +169,8 @@ class Quad:
         self.radius_top_right = radius_top_right
         self.radius_bottom_left = radius_bottom_left
         self.radius_bottom_right = radius_bottom_right
+        self.highlight_width = highlight_width
+        self.highlight_color = highlight_color
         if not program:
             program = rounded_program()
         self.program: pyglet.graphics.shader.ShaderProgram = program
@@ -239,6 +247,11 @@ class Quad:
         bottom = y
         top = bottom + self.height
 
+        self.program['left'] = left
+        #self.program['right'] = right
+        #self.program['bottom'] = bottom
+        self.program['top'] = top
+
         self.program['pos_v3'] = Vec2(
             left + self.radius_top_left,
             top - self.radius_top_left
@@ -255,6 +268,16 @@ class Quad:
             right - self.radius_bottom_right,
             bottom + self.radius_bottom_right
         )
+
+        # Set highlight
+        self.program['highlight_width'] = self.highlight_width
+        highlight_color = Vec3(
+            self.highlight_color.r,
+            self.highlight_color.g,
+            self.highlight_color.b
+        )
+        highlight_color /= 255
+        self.program['highlight_color'] = highlight_color
 
 
 class TexturedQuad(Quad):
