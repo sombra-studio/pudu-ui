@@ -23,7 +23,7 @@ rounded_fragment_src = files('pudu_ui.shaders').joinpath(
     'frame_rounded.frag'
 ).read_text()
 textured_fragment_src = files('pudu_ui.shaders').joinpath(
-    'frame_textured.frag'
+    'textured_quad.frag'
 ).read_text()
 
 default_vs = Shader(default_vertex_src, 'vertex')
