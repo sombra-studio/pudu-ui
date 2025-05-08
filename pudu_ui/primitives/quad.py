@@ -241,33 +241,9 @@ class Quad:
         self.program['radius_v1'] = self.radius_bottom_right
 
         x, y = self.get_position()
-
-        left = x
-        right = left + self.width
-        bottom = y
-        top = bottom + self.height
-
-        self.program['left'] = left
-        #self.program['right'] = right
-        #self.program['bottom'] = bottom
-        self.program['top'] = top
-
-        self.program['pos_v3'] = Vec2(
-            left + self.radius_top_left,
-            top - self.radius_top_left
-        )
-        self.program['pos_v2'] = Vec2(
-            right - self.radius_top_right,
-            top - self.radius_top_right
-        )
-        self.program['pos_v0'] = Vec2(
-            left + self.radius_bottom_left,
-            bottom + self.radius_bottom_left
-        )
-        self.program['pos_v1'] = Vec2(
-            right - self.radius_bottom_right,
-            bottom + self.radius_bottom_right
-        )
+        self.program['position'] = Vec2(x, y)
+        self.program['width'] = self.width
+        self.program['height'] = self.height
 
         # Set highlight
         self.program['highlight_width'] = self.highlight_width
