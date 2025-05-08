@@ -40,6 +40,8 @@ class Frame(Widget):
             radius_top_right=params.style.radius_top_right,
             radius_bottom_left=params.style.radius_bottom_left,
             radius_bottom_right=params.style.radius_bottom_right,
+            highlight_width=params.style.highlight_width,
+            highlight_color=params.style.highlight_color,
             batch=batch,
             group=group,
             parent=self
