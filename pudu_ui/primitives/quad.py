@@ -20,7 +20,7 @@ textured_vertex_src = files('pudu_ui.shaders').joinpath(
     'textured.vert'
 ).read_text()
 rounded_fragment_src = files('pudu_ui.shaders').joinpath(
-    'frame_rounded.frag'
+    'rounded_quad.frag'
 ).read_text()
 textured_fragment_src = files('pudu_ui.shaders').joinpath(
     'textured_quad.frag'
@@ -49,8 +49,6 @@ default_textured_colors = (
     pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
     pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
 )
-
-
 
 
 class SolidBordersQuad:
@@ -151,8 +149,8 @@ class Quad:
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
-        highlight_width: int = 3,
-        highlight_color: Color = pudu_ui.colors.WHITE,
+        border_width: int = 3,
+        border_color: Color = pudu_ui.colors.WHITE,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -169,8 +167,8 @@ class Quad:
         self.radius_top_right = radius_top_right
         self.radius_bottom_left = radius_bottom_left
         self.radius_bottom_right = radius_bottom_right
-        self.highlight_width = highlight_width
-        self.highlight_color = highlight_color
+        self.border_width = border_width
+        self.border_color = border_color
         if not program:
             program = rounded_program()
         self.program: pyglet.graphics.shader.ShaderProgram = program
@@ -246,14 +244,14 @@ class Quad:
         self.program['height'] = self.height
 
         # Set highlight
-        self.program['highlight_width'] = self.highlight_width
-        highlight_color = Vec3(
-            self.highlight_color.r,
-            self.highlight_color.g,
-            self.highlight_color.b
+        self.program['border_width'] = self.border_width
+        border_color = Vec3(
+            self.border_color.r,
+            self.border_color.g,
+            self.border_color.b
         )
-        highlight_color /= 255
-        self.program['highlight_color'] = highlight_color
+        border_color /= 255
+        self.program['border_color'] = border_color
 
 
 class TexturedQuad(Quad):

@@ -57,6 +57,8 @@ if __name__ == '__main__':
         params.x += 25 + BTN_SIZE
         buttons.append(img_button)
 
+    buttons[0].focus()
+
     # Add mouse events to buttons
     for btn in buttons:
         window.push_handlers(btn)

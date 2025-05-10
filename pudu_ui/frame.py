@@ -40,8 +40,8 @@ class Frame(Widget):
             radius_top_right=params.style.radius_top_right,
             radius_bottom_left=params.style.radius_bottom_left,
             radius_bottom_right=params.style.radius_bottom_right,
-            highlight_width=params.style.highlight_width,
-            highlight_color=params.style.highlight_color,
+            border_width=params.style.border_width,
+            border_color=params.style.border_color,
             batch=batch,
             group=group,
             parent=self
@@ -86,7 +86,11 @@ class Frame(Widget):
         self.quad.radius_top_right = style.radius_top_right
         self.quad.radius_bottom_left = style.radius_bottom_left
         self.quad.radius_bottom_right = style.radius_bottom_right
+
+        # Change other uniforms
         self.quad.opacity = style.opacity
+        self.quad.border_width = style.border_width
+        self.quad.border_color = style.border_color
         self.quad.set_uniforms()
 
     def recompute(self):

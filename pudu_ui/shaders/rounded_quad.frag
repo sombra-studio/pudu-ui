@@ -4,8 +4,8 @@ uniform float radius_v3; // top-left
 uniform float radius_v2; // top-right
 uniform float radius_v0; // bottom-left
 uniform float radius_v1; // bottom-right
-uniform int highlight_width;
-uniform vec3 highlight_color;
+uniform int border_width;
+uniform vec3 border_color;
 uniform float opacity;
 uniform vec2 position;
 uniform int width;
@@ -18,8 +18,8 @@ vec3 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
     if (dist > radius) {
         discard;
-    } else if (dist > (radius - highlight_width)) {
-        return highlight_color;
+    } else if (dist > (radius - border_width)) {
+        return border_color;
     } else {
         return frag_color;
     }
@@ -73,15 +73,15 @@ void main() {
     } else {
         // Inner rectangle
         if (
-            pos.x > left + highlight_width &&
-            pos.x < right - highlight_width &&
-            pos.y > bottom + highlight_width &&
-            pos.y < top - highlight_width
+            pos.x > left + border_width &&
+            pos.x < right - border_width &&
+            pos.y > bottom + border_width &&
+            pos.y < top - border_width
         ) {
             color = frag_color;
         // outer rectangle
         } else {
-            color = highlight_color;
+            color = border_color;
         }
     }
 
