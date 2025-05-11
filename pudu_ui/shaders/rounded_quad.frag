@@ -14,21 +14,45 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-vec3 color_rounded_corner(vec2 pos, vec2 center, float radius) {
+const int NUM_SAMPLES = 1;
+const float MAX_PIXEL_DISTANCE = 1.41;
+
+vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
-    if (dist > radius) {
+
+    if (dist > radius + MAX_PIXEL_DISTANCE) {
         discard;
-    } else if (dist > (radius - border_width)) {
-        return border_color;
     } else {
-        return frag_color;
+        vec4 color = vec4(0.0);
+        const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
+        vec3 rgb_color;
+        float accumulated_opacity = 0.0;
+        for (int j = 0; j < NUM_SAMPLES; j++) {
+            for (int i = 0; i < NUM_SAMPLES; i++) {
+                vec2 sample_pos = pos + vec2(
+                    i / NUM_SAMPLES, j / NUM_SAMPLES
+                );
+                float sample_dist = distance(sample_pos, center);
+                if (dist > radius) {
+                    continue;
+                } else if (dist > (radius - border_width)) {
+                    rgb_color = border_color;
+                    accumulated_opacity += 1.0 / TOTAL_SAMPLES;
+                } else {
+                    rgb_color = frag_color;
+                    accumulated_opacity += 1.0 / TOTAL_SAMPLES;
+                }
+            }
+        }
+        color = vec4(rgb_color, accumulated_opacity);
+
+        return color;
     }
 }
 
 
 void main() {
-    vec2 pos = gl_FragCoord.xy;
-    vec3 color;
+    vec4 color;
     vec2 pos_v0 = position + vec2(radius_v0, radius_v0);
     vec2 pos_v1 = position + vec2(width - radius_v1, radius_v1);
     vec2 pos_v2 = position + vec2(width - radius_v2, height - radius_v2);
@@ -37,6 +61,7 @@ void main() {
     float right = position.x + width;
     float top = position.y + height;
     float bottom = position.y;
+    vec2 pos = gl_FragCoord.xy;
 
     // Corner top left
     if (
@@ -78,12 +103,12 @@ void main() {
             pos.y > bottom + border_width &&
             pos.y < top - border_width
         ) {
-            color = frag_color;
+            color = vec4(frag_color, 1.0);
         // outer rectangle
         } else {
-            color = border_color;
+            color = vec4(border_color, 1.0);
         }
     }
 
-    final_color = vec4(color, opacity);
+    final_color = color * vec4(1.0, 1.0, 1.0, opacity);
 }
