@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-from pudu_ui import Color, Params, Widget
+from pudu_ui import Params, Widget
 from pudu_ui.styles.sliders import SliderStyle
 import pudu_ui
 

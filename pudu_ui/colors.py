@@ -8,8 +8,11 @@ class Color:
     g: int = 0
     b: int = 0
 
-    def as_tuple(self):
+    def as_tuple(self) -> tuple[int, int, int]:
         return self.r, self.g, self.b
+
+    def as_vec3(self) -> tuple[float, float, float]:
+        return self.r / 255.0, self.g / 255.0, self.b / 255.0
 
 
 class GradientDirection(Enum):
