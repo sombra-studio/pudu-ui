@@ -260,58 +260,6 @@ class Quad:
         self.program['border_color'] = border_color
 
 
-class ProgressQuad(Quad):
-    def __init__(
-        self,
-        x: float = 0.0,
-        y: float = 0.0,
-        width: int = DEFAULT_WIDTH,
-        height: int = DEFAULT_HEIGHT,
-        left_color: Color = pudu_ui.colors.LIGHT_PURPLE,
-        right_color: Color = pudu_ui.colors.LIGHTER_GRAY,
-        opacity: float = 255,
-        radius_top_left: float = DEFAULT_BORDER_RADIUS,
-        radius_top_right: float = DEFAULT_BORDER_RADIUS,
-        radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
-        radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
-        border_width: int = 0,
-        border_color: Color = pudu_ui.colors.WHITE,
-        program: pyglet.graphics.shader.ShaderProgram = None,
-        batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None,
-        parent=None
-    ):
-        if not program:
-            program = progress_program()
-        colors = (
-            pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
-            pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
-        )
-        self.left_color = left_color
-        self.right_color = right_color
-        self.limit_x = x + width
-        super().__init__(
-            x=x, y=y, width=width, height=height,
-            colors=colors, opacity=opacity,
-            radius_top_left=radius_top_left,
-            radius_top_right=radius_top_right,
-            radius_bottom_left=radius_bottom_left,
-            radius_bottom_right=radius_bottom_right,
-            border_width=border_width,
-            border_color=border_color,
-            program=program,
-            batch=batch,
-            group=group,
-            parent=parent
-        )
-
-    def set_uniforms(self):
-        super().set_uniforms()
-        self.program['left_color'] = self.left_color.as_vec3()
-        self.program['right_color'] = self.right_color.as_vec3()
-        self.program['limit_x'] = self.limit_x
-
-
 class TexturedQuad(Quad):
     def __init__(
         self,

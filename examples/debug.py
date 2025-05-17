@@ -1,24 +1,18 @@
-from pudu_ui import Screen
-import pudu_ui
+from pudu_ui import ProgressBar, Screen
 import pyglet
 
 
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        height = 6
-        radius = height // 2
-        self.progress = pudu_ui.primitives.quad.ProgressQuad(
-            x=300, y=200, width=200, height=height,
-            radius_top_left=radius, radius_top_right=radius,
-            radius_bottom_left=radius, radius_bottom_right=radius,
-            batch=self.batch
-        )
-        self.progress.limit_x = self.progress.x + 2 * self.progress.width / 3
-        self.progress.recompute()
+        self.progress_bar = ProgressBar(batch=self.batch)
+        self.progress_bar.x = 200
+        self.progress_bar.y = 150
+        self.progress_bar.value = 75
+        self.progress_bar.invalidate()
 
     def update(self, dt: float):
-        pass
+        self.progress_bar.update(dt)
 
 
 window = pyglet.window.Window(caption="Pudu UI")

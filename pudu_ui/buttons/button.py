@@ -49,7 +49,6 @@ class Button(Widget):
         self.text: str = params.text
         self.on_press = params.on_press
         self.is_on_press = False
-        self.batch: pyglet.graphics.Batch = batch
         self.front_group: pyglet.graphics.Group = pyglet.graphics.Group(
             1, parent=group
         )

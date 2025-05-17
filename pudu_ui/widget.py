@@ -48,15 +48,17 @@ class Widget:
         self.y: float = params.y
         self.width: int = params.width
         self.height: int = params.height
-        self._visible: bool = True
+        self.batch: Batch = batch
+        self.group: Group = group
+        self.parent: Widget | None = parent
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
         self.index: int = 0
-        self.parent: Widget | None = parent
         self.is_valid: bool = True
         self.children: list[Widget] = []
         self.mode: Mode = Mode.NORMAL
+
 
         # Create borders to debug
         self.debug_front_group = WidgetGroup(self,4, parent=group)
