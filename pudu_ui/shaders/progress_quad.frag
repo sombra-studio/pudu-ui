@@ -22,7 +22,7 @@ const float MAX_PIXEL_DISTANCE = 1.41;
 
 vec4 progress_color(vec2 pos) {
     vec4 color;
-    if (pos.x < limit_x) {
+    if (pos.x < position.x + limit_x) {
         color = vec4(frag_color * left_color, 1.0);
     } else {
         color = vec4(frag_color * right_color, 1.0);

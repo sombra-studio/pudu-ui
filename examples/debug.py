@@ -5,14 +5,19 @@ import pyglet
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        self.progress_bar = ProgressBar(batch=self.batch)
-        self.progress_bar.x = 200
-        self.progress_bar.y = 150
-        self.progress_bar.value = 75
-        self.progress_bar.invalidate()
+        self.bars = []
+        values = [0, 30, 50, 75, 100]
+        for i, value in enumerate(values):
+            bar = ProgressBar(batch=self.batch)
+            bar.x = 200
+            bar.y = 500 - i * 100
+            bar.value = value
+            bar.invalidate()
+            self.bars.append(bar)
 
     def update(self, dt: float):
-        self.progress_bar.update(dt)
+        for bar in self.bars:
+            bar.update(dt)
 
 
 window = pyglet.window.Window(caption="Pudu UI")
