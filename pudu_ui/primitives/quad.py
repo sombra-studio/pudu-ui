@@ -21,6 +21,9 @@ textured_vertex_src = files('pudu_ui.shaders').joinpath(
 rounded_fragment_src = files('pudu_ui.shaders').joinpath(
     'rounded_quad.frag'
 ).read_text()
+progress_fragment_src = files('pudu_ui.shaders').joinpath(
+    'progress_quad.frag'
+).read_text()
 textured_fragment_src = files('pudu_ui.shaders').joinpath(
     'textured_quad.frag'
 ).read_text()
@@ -28,6 +31,7 @@ textured_fragment_src = files('pudu_ui.shaders').joinpath(
 default_vs = Shader(default_vertex_src, 'vertex')
 textured_vs = Shader(textured_vertex_src, 'vertex')
 rounded_fs = Shader(rounded_fragment_src, 'fragment')
+progress_fs = Shader(progress_fragment_src, 'fragment')
 textured_fs = Shader(textured_fragment_src, 'fragment')
 
 
@@ -35,7 +39,7 @@ def rounded_program():
     return ShaderProgram(default_vs, rounded_fs)
 
 def progress_program():
-    return ShaderProgram()
+    return ShaderProgram(default_vs, progress_fs)
 
 def textured_program():
     return ShaderProgram(textured_vs, textured_fs)
@@ -270,6 +274,8 @@ class ProgressQuad(Quad):
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
+        border_width: int = 0,
+        border_color: Color = pudu_ui.colors.WHITE,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -277,28 +283,33 @@ class ProgressQuad(Quad):
     ):
         if not program:
             program = progress_program()
-
         colors = (
             pudu_ui.colors.WHITE, pudu_ui.colors.WHITE,
             pudu_ui.colors.WHITE, pudu_ui.colors.WHITE
         )
+        self.left_color = left_color
+        self.right_color = right_color
+        self.limit_x = x + width
         super().__init__(
             x=x, y=y, width=width, height=height,
-            colors=colors, opacity=opacity, radius_top_left=radius_top_left,
+            colors=colors, opacity=opacity,
+            radius_top_left=radius_top_left,
             radius_top_right=radius_top_right,
             radius_bottom_left=radius_bottom_left,
             radius_bottom_right=radius_bottom_right,
+            border_width=border_width,
+            border_color=border_color,
             program=program,
             batch=batch,
             group=group,
             parent=parent
         )
-        self.left_color = left_color
-        self.right_color = right_color
 
     def set_uniforms(self):
+        super().set_uniforms()
         self.program['left_color'] = self.left_color.as_vec3()
         self.program['right_color'] = self.right_color.as_vec3()
+        self.program['limit_x'] = self.limit_x
 
 
 class TexturedQuad(Quad):
@@ -324,7 +335,8 @@ class TexturedQuad(Quad):
         self.program: pyglet.graphics.shader.ShaderProgram = program
         super().__init__(
             x=x, y=y, width=width, height=height,
-            colors=colors, opacity=opacity, radius_top_left=radius_top_left,
+            colors=colors, opacity=opacity,
+            radius_top_left=radius_top_left,
             radius_top_right=radius_top_right,
             radius_bottom_left=radius_bottom_left,
             radius_bottom_right=radius_bottom_right,

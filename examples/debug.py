@@ -1,31 +1,24 @@
-from pudu_ui import Button, Screen
-from pudu_ui.layouts import GridLayout, GridLayoutParams
+from pudu_ui import Screen
+import pudu_ui
 import pyglet
 
 
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        layout_params = GridLayoutParams(
-            width=200, height=300,
-            rows=3, columns=2, item_gap=10.0
+        height = 6
+        radius = height // 2
+        self.progress = pudu_ui.primitives.quad.ProgressQuad(
+            x=300, y=200, width=200, height=height,
+            radius_top_left=radius, radius_top_right=radius,
+            radius_bottom_left=radius, radius_bottom_right=radius,
+            batch=self.batch
         )
-        self.grid = GridLayout(layout_params, batch=self.batch)
-        num_items = 6
-        for i in range(num_items):
-            new_item = Button(batch=self.batch)
-            self.grid.add(new_item)
-            # Use the index given to the new item as the text of the button
-            new_item.text = f"{new_item.index}"
-
-        # Invalidate grid to apply text change in buttons
-        self.grid.invalidate()
-        self.grid.set_debug_mode()
-        #for item in self.grid.children:
-            #item.set_debug_mode()
+        self.progress.limit_x = self.progress.x + 2 * self.progress.width / 3
+        self.progress.recompute()
 
     def update(self, dt: float):
-        self.grid.update(dt)
+        pass
 
 
 window = pyglet.window.Window(caption="Pudu UI")
