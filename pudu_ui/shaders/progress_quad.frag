@@ -6,10 +6,11 @@ uniform float radius_v0; // bottom-left
 uniform float radius_v1; // bottom-right
 uniform int border_width;
 uniform vec3 border_color;
+uniform float opacity;
+uniform float right_opacity;
 uniform vec3 left_color;
 uniform vec3 right_color;
 uniform float limit_x;
-uniform float opacity;
 uniform vec2 position;
 uniform int width;
 uniform int height;
@@ -17,15 +18,16 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 1;
-const float MAX_PIXEL_DISTANCE = 1.41;
+const int NUM_SAMPLES = 6;
+// const float MAX_PIXEL_DISTANCE = 1.41;
+const float MAX_PIXEL_DISTANCE = 3;
 
 vec4 progress_color(vec2 pos) {
     vec4 color;
     if (pos.x < position.x + limit_x) {
-        color = vec4(frag_color * left_color, 1.0);
+        color = vec4(frag_color * left_color, opacity);
     } else {
-        color = vec4(frag_color * right_color, 1.0);
+        color = vec4(frag_color * right_color, right_opacity);
     }
     return color;
 }
@@ -38,8 +40,7 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     } else {
         vec4 color = vec4(0.0);
         const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-        vec3 rgb_color;
-        float accumulated_opacity = 0.0;
+        vec4 sample_color;
         for (int j = 0; j < NUM_SAMPLES; j++) {
             for (int i = 0; i < NUM_SAMPLES; i++) {
                 vec2 sample_pos = pos + vec2(
@@ -49,16 +50,15 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
                 if (dist > radius) {
                     continue;
                 } else if (dist > (radius - border_width)) {
-                    rgb_color = border_color;
-                    accumulated_opacity += 1.0 / TOTAL_SAMPLES;
+                    sample_color = vec4(border_color, opacity);
                 } else {
-                    rgb_color = frag_color * progress_color(pos).rgb;
-                    accumulated_opacity += 1.0 / TOTAL_SAMPLES;
+                    sample_color = progress_color(pos);
                 }
+                float sample_opacity = 1.0 / TOTAL_SAMPLES;
+                color += sample_color * vec4(1.0, 1.0, 1.0, sample_opacity);
             }
         }
 
-        color = vec4(rgb_color, accumulated_opacity);
         return color;
     }
 }
@@ -119,9 +119,9 @@ void main() {
             color = progress_color(pos);
         // outer rectangle
         } else {
-            color = vec4(border_color, 1.0);
+            color = vec4(border_color, opacity);
         }
     }
 
-    final_color = color * vec4(1.0, 1.0, 1.0, opacity);
+    final_color = color;
 }

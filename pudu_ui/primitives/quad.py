@@ -270,12 +270,14 @@ class ProgressQuad(Quad):
         left_color: Color = pudu_ui.colors.LIGHT_PURPLE,
         right_color: Color = pudu_ui.colors.LIGHTER_GRAY,
         opacity: float = 255,
+        right_opacity: float = 255,
         radius_top_left: float = DEFAULT_BORDER_RADIUS,
         radius_top_right: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_left: float = DEFAULT_BORDER_RADIUS,
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
         border_width: int = 0,
         border_color: Color = pudu_ui.colors.WHITE,
+        limit_x: int = DEFAULT_WIDTH,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -289,7 +291,8 @@ class ProgressQuad(Quad):
         )
         self.left_color = left_color
         self.right_color = right_color
-        self.limit_x = x + width
+        self.limit_x = x + limit_x
+        self.right_opacity = right_opacity
         super().__init__(
             x=x, y=y, width=width, height=height,
             colors=colors, opacity=opacity,
@@ -310,6 +313,7 @@ class ProgressQuad(Quad):
         self.program['left_color'] = self.left_color.as_vec3()
         self.program['right_color'] = self.right_color.as_vec3()
         self.program['limit_x'] = self.limit_x
+        self.program['right_opacity'] = self.right_opacity / 255.0
 
 
 class TexturedQuad(Quad):

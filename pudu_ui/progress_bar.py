@@ -8,10 +8,14 @@ import pudu_ui
 from pyglet.graphics import Batch, Group
 
 
+DEFAULT_PROGRESS_BAR_WIDTH = 200
+DEFAULT_PROGRESS_BAR_HEIGHT = 20
+
+
 @dataclass
 class ProgressBarParams(Params):
-    width: int = pudu_ui.styles.progress_bars.DEFAULT_PROGRESS_BAR_WIDTH
-    height: int = pudu_ui.styles.progress_bars.DEFAULT_PROGRESS_BAR_HEIGHT
+    width: int = DEFAULT_PROGRESS_BAR_WIDTH
+    height: int = DEFAULT_PROGRESS_BAR_HEIGHT
     min_value: float = 0.0
     max_value: float = 100.0
     value: float = 75.0
@@ -40,14 +44,17 @@ class ProgressBar(Widget):
 
     def create_quad(self) -> ProgressQuad:
         style = self.style
+        limit_x = self.get_limit_x()
         quad = ProgressQuad(
             width=self.width, height=self.height,
             left_color=style.left_color, right_color=style.right_color,
+            opacity=style.opacity, right_opacity=style.right_opacity,
             radius_top_left=style.radius_top_left,
             radius_top_right=style.radius_top_right,
             radius_bottom_left=style.radius_bottom_left,
             radius_bottom_right=style.radius_bottom_right,
             border_width=style.border_width, border_color=style.border_color,
+            limit_x=limit_x,
             batch=self.batch, group=self.group,
             parent=self
         )

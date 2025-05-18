@@ -24,6 +24,7 @@ WHITE = Color(r=255, g=255, b=255)
 LIGHTER_GRAY = Color(220, 220, 220)
 LIGHT_GRAY = Color(180, 180, 180)
 GRAY = Color(r=122, g=122, b=122)
+DARK_GRAY = Color(r=65, g=65, b=65)
 BLACK = Color(r=0, g=0, b=0)
 
 DARK_PURPLE = Color(r=55, g=36, b=106)

@@ -4,8 +4,6 @@ from dataclasses import dataclass, field
 from pudu_ui.colors import *
 
 
-DEFAULT_PROGRESS_BAR_WIDTH = 200
-DEFAULT_PROGRESS_BAR_HEIGHT = 20
 # DEFAULT_PROGRESS_BAR_CORNER_RADIUS = DEFAULT_PROGRESS_BAR_HEIGHT / 2.0
 DEFAULT_PROGRESS_BAR_CORNER_RADIUS = 0.0
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 4
@@ -31,6 +29,7 @@ class ProgressBarStyle:
     left_color: Color = field(default_factory=default_left_color)
     right_color: Color = field(default_factory=default_right_color)
     opacity: int = 255
+    right_opacity: int = 255
     radius_top_left: float = DEFAULT_PROGRESS_BAR_CORNER_RADIUS
     radius_top_right: float = DEFAULT_PROGRESS_BAR_CORNER_RADIUS
     radius_bottom_left: float = DEFAULT_PROGRESS_BAR_CORNER_RADIUS
