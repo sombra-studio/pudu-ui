@@ -1,5 +1,6 @@
 from pudu_ui import ProgressBar, ProgressBarParams, Screen
 import pudu_ui
+from pyglet.gl import *
 import pyglet
 
 
@@ -46,6 +47,8 @@ screen = DebugScreen()
 @window.event
 def on_draw():
     window.clear()
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     screen.draw()
 
 

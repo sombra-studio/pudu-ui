@@ -18,9 +18,8 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 6;
-// const float MAX_PIXEL_DISTANCE = 1.41;
-const float MAX_PIXEL_DISTANCE = 3;
+const int NUM_SAMPLES = 2;
+const float MAX_PIXEL_DISTANCE = 2;
 
 vec4 progress_color(vec2 pos) {
     vec4 color;
@@ -54,8 +53,7 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
                 } else {
                     sample_color = progress_color(pos);
                 }
-                float sample_opacity = 1.0 / TOTAL_SAMPLES;
-                color += sample_color * vec4(1.0, 1.0, 1.0, sample_opacity);
+                color += sample_color / TOTAL_SAMPLES;
             }
         }
 
