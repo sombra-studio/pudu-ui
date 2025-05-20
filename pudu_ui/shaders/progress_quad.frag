@@ -18,8 +18,8 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 2;
-const float MAX_PIXEL_DISTANCE = 2;
+const int NUM_SAMPLES = 4;
+const float SAMPLE_AREA_DISTANCE = 1;
 
 vec4 progress_color(vec2 pos) {
     vec4 color;
@@ -34,7 +34,7 @@ vec4 progress_color(vec2 pos) {
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
 
-    if (dist > radius + MAX_PIXEL_DISTANCE) {
+    if (dist > radius + SAMPLE_AREA_DISTANCE) {
         discard;
     } else {
         vec4 color = vec4(0.0);
@@ -43,12 +43,19 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
         for (int j = 0; j < NUM_SAMPLES; j++) {
             for (int i = 0; i < NUM_SAMPLES; i++) {
                 vec2 sample_pos = pos + vec2(
-                    i / NUM_SAMPLES, j / NUM_SAMPLES
+                    (
+                        -SAMPLE_AREA_DISTANCE / 2.0 +
+                        SAMPLE_AREA_DISTANCE * i / NUM_SAMPLES
+                    ),
+                    (
+                        -SAMPLE_AREA_DISTANCE / 2.0 +
+                        SAMPLE_AREA_DISTANCE * j / NUM_SAMPLES
+                    )
                 );
                 float sample_dist = distance(sample_pos, center);
-                if (dist > radius) {
+                if (sample_dist > radius) {
                     continue;
-                } else if (dist > (radius - border_width)) {
+                } else if (sample_dist > (radius - border_width)) {
                     sample_color = vec4(border_color, opacity);
                 } else {
                     sample_color = progress_color(pos);
