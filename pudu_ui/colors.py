@@ -8,8 +8,11 @@ class Color:
     g: int = 0
     b: int = 0
 
-    def as_tuple(self):
+    def as_tuple(self) -> tuple[int, int, int]:
         return self.r, self.g, self.b
+
+    def as_vec3(self) -> tuple[float, float, float]:
+        return self.r / 255.0, self.g / 255.0, self.b / 255.0
 
 
 class GradientDirection(Enum):
@@ -21,6 +24,7 @@ WHITE = Color(r=255, g=255, b=255)
 LIGHTER_GRAY = Color(220, 220, 220)
 LIGHT_GRAY = Color(180, 180, 180)
 GRAY = Color(r=122, g=122, b=122)
+DARK_GRAY = Color(r=65, g=65, b=65)
 BLACK = Color(r=0, g=0, b=0)
 
 DARK_PURPLE = Color(r=55, g=36, b=106)
@@ -32,6 +36,7 @@ MEDIUM_BLUE = Color(0, 91, 150)
 LIGHT_BLUE_GREEN = Color(100, 151, 177)
 
 DARK_RED = Color(r=125, g=0, b=0)
+RED = Color(r=180, g=0, b=5)
 
 PRIMARY_BTN_BG_COLOR = PURPLE
 PRIMARY_BTN_BG_END_COLOR = DARK_PURPLE

@@ -24,4 +24,6 @@ from . import image
 
 from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 
+from .progress_bar import ProgressBar, ProgressBarParams
+
 from . import layouts

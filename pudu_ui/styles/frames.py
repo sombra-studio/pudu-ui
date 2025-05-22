@@ -17,6 +17,9 @@ def focus_color():
 def hover_color():
     return colors.LIGHTER_PURPLE
 
+def border_color():
+    return colors.WHITE
+
 def default_frame_style():
     return FrameStyle()
 
@@ -33,6 +36,8 @@ class FrameStyle:
     radius_bottom_left: float = 0
     radius_bottom_right: float = 0
     gradient_direction: GradientDirection = GradientDirection.VERTICAL
+    border_width: int = 0
+    border_color: Color = field(default_factory=border_color)
 
     def set_solid_color(self, color: Color):
         self.start_color = color

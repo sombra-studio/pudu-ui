@@ -27,7 +27,7 @@ class ButtonParams(Params):
         press_style: The style for the button when pressed
     """
     text: str = ""
-    on_press: Callable[[...], None] = lambda x: None
+    on_press: Callable[[...], None] = lambda *args: None
     style: ButtonStyle = field(default_factory=default_button_style)
     hover_style: ButtonStyle = field(default_factory=dft_btn_hover_style)
     focus_style: ButtonStyle = field(default_factory=dft_btn_focus_style)
@@ -49,7 +49,6 @@ class Button(Widget):
         self.text: str = params.text
         self.on_press = params.on_press
         self.is_on_press = False
-        self.batch: pyglet.graphics.Batch = batch
         self.front_group: pyglet.graphics.Group = pyglet.graphics.Group(
             1, parent=group
         )
@@ -100,17 +99,24 @@ class Button(Widget):
         )
         return label
 
-    def on_unfocus(self):
-        super().on_unfocus()
-        self.change_style(self.style)
-
     def on_hover(self):
         super().on_hover()
         self.change_style(self.hover_style)
 
+    def on_unhover(self):
+        super().on_unhover()
+        if self.is_on_focus:
+            self.change_style(self.focus_style)
+        else:
+            self.change_style(self.style)
+
     def on_focus(self):
         super().on_focus()
         self.change_style(self.focus_style)
+
+    def on_unfocus(self):
+        super().on_unfocus()
+        self.change_style(self.style)
 
     def press(self):
         self.change_style(self.press_style)

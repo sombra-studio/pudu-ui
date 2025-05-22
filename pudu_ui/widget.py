@@ -48,15 +48,17 @@ class Widget:
         self.y: float = params.y
         self.width: int = params.width
         self.height: int = params.height
-        self._visible: bool = True
+        self.batch: Batch = batch
+        self.group: Group = group
+        self.parent: Widget | None = parent
         self.focusable: bool = params.focusable
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
         self.index: int = 0
-        self.parent: Widget | None = parent
         self.is_valid: bool = True
         self.children: list[Widget] = []
         self.mode: Mode = Mode.NORMAL
+
 
         # Create borders to debug
         self.debug_front_group = WidgetGroup(self,4, parent=group)
@@ -86,6 +88,9 @@ class Widget:
     def on_hover(self):
         self.invalidate()
 
+    def on_unhover(self):
+        self.invalidate()
+
     def focus(self):
         if self.focusable:
             self.is_on_focus = True
@@ -106,6 +111,13 @@ class Widget:
             self.on_hover()
             for child in self.children:
                 child.hover()
+
+    def unhover(self):
+        if self.focusable:
+            self.is_on_hover = False
+            self.on_unhover()
+            for child in self.children:
+                child.unhover()
 
     def invalidate(self):
         self.is_valid = False
@@ -141,11 +153,8 @@ class Widget:
             if not self.is_on_hover:
                 self.hover()
         else:
-            if self.is_on_hover and not self.is_on_focus:
-                self.is_on_hover = False
-                for child in self.children:
-                    child.is_on_hover = False
-                self.unfocus()
+            if self.is_on_hover:
+                self.unhover()
         return pyglet.event.EVENT_UNHANDLED
 
     def set_normal_mode(self):

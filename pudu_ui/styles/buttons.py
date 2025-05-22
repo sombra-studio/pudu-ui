@@ -5,6 +5,7 @@ from pudu_ui.styles.frames import FrameStyle, default_frame_style
 
 
 DEFAULT_BTN_CORNER_RADIUS = 24
+DEFAULT_BTN_BORDER_WIDTH = 3
 
 
 #------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ def dft_btn_focus_style():
     style = default_button_style()
     style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
     style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
+    style.frame_style.border_width = DEFAULT_BTN_BORDER_WIDTH
     return style
 
 
@@ -56,6 +58,8 @@ def dft_img_btn_focus_style():
     style = dft_img_btn_style()
     style.frame_style.start_color = PRIMARY_BTN_FOCUS_BG_COLOR
     style.color = LIGHTER_GRAY
+    style.frame_style.border_width = DEFAULT_BTN_BORDER_WIDTH
+    style.frame_style.border_color = LIGHTER_GRAY
     return style
 
 

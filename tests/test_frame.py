@@ -1,4 +1,4 @@
-from pudu_ui.primitives import Frame
+from pudu_ui import Frame
 import unittest
 
 

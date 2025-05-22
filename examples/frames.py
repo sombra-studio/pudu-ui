@@ -34,7 +34,7 @@ frames.append(pudu_ui.Frame(params, batch=batch))
 
 @window.event
 def on_draw():
-    pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
+    pyglet.gl.glClearColor(0.0, 0.0, 0.0, 1.0)
     window.clear()
     batch.draw()
 
