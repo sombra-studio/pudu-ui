@@ -1,5 +1,4 @@
-from pudu_ui import ProgressBar, ProgressBarParams, Screen
-import pudu_ui
+from pudu_ui import Screen, Slider, SliderParams
 from pyglet.gl import *
 import pyglet
 
@@ -7,25 +6,11 @@ import pyglet
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        self.bars = []
-        height = 400
-        width = 400
-        style = pudu_ui.styles.progress_bars.ProgressBarStyle(
-            left_color=pudu_ui.colors.PURPLE,
-            right_color=pudu_ui.colors.DARK_GRAY,
-            border_width=0
-        )
-        style.set_uniform_radius(height / 2.0)
-        params = ProgressBarParams(width=width, height=height, style=style)
-        params.x = 300
-        params.y = 100
-        params.value = 75
-        bar = ProgressBar(params=params, batch=self.batch)
-        self.bars.append(bar)
+        params = SliderParams(x=300, y=100)
+        self.slider = Slider(params=params, batch=self.batch)
 
     def update(self, dt: float):
-        for bar in self.bars:
-            bar.update(dt)
+        self.slider.update(dt)
 
 
 window = pyglet.window.Window(caption="Pudu UI")

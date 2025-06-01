@@ -3,19 +3,27 @@ from dataclasses import dataclass, field
 
 from pudu_ui import Color
 import pudu_ui
+from pudu_ui.colors import DARK_GRAY, PURPLE
+from pudu_ui.styles.frames import FrameStyle
+from pudu_ui.styles.progress_bars import ProgressBarStyle
+
+DEFAULT_HANDLE_RADIUS = 6.0
+DEFAULT_SLIDER_CORNER_RADIUS = 9.0
 
 
-def default_handle_color():
-    return pudu_ui.colors.PURPLE
+def default_bar_style():
+    style = ProgressBarStyle(
+        left_color=PURPLE, right_color=DARK_GRAY, border_width=0
+    )
+    style.set_uniform_radius(DEFAULT_SLIDER_CORNER_RADIUS)
+    return style
 
 
-def default_left_color():
-    return pudu_ui.colors.LIGHT_PURPLE
-
-
-def default_right_color():
-    return pudu_ui.colors.LIGHTER_GRAY
-
+def default_handle_style():
+    style = FrameStyle()
+    style.set_solid_color(PURPLE)
+    style.set_uniform_radius(DEFAULT_HANDLE_RADIUS)
+    return style
 
 def default_slider_style():
     return SliderStyle()
@@ -23,6 +31,5 @@ def default_slider_style():
 
 @dataclass
 class SliderStyle:
-    left_color: Color = field(default_factory=default_left_color)
-    right_color: Color = field(default_factory=default_left_color)
-    handle_color: Color = field(default_factory=default_handle_color)
+    bar_style: ProgressBarStyle = field(default_factory=default_bar_style)
+    handle_style: FrameStyle = field(default_factory=default_handle_style)
