@@ -1,14 +1,12 @@
 from dataclasses import dataclass, field
 
 
-from pudu_ui import Color
-import pudu_ui
 from pudu_ui.colors import DARK_GRAY, PURPLE
 from pudu_ui.styles.frames import FrameStyle
 from pudu_ui.styles.progress_bars import ProgressBarStyle
 
-DEFAULT_HANDLE_RADIUS = 6.0
-DEFAULT_SLIDER_CORNER_RADIUS = 9.0
+DEFAULT_HANDLE_RADIUS = 10.0
+DEFAULT_SLIDER_CORNER_RADIUS = 4.0
 
 
 def default_bar_style():
