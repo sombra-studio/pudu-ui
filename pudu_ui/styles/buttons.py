@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from pudu_ui.colors import *
 from pudu_ui.styles.fonts import FontStyle, p1
 from pudu_ui.styles.frames import FrameStyle, default_frame_style

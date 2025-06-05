@@ -7,16 +7,19 @@ from pudu_ui import (
     Frame, FrameParams, Params, ProgressBar, ProgressBarParams,
     Widget, WidgetGroup
 )
-from pudu_ui.styles.sliders import (
-    SliderStyle, DEFAULT_HANDLE_RADIUS, DEFAULT_SLIDER_CORNER_RADIUS
-)
+from pudu_ui.styles.sliders import SliderStyle
 import pudu_ui
+
+
+DEFAULT_THUMB_SIZE = 20
+DEFAULT_BAR_HEIGHT = 12
 
 
 @dataclass
 class SliderParams(Params):
     width: int = 200
-    height: int = int(round(DEFAULT_HANDLE_RADIUS * 2))
+    height: int = DEFAULT_THUMB_SIZE
+    bar_height: int = DEFAULT_BAR_HEIGHT
     min_value: float = 0.0
     max_value: float = 100.0
     value: float = 75.0
@@ -48,16 +51,16 @@ class Slider(Widget):
         self.min_value = params.min_value
         self.max_value = params.max_value
         self.value = params.value
+        self.bar_height = params.bar_height
         self.style = deepcopy(params.style)
         self.back_group = WidgetGroup(widget=self, order=0, parent=group)
         self.front_group = WidgetGroup(widget=self, order=1, parent=group)
-        self.progress_bar = self.create_progress_bar()
-        self.handle = self.create_handle()
+        self.bar = self.create_bar()
+        self.thumb = self.create_thumb()
+        self.is_on_press = False
 
-    def create_handle(self) -> Frame:
-        value_pos = (
-            (self.value - self.min_value) / (self.max_value - self.min_value)
-        ) * self.width
+    def create_thumb(self) -> Frame:
+        value_pos = self.get_value_pos()
         params = FrameParams(
             x=value_pos - self.height / 2.0,
             width=self.height, height=self.height, focusable=True,
@@ -68,11 +71,10 @@ class Slider(Widget):
         )
         return frame
 
-    def create_progress_bar(self) -> ProgressBar:
-        bar_height = int(round(2 * self.style.bar_style.radius_top_left))
+    def create_bar(self) -> ProgressBar:
         params = ProgressBarParams(
-            y=self.height / 2.0 - bar_height / 2.0,
-            width=self.width, height=bar_height,
+            y=self.height / 2.0 - self.bar_height / 2.0,
+            width=self.width, height=self.bar_height,
             min_value=self.min_value, max_value=self.max_value,
             value=self.value,
             style=self.style.bar_style
@@ -81,3 +83,37 @@ class Slider(Widget):
             params, batch=self.batch, group=self.back_group, parent=self
         )
         return bar
+
+    def get_value_pos(self) -> float:
+        return (
+            (self.value - self.min_value) / (self.max_value - self.min_value)
+        ) * self.width
+
+    def press(self):
+        self.change_style(self.press_style)
+        self.invalidate()
+        self.is_on_press = True
+        self.on_press(self)
+
+    def release(self, is_inside: bool):
+        self.is_on_press = False
+        if not is_inside:
+            self.change_style(self.style)
+        else:
+            self.change_style(self.hover_style)
+        self.invalidate()
+
+    def recompute(self):
+        # Update bar
+        self.bar.width = self.width
+        self.bar.heigh = self.bar_height
+        self.bar.value = self.value
+        self.bar.invalidate()
+
+        # Update thumb
+        self.thumb.height = self.height
+        self.thumb.width = self.width
+        self.thumb.style.set_uniform_radius(self.height / 2.0)
+        value_pos = self.get_value_pos()
+        self.thumb.x = value_pos - self.thumb.width / 2.0
+        self.thumb.invalidate()
