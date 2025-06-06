@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import dataclass, field
 import pyglet
 from pyglet.window import mouse
@@ -55,10 +56,10 @@ class Button(Widget):
         self.back_group: pyglet.graphics.Group = pyglet.graphics.Group(
             parent=group
         )
-        self.style = params.style
-        self.hover_style = params.hover_style
-        self.focus_style = params.focus_style
-        self.press_style = params.press_style
+        self.style = deepcopy(params.style)
+        self.hover_style = deepcopy(params.hover_style)
+        self.focus_style = deepcopy(params.focus_style)
+        self.press_style = deepcopy(params.press_style)
 
         # Create background Frame
         self.background = self.create_background()

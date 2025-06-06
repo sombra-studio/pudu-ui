@@ -137,11 +137,10 @@ class Widget:
                 child.update(dt)
 
     def is_inside(self, x: float, y: float) -> bool:
-        x_offset = self.parent.x if self.parent else 0
-        y_offset = self.parent.y if self.parent else 0
-        left = self.x + x_offset
+        x_pos, y_pos = self.get_position()
+        left = x_pos
         right = left + self.width
-        bottom = self.y + y_offset
+        bottom = y_pos
         top = bottom + self.height
 
         return (

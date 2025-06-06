@@ -17,7 +17,7 @@ def default_bar_style():
     return style
 
 
-def default_handle_style():
+def default_thumb_style():
     style = FrameStyle()
     style.set_solid_color(PURPLE)
     style.set_uniform_radius(DEFAULT_THUMB_RADIUS)
@@ -30,4 +30,4 @@ def default_slider_style():
 @dataclass
 class SliderStyle:
     bar_style: ProgressBarStyle = field(default_factory=default_bar_style)
-    handle_style: FrameStyle = field(default_factory=default_handle_style)
+    thumb_style: FrameStyle = field(default_factory=default_thumb_style)

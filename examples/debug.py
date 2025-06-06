@@ -15,6 +15,9 @@ class DebugScreen(Screen):
 
 window = pyglet.window.Window(caption="Pudu UI")
 screen = DebugScreen()
+window.push_handlers(screen.slider.on_mouse_press)
+window.push_handlers(screen.slider.on_mouse_motion)
+window.push_handlers(screen.slider.on_mouse_release)
 
 
 @window.event
