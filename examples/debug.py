@@ -8,6 +8,7 @@ class DebugScreen(Screen):
         super().__init__(name="home")
         params = SliderParams(x=300, y=100)
         self.slider = Slider(params=params, batch=self.batch)
+        self.slider.set_debug_mode()
 
     def update(self, dt: float):
         self.slider.update(dt)
@@ -15,13 +16,12 @@ class DebugScreen(Screen):
 
 window = pyglet.window.Window(caption="Pudu UI")
 screen = DebugScreen()
-window.push_handlers(screen.slider.on_mouse_press)
-window.push_handlers(screen.slider.on_mouse_motion)
-window.push_handlers(screen.slider.on_mouse_release)
+window.push_handlers(screen.slider.on_mouse_drag)
 
 
 @window.event
 def on_draw():
+    # glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)

@@ -34,9 +34,6 @@ class SliderParams(Params):
     focus_style: SliderStyle = field(
         default_factory=pudu_ui.styles.sliders.default_slider_style
     )
-    press_style: SliderStyle = field(
-        default_factory=pudu_ui.styles.sliders.default_slider_style
-    )
 
 
 class Slider(Widget):
@@ -58,7 +55,6 @@ class Slider(Widget):
         self.style = deepcopy(params.style)
         self.hover_style = deepcopy(params.hover_style)
         self.focus_style = deepcopy(params.focus_style)
-        self.press_style = deepcopy(params.press_style)
         self.back_group = WidgetGroup(widget=self, order=0, parent=group)
         self.front_group = WidgetGroup(widget=self, order=1, parent=group)
         self.bar = self.create_bar()
@@ -66,8 +62,6 @@ class Slider(Widget):
 
         self.thumb = self.create_thumb()
         self.children.append(self.thumb)
-
-        self.is_on_press = False
 
     def change_style(self, style: SliderStyle):
         if style == self.style:
@@ -79,7 +73,7 @@ class Slider(Widget):
     def create_thumb(self) -> Frame:
         value_pos = self.get_value_pos()
         params = FrameParams(
-            x=value_pos - self.height / 2.0,
+            x=value_pos,
             width=self.height, height=self.height, focusable=True,
             style=self.style.thumb_style
         )
@@ -89,9 +83,11 @@ class Slider(Widget):
         return frame
 
     def create_bar(self) -> ProgressBar:
+        bar_width = self.width - self.height
         params = ProgressBarParams(
+            x=self.height / 2.0,
             y=self.height / 2.0 - self.bar_height / 2.0,
-            width=self.width, height=self.bar_height,
+            width=bar_width, height=self.bar_height,
             min_value=self.min_value, max_value=self.max_value,
             value=self.value,
             style=self.style.bar_style
@@ -102,9 +98,10 @@ class Slider(Widget):
         return bar
 
     def get_value_pos(self) -> float:
-        return (
+        value_t = (
             (self.value - self.min_value) / (self.max_value - self.min_value)
-        ) * self.width
+        )
+        return value_t * self.bar.width
 
     def is_inside(self, x: float, y: float) -> bool:
         left, bottom = self.thumb.get_position()
@@ -117,22 +114,10 @@ class Slider(Widget):
             ((y - center_y) ** 2 <= radius ** 2)
         )
 
-    def press(self):
-        self.change_style(self.press_style)
-        self.invalidate()
-        self.is_on_press = True
-
-    def release(self, is_inside: bool):
-        self.is_on_press = False
-        if not is_inside:
-            self.change_style(self.style)
-        else:
-            self.change_style(self.hover_style)
-        self.invalidate()
-
     def recompute(self):
+        super().recompute()
         # Update bar
-        self.bar.width = self.width
+        self.bar.width = self.width - self.height
         self.bar.heigh = self.bar_height
         self.bar.value = self.value
         self.bar.invalidate()
@@ -142,37 +127,14 @@ class Slider(Widget):
         self.thumb.width = self.height
         self.thumb.style.set_uniform_radius(self.height / 2.0)
         value_pos = self.get_value_pos()
-        self.thumb.x = value_pos - self.thumb.width / 2.0
+        self.thumb.x = value_pos
         self.thumb.invalidate()
 
-
-    # Override function
-    def on_mouse_press(self, x, y, buttons, modifiers):
-        if self.is_inside(x, y) and buttons & mouse.LEFT:
-            self.press()
-            return pyglet.event.EVENT_HANDLED
-        return pyglet.event.EVENT_UNHANDLED
-
-    # Override function
-    def on_mouse_release(self, x, y, buttons, modifiers):
-        if not self.is_on_press or not (buttons & mouse.LEFT):
-            return pyglet.event.EVENT_UNHANDLED
-        self.release(self.is_inside(x, y))
-        return pyglet.event.EVENT_HANDLED
-
-    def on_mouse_motion(self, x, y, dx, dy) -> bool:
-        if self.is_on_press:
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+        if buttons & mouse.LEFT:
             value_delta = (dx / self.width) * (self.max_value - self.min_value)
             self.value += value_delta
             self.value = min(self.max_value, self.value)
             self.value = max(self.min_value, self.value)
             self.invalidate()
             return pyglet.event.EVENT_HANDLED
-        else:
-            if self.is_inside(x, y):
-                if not self.is_on_hover:
-                    self.hover()
-            else:
-                if self.is_on_hover:
-                    self.unhover()
-            return pyglet.event.EVENT_UNHANDLED
