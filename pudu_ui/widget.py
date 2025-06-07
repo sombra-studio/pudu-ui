@@ -1,9 +1,15 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 import pyglet
 from pyglet.graphics import Batch, Group
 
+from pudu_ui import Color
+from pudu_ui.colors import LIGHT_GRAY
 from pudu_ui.primitives.quad import SolidBordersQuad
+
+
+def default_debug_label_color():
+    return LIGHT_GRAY
 
 
 class Mode(Enum):
@@ -18,6 +24,7 @@ class Params:
     width: int = 100
     height: int = 100
     focusable: bool = True
+    debug_label_color: Color = field(default_factory=default_debug_label_color)
 
 
 class WidgetGroup(Group):
@@ -25,7 +32,7 @@ class WidgetGroup(Group):
         super().__init__(order, parent)
         self.widget = widget
 
-    def __eq__(self, other: Group) -> bool:
+    def __eq__(self, other) -> bool:
         return (
             self.__class__ is other.__class__ and
             self._order == other.order and
@@ -68,6 +75,21 @@ class Widget:
             parent=self
         )
         self.set_normal_mode()
+
+        # Debug label
+        debug_str = self.get_debug_string()
+        x, y = self.get_position()
+        self.debug_label = pyglet.text.Label(
+            debug_str, x=x - 10, y=y - 20, font_size=9,
+            color=params.debug_label_color.as_tuple(),
+            batch=self.batch, group=self.debug_front_group
+        )
+
+    def get_debug_string(self) -> str:
+        return (
+            f"x={self.x}, y={self.y}, width={self.width}, height"
+            f"={self.height}"
+        )
 
     def get_position(self) -> tuple[float, float]:
         if self.parent:
@@ -125,9 +147,17 @@ class Widget:
             child.invalidate()
 
     def recompute(self):
+        # Debug borders
         self.debug_background.width = self.width
         self.debug_background.height = self.height
         self.debug_background.recompute()
+
+        # Debug label
+        debug_str = self.get_debug_string()
+        x, y = self.get_position()
+        self.debug_label.text = debug_str
+        self.debug_label.x = x
+        self.debug_label.y = y
 
     def update(self, dt: float):
         if not self.is_valid:

@@ -131,7 +131,7 @@ class SolidBordersQuad:
         self.attributes['position'] = ('f', self.get_vertices())
 
     def set_uniforms(self):
-        self.program['border_width'] = 3.0
+        self.program['border_width'] = 2.0
         self.program['color'] = Vec3(
             self.color.r / 255.0, self.color.g / 255.0, self.color.b / 255.0
         )
