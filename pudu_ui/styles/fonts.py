@@ -4,6 +4,9 @@ from pyglet.text import Weight
 from typing import Union
 
 
+DEFAULT_FONT_SIZE = 23
+DEFAULT_FONT_NAME = "Arial"
+
 #------------------------------------------------------------------------------
 # Factory functions
 
@@ -15,8 +18,8 @@ def default_font_color():
 
 @dataclass
 class FontStyle:
-    font_size: Union[float, int, str]
-    font_name: str
+    font_size: Union[float, int, str] = DEFAULT_FONT_SIZE
+    font_name: str = DEFAULT_FONT_NAME
     weight: Weight = Weight.NORMAL
     italic: bool = False
     color: Color  = field(default_factory=default_font_color)
@@ -26,20 +29,20 @@ class FontStyle:
 # Header Styles
 
 def h1():
-    return FontStyle(font_size=23, font_name="Arial")
+    return FontStyle(font_size=DEFAULT_FONT_SIZE, font_name=DEFAULT_FONT_NAME)
 
 
 # Paragraph Styles
 
 def p1():
-    return FontStyle(font_size=23, font_name="Arial")
+    return FontStyle(font_size=DEFAULT_FONT_SIZE, font_name=DEFAULT_FONT_NAME)
 
 
 def p2():
-    return FontStyle(font_size=18, font_name="Arial")
+    return FontStyle(font_size=18, font_name=DEFAULT_FONT_NAME)
 
 
 # Buttons Styles
 
 def b1():
-    return FontStyle(font_size=23, font_name="Arial")
+    return FontStyle(font_size=DEFAULT_FONT_SIZE, font_name=DEFAULT_FONT_NAME)

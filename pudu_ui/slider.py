@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pyglet.graphics import Batch
@@ -25,6 +26,7 @@ class SliderParams(Params):
     min_value: float = 0.0
     max_value: float = 100.0
     value: float = 75.0
+    on_value_changed: Callable[[...], None] = lambda *args: None
     style: SliderStyle = field(
         default_factory=pudu_ui.styles.sliders.default_slider_style
     )
@@ -52,6 +54,7 @@ class Slider(Widget):
         self.value = params.value
         self.bar_height = params.bar_height
         self.height_offset = params.height * 0.1
+        self.on_value_changed = params.on_value_changed
         self.style = deepcopy(params.style)
         self.hover_style = deepcopy(params.hover_style)
         self.focus_style = deepcopy(params.focus_style)
@@ -130,11 +133,13 @@ class Slider(Widget):
         self.thumb.x = value_pos
         self.thumb.invalidate()
 
-    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers) -> bool:
         if buttons & mouse.LEFT:
             value_delta = (dx / self.width) * (self.max_value - self.min_value)
             self.value += value_delta
             self.value = min(self.max_value, self.value)
             self.value = max(self.min_value, self.value)
             self.invalidate()
+            self.on_value_changed(self)
             return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED

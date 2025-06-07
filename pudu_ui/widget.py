@@ -8,6 +8,10 @@ from pudu_ui.colors import LIGHT_GRAY
 from pudu_ui.primitives.quad import SolidBordersQuad
 
 
+DEBUG_LABEL_OFFSET_X = 10
+DEBUG_LABEL_OFFSET_Y = 20
+
+
 def default_debug_label_color():
     return LIGHT_GRAY
 
@@ -79,8 +83,10 @@ class Widget:
         # Debug label
         debug_str = self.get_debug_string()
         x, y = self.get_position()
+        label_x = x - DEBUG_LABEL_OFFSET_X
+        label_y = y - DEBUG_LABEL_OFFSET_Y
         self.debug_label = pyglet.text.Label(
-            debug_str, x=x - 10, y=y - 20, font_size=9,
+            debug_str, x=label_x, y=label_y, font_size=9,
             color=params.debug_label_color.as_tuple(),
             batch=self.batch, group=self.debug_front_group
         )
@@ -155,9 +161,11 @@ class Widget:
         # Debug label
         debug_str = self.get_debug_string()
         x, y = self.get_position()
+        label_x = x - DEBUG_LABEL_OFFSET_X
+        label_y = y - DEBUG_LABEL_OFFSET_Y
         self.debug_label.text = debug_str
-        self.debug_label.x = x
-        self.debug_label.y = y
+        self.debug_label.x = label_x
+        self.debug_label.y = label_y
 
     def update(self, dt: float):
         if not self.is_valid:
