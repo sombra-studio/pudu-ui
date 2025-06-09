@@ -14,7 +14,7 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 3;
+const int NUM_SAMPLES = 5;
 const float SAMPLE_AREA_DISTANCE = 1;
 
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
