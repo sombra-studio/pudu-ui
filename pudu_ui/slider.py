@@ -55,6 +55,7 @@ class Slider(Widget):
         self.bar_height = params.bar_height
         self.height_offset = params.height * 0.1
         self.on_value_changed = params.on_value_changed
+        self.is_on_press = False
         self.style = deepcopy(params.style)
         self.hover_style = deepcopy(params.hover_style)
         self.focus_style = deepcopy(params.focus_style)
@@ -133,8 +134,9 @@ class Slider(Widget):
         self.thumb.x = value_pos
         self.thumb.invalidate()
 
+    # Event function
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers) -> bool:
-        if buttons & mouse.LEFT:
+        if buttons & mouse.LEFT and self.is_on_press:
             value_delta = (dx / self.width) * (self.max_value - self.min_value)
             self.value += value_delta
             self.value = min(self.max_value, self.value)
@@ -143,3 +145,17 @@ class Slider(Widget):
             self.on_value_changed(self)
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED
+
+    # Event function
+    def on_mouse_press(self, x, y, buttons, modifiers):
+        if self.is_inside(x, y) and buttons & mouse.LEFT:
+            self.is_on_press = True
+            return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED
+
+    # Event function
+    def on_mouse_release(self, x, y, buttons, modifiers):
+        if not self.is_on_press or not (buttons & mouse.LEFT):
+            return pyglet.event.EVENT_UNHANDLED
+        self.is_on_press = False
+        return pyglet.event.EVENT_HANDLED

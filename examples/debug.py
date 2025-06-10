@@ -4,12 +4,17 @@ from pyglet.gl import *
 import pyglet
 
 
+def create_on_value_change(label: Label):
+    def on_value_change(slider: Slider):
+        label.text = f"{slider.value}"
+        label.invalidate()
+    return on_value_change
+
+
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        params = SliderParams(
-            x=300, y=100, on_value_changed=self.on_value_changed
-        )
+        params = SliderParams(x=300, y=100)
         self.slider = Slider(params=params, batch=self.batch)
         # self.slider.set_debug_mode()
 
@@ -23,10 +28,7 @@ class DebugScreen(Screen):
         self.label = Label(
             label_params, batch=self.batch
         )
-
-    def on_value_changed(self, widgets):
-        self.label.text = f"{self.slider.value}"
-        self.label.invalidate()
+        self.slider.on_value_changed = create_on_value_change(self.label)
 
     def update(self, dt: float):
         self.slider.update(dt)
@@ -35,7 +37,7 @@ class DebugScreen(Screen):
 
 window = pyglet.window.Window(caption="Pudu UI")
 screen = DebugScreen()
-window.push_handlers(screen.slider.on_mouse_drag)
+window.push_handlers(screen.slider)
 
 
 @window.event
