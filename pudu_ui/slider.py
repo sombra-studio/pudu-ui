@@ -53,7 +53,6 @@ class Slider(Widget):
         self.max_value = params.max_value
         self.value = params.value
         self.bar_height = params.bar_height
-        self.height_offset = params.height * 0.1
         self.on_value_changed = params.on_value_changed
         self.is_on_press = False
         self.style = deepcopy(params.style)
@@ -76,10 +75,12 @@ class Slider(Widget):
 
     def create_thumb(self) -> Frame:
         value_pos = self.get_value_pos()
+        style = self.style.thumb_style
+        style.set_uniform_radius(self.height / 2.0)
         params = FrameParams(
             x=value_pos,
             width=self.height, height=self.height, focusable=True,
-            style=self.style.thumb_style
+            style=style
         )
         frame = Frame(
             params, batch=self.batch, group=self.front_group, parent=self
@@ -135,7 +136,7 @@ class Slider(Widget):
         self.thumb.invalidate()
 
     # Event function
-    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers) -> bool:
+    def on_mouse_drag(self, _, __, dx, ___, buttons, ____) -> bool:
         if buttons & mouse.LEFT and self.is_on_press:
             value_delta = (dx / self.width) * (self.max_value - self.min_value)
             self.value += value_delta
@@ -147,14 +148,14 @@ class Slider(Widget):
         return pyglet.event.EVENT_UNHANDLED
 
     # Event function
-    def on_mouse_press(self, x, y, buttons, modifiers):
+    def on_mouse_press(self, x, y, buttons, _):
         if self.is_inside(x, y) and buttons & mouse.LEFT:
             self.is_on_press = True
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED
 
     # Event function
-    def on_mouse_release(self, x, y, buttons, modifiers):
+    def on_mouse_release(self, _, __, buttons, ___):
         if not self.is_on_press or not (buttons & mouse.LEFT):
             return pyglet.event.EVENT_UNHANDLED
         self.is_on_press = False

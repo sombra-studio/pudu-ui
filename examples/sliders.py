@@ -22,7 +22,7 @@ class DebugScreen(Screen):
         for i in range(num_objects):
             params = SliderParams(x=300, y=100 + i * 120)
             slider = Slider(params=params, batch=self.batch)
-            slider.set_debug_mode()
+            # slider.set_debug_mode()
 
             label_style = pudu_ui.styles.fonts.p2()
             label_style.color = pudu_ui.colors.LIGHTER_GRAY
