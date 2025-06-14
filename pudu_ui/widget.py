@@ -78,7 +78,6 @@ class Widget:
             batch=batch, group=self.debug_front_group,
             parent=self
         )
-        self.set_normal_mode()
 
         # Debug label
         debug_str = self.get_debug_string()
@@ -90,6 +89,8 @@ class Widget:
             color=params.debug_label_color.as_tuple(),
             batch=self.batch, group=self.debug_front_group
         )
+
+        self.set_normal_mode()
 
     def get_debug_string(self) -> str:
         return (

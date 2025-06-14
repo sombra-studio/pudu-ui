@@ -89,6 +89,8 @@ class Slider(Widget):
 
     def create_bar(self) -> ProgressBar:
         bar_width = self.width - self.height
+        style = self.style.bar_style
+        style.set_uniform_radius(self.bar_height / 2.0)
         params = ProgressBarParams(
             x=self.height / 2.0,
             y=self.height / 2.0 - self.bar_height / 2.0,
