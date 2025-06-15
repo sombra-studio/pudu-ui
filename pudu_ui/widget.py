@@ -186,7 +186,7 @@ class Widget:
             (left <= x <= right) and (bottom <= y <= top)
         )
 
-    def on_mouse_motion(self, x, y, dx, dy) -> bool:
+    def on_mouse_motion(self, x, y, _, __) -> bool:
         if self.is_inside(x, y):
             if not self.is_on_hover:
                 self.hover()

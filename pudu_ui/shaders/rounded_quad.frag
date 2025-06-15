@@ -14,8 +14,7 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 5;
-const float SAMPLE_AREA_DISTANCE = 1;
+const int NUM_SAMPLES = 4;
 
 bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
     return (
@@ -27,44 +26,48 @@ bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
 }
 
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
-    float dist = distance(pos, center);
+    vec2 pixel_pos = pos + vec2(0.5, 0.5);
+    float dist = distance(pixel_pos, center);
 
-    if (dist > radius + 2 * SAMPLE_AREA_DISTANCE) {
+    if (dist > radius + 2.0) {
         discard;
     } else {
-        vec4 color = vec4(0.0);
+        bool is_border = false;
+        if (dist > (radius - border_width)) {
+            is_border = true;
+        }
         const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-        vec4 sample_color = vec4(0.0);
-        float sample_opacity = 0.0;
+        float total_opacity = 0.0;
         for (int j = 0; j < NUM_SAMPLES; j++) {
             for (int i = 0; i < NUM_SAMPLES; i++) {
                 vec2 sample_pos = pos + vec2(
-                    (
-                        -SAMPLE_AREA_DISTANCE / 2.0 +
-                        SAMPLE_AREA_DISTANCE * i / NUM_SAMPLES
-                    ),
-                    (
-                        -SAMPLE_AREA_DISTANCE / 2.0 +
-                        SAMPLE_AREA_DISTANCE * j / NUM_SAMPLES
-                    )
+                    -0.5 + i / NUM_SAMPLES, -0.5 + j / NUM_SAMPLES
                 );
                 float sample_dist = distance(sample_pos, center);
                 if (sample_dist > radius) {
                     // Out of the circle
                     continue;
-                } else if (sample_dist > (radius - border_width)) {
-                    // Inside the border
-                    sample_color = vec4(border_color, opacity);
                 } else {
-                    // Inside the circle
-                    sample_color = vec4(frag_color, 1.0);
+                    if (sample_dist > (radius - border_width)) {
+                        // Inside the border
+                        if (is_border) {
+                            total_opacity += 1.0 / TOTAL_SAMPLES;
+                        }
+                    } else {
+                        if (!is_border) {
+                            // Inside the circle
+                            total_opacity += 1.0 / TOTAL_SAMPLES;
+                        }
+                    }
                 }
-                sample_opacity += 1.0 / TOTAL_SAMPLES;
             }
         }
-        sample_color.a *= sample_opacity;
-        color = sample_color;
-        return color;
+//        float total_opacity = 1.0;
+        if (is_border) {
+            return vec4(border_color, total_opacity);
+        } else {
+            return vec4(frag_color, total_opacity);
+        }
     }
 }
 
@@ -114,5 +117,6 @@ void main() {
         }
     }
 
+    if (color.a < 0.003) discard;
     final_color = color * vec4(1.0, 1.0, 1.0, opacity);
 }

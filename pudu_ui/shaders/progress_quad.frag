@@ -60,14 +60,16 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
                 } else if (sample_dist > (radius - border_width)) {
                     // Inside the border
                     sample_color = vec4(border_color, opacity);
+                    sample_opacity += 1.0 / TOTAL_SAMPLES;
                 } else {
                     // Inside the circle
                     sample_color = progress_color(pos);
+                    sample_opacity += 1.0 / TOTAL_SAMPLES;
                 }
-                sample_opacity += 1.0 / TOTAL_SAMPLES;
+
             }
         }
-        sample_color.a *= sample_opacity;
+        sample_color.a = sample_opacity;
         color = sample_color;
         return color;
     }
@@ -132,6 +134,6 @@ void main() {
             color = vec4(border_color, opacity);
         }
     }
-
+    if (color.a < 0.003) discard;
     final_color = color;
 }

@@ -9,25 +9,33 @@ import pyglet
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        # n = 1
-        # size = 200
+        n = 4
+        size = 100
         # for i in range(n):
-            # style = pudu_ui.styles.frames.FrameStyle()
-            # style.set_uniform_radius(10.0)
-            # params = FrameParams(
-            #     x=435, y=104 + i * 100, width=20, height=20,
-            #     style=style
-            # )
-            # frame = Frame(params, batch=self.batch)
-            # self.widgets.append(frame)
+        #     style = pudu_ui.styles.frames.FrameStyle()
+        #     style.set_uniform_radius(50.0)
+        #     params = FrameParams(
+        #         x=435, y=104 + i * 150, width=size, height=size,
+        #         style=style
+        #     )
+        #     frame = Frame(params, batch=self.batch)
+        #     self.widgets.append(frame)
         # params = SliderParams(x=300, y=100)
         # slider = Slider(params, batch=self.batch)
         # self.widgets.append(slider)
+
         num_objects = 4
         for i in range(num_objects):
             params = SliderParams(x=300, y=100 + i * 120)
             slider = Slider(params, batch=self.batch)
             self.widgets.append(slider)
+
+        # self.quad = pudu_ui.primitives.quad.Quad(
+        #     x=100, y=150,
+        #     batch=self.batch
+        # )
+
+
 
 
 
@@ -37,7 +45,7 @@ screen = DebugScreen()
 
 @window.event
 def on_draw():
-    glClearColor(1.0, 1.0, 1.0, 1.0)
+    glClearColor(0.5, 0.5, 0.5, 1.0)
     window.clear()
     glEnable(GL_BLEND)
     screen.draw()
