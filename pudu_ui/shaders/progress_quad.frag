@@ -134,6 +134,6 @@ void main() {
             color = vec4(border_color, opacity);
         }
     }
-    if (color.a < 0.003) discard;
+    if (color.a == 0.0) discard;
     final_color = color;
 }

@@ -26,7 +26,8 @@ bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
 }
 
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
-    float dist = distance(pos, center);
+    vec2 pixel_center = pos + vec2(0.5, 0.5);
+    float dist = distance(pixel_center, center);
 
     if (dist > radius + 2.0) {
         discard;
@@ -38,7 +39,7 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
 
         // Use multi sample anti-aliasing to calculate opacity
         const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-        float total_opacity = 0.0;
+        vec4 color = vec4(0.0);
 
         for (int j = 0; j < NUM_SAMPLES; j++) {
             for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -50,26 +51,19 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
                     // Out of the circle
                     continue;
                 } else {
+                    // Inside the circle
                     if (sample_dist > (radius - border_width)) {
                         // Inside the border
-                        if (is_border) {
-                            total_opacity += 1.0 / TOTAL_SAMPLES;
-                        }
+                        color += vec4(border_color, 1.0) / TOTAL_SAMPLES;
                     } else {
-                        if (!is_border) {
-                            // Inside the circle
-                            total_opacity += 1.0 / TOTAL_SAMPLES;
-                        }
+                        // Inside the circle
+                        color += vec4(frag_color, 1.0) / TOTAL_SAMPLES;
                     }
                 }
-            }
-        }
+            }   // for each sample column
+        }   // for each sample row
 
-        if (is_border) {
-            return vec4(border_color, total_opacity);
-        } else {
-            return vec4(frag_color, total_opacity);
-        }
+        return color;
     }
 }
 
@@ -119,6 +113,6 @@ void main() {
         }
     }
 
-    if (color.a < 0.003) discard;
+    if (color.a == 0.0) discard;
     final_color = color * vec4(1.0, 1.0, 1.0, opacity);
 }
