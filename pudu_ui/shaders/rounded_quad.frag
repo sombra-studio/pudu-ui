@@ -14,7 +14,7 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 2;
+const int NUM_SAMPLES = 5;
 
 bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
     return (
@@ -28,46 +28,44 @@ bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
 
-//    if (dist > radius + 1.5) {
     if (dist > radius + 1.5) {
         discard;
-    } else {
-        vec3 color;
-        if (dist > (radius - border_width) && border_width > 0) {
-            color = border_color;
-        } else {
-            color = frag_color;
-        }
-        return vec4(color, 1.0);
-
-        // Use multi sample anti-aliasing to calculate opacity
-//        int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-//        float total_opacity = 0.0;
-//
-//        for (int j = 0; j < NUM_SAMPLES; j++) {
-//            for (int i = 0; i < NUM_SAMPLES; i++) {
-//                vec2 sample_pos = pos + vec2(
-//                    i / NUM_SAMPLES, j / NUM_SAMPLES
-//                );
-//                float sample_dist = distance(sample_pos, center);
-//                if (sample_dist > radius) {
-//                    // Out of the circle
-//                    continue;
-//                } else {
-//                    total_opacity += 1.0 / TOTAL_SAMPLES;
-//                }
-//            }   // for each sample column
-//        }   // for each sample row
-
-//        return vec4(color, total_opacity);
-
-//        if (dist > radius + 1.0)
-//            return vec4(color, 0.1);
-//        if (dist > radius + 0.1)
-//            return vec4(color, 0.25);
-//        else
-//            return vec4(color, 1.0);
     }
+
+    vec3 color;
+    if (dist > (radius - border_width) && border_width > 0) {
+        color = border_color;
+    } else {
+        color = frag_color;
+    }
+
+    // Use multi sample anti-aliasing to calculate opacity
+    int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
+    float total_opacity = 0.0;
+
+    for (int j = 0; j < NUM_SAMPLES; j++) {
+        for (int i = 0; i < NUM_SAMPLES; i++) {
+            vec2 sample_pos = pos + vec2(
+                float(i) / NUM_SAMPLES, float(j) / NUM_SAMPLES
+            );
+            float sample_dist = distance(sample_pos, center);
+            if (sample_dist > radius) {
+                // Out of the circle
+                continue;
+            } else {
+                total_opacity += 1.0 / TOTAL_SAMPLES;
+            }
+        }   // for each sample column
+    }   // for each sample row
+
+    return vec4(color, total_opacity);
+    // code for debugging opacity
+//    if (total_opacity == 1.0)
+//        return vec4(border_color, 0.1);
+//    if (total_opacity == 0.0)
+//        return vec4(frag_color, 0.25);
+//    else
+//        return vec4(1.0, 0.0, 1.0, 1.0);
 }
 
 

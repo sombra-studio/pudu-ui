@@ -6,11 +6,14 @@ from pyglet.gl import (
 import pyglet
 
 
+window = pyglet.window.Window(caption="Pudu UI")
+
+
 class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
-        n = 4
-        size = 100
+        # n = 4
+        # size = 100
         # for i in range(n):
         #     style = pudu_ui.styles.frames.FrameStyle()
         #     style.set_uniform_radius(50.0)
@@ -24,22 +27,24 @@ class DebugScreen(Screen):
         # slider = Slider(params, batch=self.batch)
         # self.widgets.append(slider)
 
-        num_objects = 4
-        for i in range(num_objects):
-            params = SliderParams(x=300, y=100 + i * 120)
-            slider = Slider(params, batch=self.batch)
-            self.widgets.append(slider)
+        # num_objects = 4
+        # for i in range(num_objects):
+        #     params = SliderParams(x=300, y=100 + i * 120)
+        #     slider = Slider(params, batch=self.batch)
+        #     self.widgets.append(slider)
 
-        # self.quad = pudu_ui.primitives.quad.Quad(
-        #     x=100, y=150,
-        #     batch=self.batch
-        # )
+        w = 300
+        h = 100
+        r = h / 2.0
+        self.quad = pudu_ui.primitives.quad.Quad(
+            x=window.width / 2.0 - w / 2.0, y=window.height / 2.0 - h / 2.0,
+            width=w, height=h,
+            radius_top_left=r, radius_top_right=r, radius_bottom_left=r,
+            radius_bottom_right=r, border_width=0,
+            batch=self.batch
+        )
 
 
-
-
-
-window = pyglet.window.Window(caption="Pudu UI")
 screen = DebugScreen()
 
 

@@ -38,7 +38,7 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
         discard;
     } else {
         vec4 color = vec4(0.0);
-        const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
+        int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
         vec4 sample_color = vec4(0.0);
         float sample_opacity = 0.0;
         for (int j = 0; j < NUM_SAMPLES; j++) {
