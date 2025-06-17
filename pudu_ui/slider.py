@@ -110,17 +110,6 @@ class Slider(Widget):
         )
         return value_t * self.bar.width
 
-    def is_inside(self, x: float, y: float) -> bool:
-        left, bottom = self.thumb.get_position()
-        radius = self.thumb.width / 2.0
-        center_x = left + radius
-        center_y = bottom + radius
-
-        return (
-            ((x - center_x) ** 2 <= radius ** 2) and
-            ((y - center_y) ** 2 <= radius ** 2)
-        )
-
     def recompute(self):
         super().recompute()
         # Update bar
@@ -153,6 +142,14 @@ class Slider(Widget):
     def on_mouse_press(self, x, y, buttons, _):
         if self.is_inside(x, y) and buttons & mouse.LEFT:
             self.is_on_press = True
+            # reposition the thumb
+            start_x, _ = self.get_position()
+            relative_x = min(x - start_x - self.bar.x, self.bar.width)
+            relative_x = max(0, relative_x)
+            value_t = relative_x / self.bar.width
+            self.value = self.min_value + value_t * self.max_value
+            self.invalidate()
+            self.on_value_changed(self)
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED
 

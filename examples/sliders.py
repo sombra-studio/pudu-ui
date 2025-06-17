@@ -6,9 +6,13 @@ from pyglet.gl import (
 import pyglet
 
 
+def format_slider_value(slider: Slider) -> str:
+    return f"{round(slider.value, 2):.2f}"
+
+
 def create_on_value_change(label: Label):
     def on_value_change(slider: Slider):
-        label.text = f"{slider.value}"
+        label.text = format_slider_value(slider)
         label.invalidate()
 
     return on_value_change
@@ -18,17 +22,17 @@ class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
 
-        num_objects = 4
-        for i in range(num_objects):
-            params = SliderParams(x=300, y=100 + i * 120)
+        values = [0.0, 75, 33.3, 100.0]
+        for i in range(len(values)):
+            params = SliderParams(x=300, y=100 + i * 120, value=values[i])
             slider = Slider(params=params, batch=self.batch)
             # slider.set_debug_mode()
 
             label_style = pudu_ui.styles.fonts.p2()
-            label_style.color = pudu_ui.colors.LIGHTER_GRAY
+            label_style.color = pudu_ui.colors.DARK_GRAY
             label_params = LabelParams(
                 x=550, y=(slider.y + slider.height / 2.0),
-                text=f"{slider.value}", anchor_y='center',
+                text=format_slider_value(slider), anchor_y='center',
                 style=label_style
             )
             label = Label(
