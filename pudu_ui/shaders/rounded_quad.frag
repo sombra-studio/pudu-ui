@@ -14,7 +14,7 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 4;
+const int NUM_SAMPLES = 2;
 
 bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
     return (
@@ -26,44 +26,47 @@ bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
 }
 
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
-    vec2 pixel_center = pos + vec2(0.5, 0.5);
-    float dist = distance(pixel_center, center);
+    float dist = distance(pos, center);
 
-    if (dist > radius + 2.0) {
+//    if (dist > radius + 1.5) {
+    if (dist > radius + 1.5) {
         discard;
     } else {
-        bool is_border = false;
-        if (dist > (radius - border_width)) {
-            is_border = true;
+        vec3 color;
+        if (dist > (radius - border_width) && border_width > 0) {
+            color = border_color;
+        } else {
+            color = frag_color;
         }
+        return vec4(color, 1.0);
 
         // Use multi sample anti-aliasing to calculate opacity
-        const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-        vec4 color = vec4(0.0);
+//        int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
+//        float total_opacity = 0.0;
+//
+//        for (int j = 0; j < NUM_SAMPLES; j++) {
+//            for (int i = 0; i < NUM_SAMPLES; i++) {
+//                vec2 sample_pos = pos + vec2(
+//                    i / NUM_SAMPLES, j / NUM_SAMPLES
+//                );
+//                float sample_dist = distance(sample_pos, center);
+//                if (sample_dist > radius) {
+//                    // Out of the circle
+//                    continue;
+//                } else {
+//                    total_opacity += 1.0 / TOTAL_SAMPLES;
+//                }
+//            }   // for each sample column
+//        }   // for each sample row
 
-        for (int j = 0; j < NUM_SAMPLES; j++) {
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                vec2 sample_pos = pos + vec2(
-                    (i / NUM_SAMPLES), (j / NUM_SAMPLES)
-                );
-                float sample_dist = distance(sample_pos, center);
-                if (sample_dist > radius) {
-                    // Out of the circle
-                    continue;
-                } else {
-                    // Inside the circle
-                    if (sample_dist > (radius - border_width)) {
-                        // Inside the border
-                        color += vec4(border_color, 1.0) / TOTAL_SAMPLES;
-                    } else {
-                        // Inside the circle
-                        color += vec4(frag_color, 1.0) / TOTAL_SAMPLES;
-                    }
-                }
-            }   // for each sample column
-        }   // for each sample row
+//        return vec4(color, total_opacity);
 
-        return color;
+//        if (dist > radius + 1.0)
+//            return vec4(color, 0.1);
+//        if (dist > radius + 0.1)
+//            return vec4(color, 0.25);
+//        else
+//            return vec4(color, 1.0);
     }
 }
 
