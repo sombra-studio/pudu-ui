@@ -14,96 +14,91 @@ uniform int height;
 in vec3 frag_color;
 out vec4 final_color;
 
-const int NUM_SAMPLES = 3;
-const float SAMPLE_AREA_DISTANCE = 1;
+const int NUM_SAMPLES = 5;
+
+bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
+    return (
+        pos.x >= box_origin.x &&
+        pos.x - box_origin.x <= side &&
+        pos.y >= box_origin.y &&
+        pos.y - box_origin.y <= side
+    );
+}
 
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
 
-    if (dist > radius + 2 * SAMPLE_AREA_DISTANCE) {
+    if (dist > radius + 1.5) {
         discard;
-    } else {
-        vec4 color = vec4(0.0);
-        const int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
-        vec4 sample_color = vec4(0.0);
-        float sample_opacity = 0.0;
-        for (int j = 0; j < NUM_SAMPLES; j++) {
-            for (int i = 0; i < NUM_SAMPLES; i++) {
-                vec2 sample_pos = pos + vec2(
-                    (
-                        -SAMPLE_AREA_DISTANCE / 2.0 +
-                        SAMPLE_AREA_DISTANCE * i / NUM_SAMPLES
-                    ),
-                    (
-                        -SAMPLE_AREA_DISTANCE / 2.0 +
-                        SAMPLE_AREA_DISTANCE * j / NUM_SAMPLES
-                    )
-                );
-                float sample_dist = distance(sample_pos, center);
-                if (sample_dist > radius) {
-                    // Out of the circle
-                    continue;
-                } else if (sample_dist > (radius - border_width)) {
-                    // Inside the border
-                    sample_color = vec4(border_color, opacity);
-                } else {
-                    // Inside the circle
-                    sample_color = vec4(frag_color, 1.0);
-                }
-                sample_opacity += 1.0 / TOTAL_SAMPLES;
-            }
-        }
-        sample_color.a *= sample_opacity;
-        color = sample_color;
-        return color;
     }
+
+    vec3 color;
+    if (dist > (radius - border_width) && border_width > 0) {
+        color = border_color;
+    } else {
+        color = frag_color;
+    }
+
+    // Use multi sample anti-aliasing to calculate opacity
+    int TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
+    float total_opacity = 0.0;
+
+    for (int j = 0; j < NUM_SAMPLES; j++) {
+        for (int i = 0; i < NUM_SAMPLES; i++) {
+            vec2 sample_pos = pos + vec2(
+                float(i) / NUM_SAMPLES, float(j) / NUM_SAMPLES
+            );
+            float sample_dist = distance(sample_pos, center);
+            if (sample_dist > radius) {
+                // Out of the circle
+                continue;
+            } else {
+                total_opacity += 1.0 / TOTAL_SAMPLES;
+            }
+        }   // for each sample column
+    }   // for each sample row
+
+    return vec4(color, total_opacity);
+    // code for debugging opacity
+//    if (total_opacity == 1.0)
+//        return vec4(border_color, 0.1);
+//    if (total_opacity == 0.0)
+//        return vec4(frag_color, 0.25);
+//    else
+//        return vec4(1.0, 0.0, 1.0, 1.0);
 }
 
 
 void main() {
     vec4 color;
-    vec2 pos_v0 = position + vec2(radius_v0, radius_v0);
-    vec2 pos_v1 = position + vec2(width - radius_v1, radius_v1);
-    vec2 pos_v2 = position + vec2(width - radius_v2, height - radius_v2);
-    vec2 pos_v3 = position + vec2(radius_v3, height - radius_v3);
     float left = position.x;
     float right = position.x + width;
     float top = position.y + height;
     float bottom = position.y;
+    vec2 box3_origin = vec2(left, top - radius_v3);
+    vec2 box2_origin = vec2(right - radius_v2, top - radius_v2);
+    vec2 box1_origin = vec2(right - radius_v0, bottom);
+    vec2 box0_origin = vec2(left, bottom);
     vec2 pos = gl_FragCoord.xy;
 
     // Corner top left
-    if (
-        pos_v3.x - radius_v3 <= pos.x &&
-        pos.x <= pos_v3.x &&
-        pos_v3.y <= pos.y &&
-        pos.y <= pos_v3.y + radius_v3
-    ) {
-        color = color_rounded_corner(pos, pos_v3, radius_v3);
+    if (is_inside_box(box3_origin, pos, radius_v3)) {
+        vec2 center = vec2(box3_origin.x + radius_v3, box3_origin.y);
+        color = color_rounded_corner(pos, center, radius_v3);
     // Corner top right
-    } else if (
-        pos_v2.x <= pos.x &&
-        pos.x <= pos_v2.x + radius_v2 &&
-        pos_v2.y <= pos.y &&
-        pos.y <= pos_v2.y + radius_v2
-    ) {
-        color = color_rounded_corner(pos, pos_v2, radius_v2);
+    } else if (is_inside_box(box2_origin, pos, radius_v2)) {
+        vec2 center = box2_origin;
+        color = color_rounded_corner(pos, center, radius_v2);
     // Corner bottom left
-    } else if (
-        pos_v0.x - radius_v0 <= pos.x &&
-        pos.x <= pos_v0.x &&
-        pos_v0.y - radius_v0 <= pos.y &&
-        pos.y <= pos_v0.y
-    ) {
-        color = color_rounded_corner(pos, pos_v0, radius_v0);
+    } else if (is_inside_box(box0_origin, pos, radius_v0)) {
+        vec2 center = vec2(
+            box0_origin.x + radius_v0, box0_origin.y + radius_v0
+        );
+        color = color_rounded_corner(pos, center, radius_v0);
     // Corner bottom right
-    } else if (
-        pos_v1.x <= pos.x &&
-        pos.x <= pos_v1.x + radius_v1 &&
-        pos_v1.y - radius_v1 <= pos.y &&
-        pos.y <= pos_v1.y
-    ) {
-        color = color_rounded_corner(pos, pos_v1, radius_v1);
+    } else if (is_inside_box(box1_origin, pos, radius_v1)) {
+        vec2 center = vec2(box1_origin.x, box1_origin.y + radius_v1);
+        color = color_rounded_corner(pos, center, radius_v1);
     } else {
         // Inner rectangle
         if (
@@ -119,5 +114,6 @@ void main() {
         }
     }
 
+    if (color.a == 0.0) discard;
     final_color = color * vec4(1.0, 1.0, 1.0, opacity);
 }

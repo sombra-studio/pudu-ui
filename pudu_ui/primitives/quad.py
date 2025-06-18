@@ -9,10 +9,10 @@ from pudu_ui import Color
 import pudu_ui
 
 
-DEFAULT_BORDER_RADIUS = 24
 NUM_VERTICES = 4
 DEFAULT_WIDTH = 100
 DEFAULT_HEIGHT = 50
+DEFAULT_BORDER_RADIUS = DEFAULT_HEIGHT / 2.0
 
 default_vertex_src = files('pudu_ui.shaders').joinpath('quad.vert').read_text()
 textured_vertex_src = files('pudu_ui.shaders').joinpath(
@@ -131,7 +131,7 @@ class SolidBordersQuad:
         self.attributes['position'] = ('f', self.get_vertices())
 
     def set_uniforms(self):
-        self.program['border_width'] = 3.0
+        self.program['border_width'] = 2.0
         self.program['color'] = Vec3(
             self.color.r / 255.0, self.color.g / 255.0, self.color.b / 255.0
         )

@@ -8,7 +8,7 @@ from . import controller
 
 from .colors import Color
 
-from .widget import CollectionWidget, Widget, Params
+from .widget import CollectionWidget, Widget, WidgetGroup, Params
 
 from . import primitives
 
@@ -25,5 +25,7 @@ from . import image
 from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 
 from .progress_bar import ProgressBar, ProgressBarParams
+
+from .slider import Slider, SliderParams
 
 from . import layouts

@@ -42,6 +42,28 @@ class ProgressBar(Widget):
         self.front_group = Group(order=1, parent=group)
         self.quad = self.create_quad()
 
+    def change_style(self, style: ProgressBarStyle):
+        if self.style == style:
+            return
+        self.style = deepcopy(style)
+
+        # Change colors
+        self.quad.left_color = style.left_color
+        self.quad.right_color = style.right_color
+
+        # Change corners
+        self.quad.radius_top_left = style.radius_top_left
+        self.quad.radius_top_right = style.radius_top_right
+        self.quad.radius_bottom_left = style.radius_bottom_left
+        self.quad.radius_bottom_right = style.radius_bottom_right
+
+        # Change other uniforms
+        self.quad.opacity = style.opacity
+        self.quad.right_opacity = style.right_opacity
+        self.quad.border_width = style.border_width
+        self.quad.border_color = style.border_color
+        self.quad.set_uniforms()
+
     def create_quad(self) -> ProgressQuad:
         style = self.style
         limit_x = self.get_limit_x()

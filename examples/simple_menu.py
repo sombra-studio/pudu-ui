@@ -46,6 +46,7 @@ screen = SimpleMenuScreen()
 
 @window.event
 def on_draw():
+    pyglet.gl.glEnable(pyglet.gl.GL_BLEND)
     pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
     screen.draw()

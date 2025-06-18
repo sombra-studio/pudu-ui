@@ -1,9 +1,19 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 import pyglet
 from pyglet.graphics import Batch, Group
 
+from pudu_ui import Color
+from pudu_ui.colors import LIGHT_GRAY
 from pudu_ui.primitives.quad import SolidBordersQuad
+
+
+DEBUG_LABEL_OFFSET_X = 10
+DEBUG_LABEL_OFFSET_Y = 20
+
+
+def default_debug_label_color():
+    return LIGHT_GRAY
 
 
 class Mode(Enum):
@@ -18,6 +28,7 @@ class Params:
     width: int = 100
     height: int = 100
     focusable: bool = True
+    debug_label_color: Color = field(default_factory=default_debug_label_color)
 
 
 class WidgetGroup(Group):
@@ -25,7 +36,7 @@ class WidgetGroup(Group):
         super().__init__(order, parent)
         self.widget = widget
 
-    def __eq__(self, other: Group) -> bool:
+    def __eq__(self, other) -> bool:
         return (
             self.__class__ is other.__class__ and
             self._order == other.order and
@@ -67,7 +78,25 @@ class Widget:
             batch=batch, group=self.debug_front_group,
             parent=self
         )
+
+        # Debug label
+        debug_str = self.get_debug_string()
+        x, y = self.get_position()
+        label_x = x - DEBUG_LABEL_OFFSET_X
+        label_y = y - DEBUG_LABEL_OFFSET_Y
+        self.debug_label = pyglet.text.Label(
+            debug_str, x=label_x, y=label_y, font_size=9,
+            color=params.debug_label_color.as_tuple(),
+            batch=self.batch, group=self.debug_front_group
+        )
+
         self.set_normal_mode()
+
+    def get_debug_string(self) -> str:
+        return (
+            f"x={self.x}, y={self.y}, width={self.width}, height"
+            f"={self.height}"
+        )
 
     def get_position(self) -> tuple[float, float]:
         if self.parent:
@@ -125,9 +154,19 @@ class Widget:
             child.invalidate()
 
     def recompute(self):
+        # Debug borders
         self.debug_background.width = self.width
         self.debug_background.height = self.height
         self.debug_background.recompute()
+
+        # Debug label
+        debug_str = self.get_debug_string()
+        x, y = self.get_position()
+        label_x = x - DEBUG_LABEL_OFFSET_X
+        label_y = y - DEBUG_LABEL_OFFSET_Y
+        self.debug_label.text = debug_str
+        self.debug_label.x = label_x
+        self.debug_label.y = label_y
 
     def update(self, dt: float):
         if not self.is_valid:
@@ -137,18 +176,17 @@ class Widget:
                 child.update(dt)
 
     def is_inside(self, x: float, y: float) -> bool:
-        x_offset = self.parent.x if self.parent else 0
-        y_offset = self.parent.y if self.parent else 0
-        left = self.x + x_offset
+        x_pos, y_pos = self.get_position()
+        left = x_pos
         right = left + self.width
-        bottom = self.y + y_offset
+        bottom = y_pos
         top = bottom + self.height
 
         return (
             (left <= x <= right) and (bottom <= y <= top)
         )
 
-    def on_mouse_motion(self, x, y, dx, dy) -> bool:
+    def on_mouse_motion(self, x, y, _, __) -> bool:
         if self.is_inside(x, y):
             if not self.is_on_hover:
                 self.hover()
