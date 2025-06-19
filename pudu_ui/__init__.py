@@ -29,3 +29,5 @@ from .progress_bar import ProgressBar, ProgressBarParams
 from .slider import Slider, SliderParams
 
 from . import layouts
+
+from .app import App
