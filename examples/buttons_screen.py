@@ -1,3 +1,5 @@
+from pyglet.gl import glEnable, GL_BLEND
+
 import pudu_ui
 from pudu_ui import Button, ButtonParams, Label, LabelParams
 import pyglet
@@ -68,6 +70,7 @@ window.push_handlers(controller.screen.subtract_button)
 
 @window.event
 def on_draw():
+    glEnable(GL_BLEND)
     pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
     controller.screen.draw()

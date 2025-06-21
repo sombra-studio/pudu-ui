@@ -35,6 +35,12 @@ class ButtonParams(Params):
     press_style: ButtonStyle = field(default_factory=dft_btn_press_style)
     focusable: bool = True
 
+    def set_uniform_radius(self, radius: float):
+        self.style.set_uniform_radius(radius)
+        self.hover_style.set_uniform_radius(radius)
+        self.focus_style.set_uniform_radius(radius)
+        self.press_style.set_uniform_radius(radius)
+
 
 class Button(Widget):
     def __init__(

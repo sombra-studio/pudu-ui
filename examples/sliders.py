@@ -50,9 +50,9 @@ screen = DebugScreen()
 
 @window.event
 def on_draw():
+    glEnable(GL_BLEND)
     glClearColor(1.0, 1.0, 1.0, 1.0)
     window.clear()
-    glEnable(GL_BLEND)
     screen.draw()
 
 

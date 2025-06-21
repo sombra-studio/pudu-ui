@@ -1,3 +1,4 @@
+from pyglet.gl import glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
 
@@ -30,6 +31,7 @@ class App(Window):
         self.current_screen = screen
 
     def on_draw(self):
+        glEnable(GL_BLEND)
         self.clear()
         self.current_screen.draw()
 
