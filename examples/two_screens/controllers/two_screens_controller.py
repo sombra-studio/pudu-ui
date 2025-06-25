@@ -1,3 +1,4 @@
+from pudu_ui import App
 from pudu_ui.controller import Controller
 
 
@@ -6,38 +7,30 @@ from examples.two_screens.screens.second_screen import SecondScreen
 
 
 class TwoScreensController(Controller):
-    def __init__(self):
-        super().__init__(name="two screens controller")
-        self.current_screen = FirstScreen()
+    def __init__(self, app: App):
+        super().__init__(app=app, name="two screens controller")
+        first_screen = FirstScreen()
+        self.app.set_screen(first_screen)
+        self.app.push_handlers(first_screen.button)
         # Map screen buttons to controller actions
-        self.current_screen.button.on_press = self.go
+        self.app.current_screen.button.on_press = self.go
 
     def go(self, _):
         # continue to the next screen
-        self.current_screen = SecondScreen()
+        self.app.pop_handlers()
+        second_screen = SecondScreen()
+        self.app.set_screen(second_screen)
+        self.app.push_handlers(second_screen.button)
         # Map screen buttons to controller actions
-        self.current_screen.button.on_press = self.back
+        self.app.current_screen.button.on_press = self.back
         print("going")
 
     def back(self, _):
         # go back to first screen
-        self.current_screen = FirstScreen()
+        self.app.pop_handlers()
+        first_screen = FirstScreen()
+        self.app.set_screen(first_screen)
+        self.app.push_handlers(first_screen.button)
         # Map screen buttons to controller actions
-        self.current_screen.button.on_press = self.go
+        self.app.current_screen.button.on_press = self.go
         print("backing")
-
-    # Override function
-    def on_mouse_press(self, x, y, buttons, modifiers):
-        return self.current_screen.button.on_mouse_press(
-            x, y, buttons, modifiers
-        )
-
-    # Override function
-    def on_mouse_release(self, x, y, buttons, modifiers):
-        return self.current_screen.button.on_mouse_release(
-            x, y, buttons, modifiers
-        )
-
-    # Override function
-    def on_mouse_motion(self, x, y, dx, dy):
-        return self.current_screen.button.on_mouse_motion(x, y, dx, dy)

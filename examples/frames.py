@@ -1,3 +1,5 @@
+from pyglet.gl import GL_BLEND, glEnable
+
 import pudu_ui
 import pyglet
 
@@ -34,6 +36,7 @@ frames.append(pudu_ui.Frame(params, batch=batch))
 
 @window.event
 def on_draw():
+    glEnable(GL_BLEND)
     pyglet.gl.glClearColor(0.3, 0.3, 0.3, 1.0)
     window.clear()
     batch.draw()

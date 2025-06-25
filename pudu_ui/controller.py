@@ -1,6 +1,9 @@
 from enum import Enum, auto
 
 
+from pudu_ui import App
+
+
 class State(Enum):
     LOADING = auto()
     ACTIVE = auto()
@@ -10,8 +13,9 @@ class State(Enum):
 
 class Controller:
     def __init__(
-        self, name: str
+        self, app: App, name: str
     ):
+        self.app: App = app
         self.name: str = name
         self.state: State = State.LOADING
 

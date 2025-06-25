@@ -46,7 +46,8 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     for (int j = 0; j < NUM_SAMPLES; j++) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
             vec2 sample_pos = pos + vec2(
-                float(i) / NUM_SAMPLES, float(j) / NUM_SAMPLES
+                -0.5 + float(i) / NUM_SAMPLES,
+                -0.5 + float(j) / NUM_SAMPLES
             );
             float sample_dist = distance(sample_pos, center);
             if (sample_dist > radius) {
@@ -59,13 +60,6 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     }   // for each sample row
 
     return vec4(color, total_opacity);
-    // code for debugging opacity
-//    if (total_opacity == 1.0)
-//        return vec4(border_color, 0.1);
-//    if (total_opacity == 0.0)
-//        return vec4(frag_color, 0.25);
-//    else
-//        return vec4(1.0, 0.0, 1.0, 1.0);
 }
 
 

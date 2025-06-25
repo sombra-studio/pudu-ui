@@ -2,10 +2,6 @@
 
 from . import utils
 
-from . import navigation
-
-from . import controller
-
 from .colors import Color
 
 from .widget import CollectionWidget, Widget, WidgetGroup, Params
@@ -29,3 +25,9 @@ from .progress_bar import ProgressBar, ProgressBarParams
 from .slider import Slider, SliderParams
 
 from . import layouts
+
+from .app import App
+
+from . import navigation
+
+from . import controller

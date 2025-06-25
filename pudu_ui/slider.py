@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
-from pyglet.graphics import Batch
+from pyglet.graphics import Batch, Group
 from pyglet.window import mouse
 import pyglet
 
@@ -43,7 +43,7 @@ class Slider(Widget):
         self,
         params: SliderParams | None = None,
         batch: Batch | None = None,
-        group: WidgetGroup | None = None,
+        group: Group | None = None,
         parent: Widget | None = None
     ):
         if not params:
