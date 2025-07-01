@@ -13,7 +13,6 @@ img_paths = [
     "resources/plus-solid.png",
     "resources/thumbs-up-solid.png",
 ]
-buttons = []
 
 
 def on_press(button: pudu_ui.Button):
@@ -44,9 +43,5 @@ if __name__ == '__main__':
         list_layout.add(img_button)
 
     list_layout.children[0].focus()
-
-    # Add mouse events to buttons
-    for btn in list_layout.children:
-        app.push_handlers(btn)
 
     app.run()

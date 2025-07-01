@@ -1,3 +1,4 @@
+from pyglet.event import EVENT_HANDLE_STATE
 from pyglet.gl import glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
@@ -39,6 +40,26 @@ class App(Window):
         glEnable(GL_BLEND)
         self.clear()
         self.current_screen.draw()
+
+    def on_mouse_press(
+        self, x: int, y: int, button: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(
+        self, x: int, y: int, button: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_release(x, y, button, modifiers)
+
+    def on_mouse_motion(
+        self, x: int, y: int, dx: int, dy: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_motion(x, y, dx, dy)
+
+    def on_mouse_drag(
+        self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_drag(x, y, dx, dy)
 
     def update(self, dt):
         self.current_screen.update(dt)
