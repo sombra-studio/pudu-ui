@@ -1,6 +1,3 @@
-import pyglet
-
-
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT
 from controllers.two_screens_controller import TwoScreensController
 import pudu_ui
@@ -11,4 +8,4 @@ controller = TwoScreensController(app)
 
 
 if __name__ == '__main__':
-    pyglet.app.run()
+    app.run()

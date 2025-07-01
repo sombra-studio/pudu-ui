@@ -1,6 +1,7 @@
 from pyglet.gl import glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
+import pyglet
 
 
 from pudu_ui.screen import Screen
@@ -11,13 +12,17 @@ class App(Window):
         self,
         width: int | None = None,
         height: int | None = None,
-        caption: str = "Pudu UI"
+        caption: str = "Pudu UI",
+        update_rate: float = 1.0 / 60.0
     ):
         super().__init__(width=width, height=height, caption=caption)
         self.screens: list[Screen] = []
         default_screen = Screen("default screen")
         self.screens.append(default_screen)
         self.current_screen = default_screen
+        self.update_rate = update_rate
+        pyglet.clock.schedule_interval(self.update, update_rate)
+
 
     @property
     def batch(self):
@@ -37,3 +42,6 @@ class App(Window):
 
     def update(self, dt):
         self.current_screen.update(dt)
+
+    def run(self):
+        pyglet.app.run(self.update_rate)

@@ -20,10 +20,6 @@ def on_press(button: pudu_ui.Button):
     print(f"pressed button {button.index}")
 
 
-def update(dt: float):
-    app.update(dt)
-
-
 if __name__ == '__main__':
     # Create list layout
     list_params = ListLayoutParams(
@@ -53,5 +49,4 @@ if __name__ == '__main__':
     for btn in list_layout.children:
         app.push_handlers(btn)
 
-    pyglet.clock.schedule_interval(update, 1 / 120.0)
-    pyglet.app.run()
+    app.run()
