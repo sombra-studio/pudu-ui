@@ -11,6 +11,8 @@ class ListLayoutParams(Params):
     item_height: int = 0
     inter_item_spacing: int = 0
     reversed: bool = False
+    resizes_item_width: bool = True
+    resizes_item_height: bool = True
 
 
 class ListLayout(CollectionWidget):
@@ -26,3 +28,5 @@ class ListLayout(CollectionWidget):
         self.item_height = params.item_height
         self.inter_item_spacing = params.inter_item_spacing
         self.reversed = params.reversed
+        self.resizes_item_width = params.resizes_item_width
+        self.resizes_item_height = params.resizes_item_height
