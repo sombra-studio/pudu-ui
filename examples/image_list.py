@@ -2,7 +2,7 @@ import pyglet
 from pyglet.gl import glClearColor
 
 from pudu_ui.image import ImageParams, Image, ImageScaleType
-from pudu_ui.layouts import HorizontalListLayout, ListLayoutParams
+from pudu_ui.layouts import ListLayout, ListLayoutParams
 
 ITEM_WIDTH = 250
 ITEM_HEIGHT = 250
@@ -43,7 +43,7 @@ list_params = ListLayoutParams(
     inter_item_spacing=INTER_ITEM_SPACING
 )
 
-new_list_layout = HorizontalListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=batch)
 new_list_layout.set_debug_mode()
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
@@ -59,7 +59,7 @@ for img in img_textures:
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = HorizontalListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
@@ -75,7 +75,7 @@ for img in img_textures:
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = HorizontalListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)

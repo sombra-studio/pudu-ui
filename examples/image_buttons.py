@@ -25,7 +25,7 @@ if __name__ == '__main__':
         x=50.0, y=100.0, width=400, item_width=BTN_SIZE, item_height=BTN_SIZE,
         inter_item_spacing=25
     )
-    list_layout = pudu_ui.layouts.HorizontalListLayout(list_params)
+    list_layout = pudu_ui.layouts.ListLayout(list_params)
     app.current_screen.widgets.append(list_layout)
 
     # Create button params

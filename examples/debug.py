@@ -1,14 +1,14 @@
 import pudu_ui
-import pyglet
 
 
 if __name__ == '__main__':
     app = pudu_ui.App()
     params = pudu_ui.layouts.ListLayoutParams(
         width=app.width, height=app.height, item_width=app.width,
-        resizes_item_height=False
+        resizes_item_height=False,
+        direction=pudu_ui.layouts.ListDirection.VERTICAL
     )
-    container = pudu_ui.layouts.VerticalListLayout(params, batch=app.batch)
+    container = pudu_ui.layouts.ListLayout(params, batch=app.batch)
 
     # First frame
     style = pudu_ui.styles.frames.FrameStyle()
