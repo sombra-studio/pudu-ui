@@ -102,7 +102,7 @@ class ListLayout(CollectionWidget):
                 item.y = 0
                 offset = item.width + self.inter_item_spacing
             else:
-                item.y = curr_pos - item_height
+                item.y = curr_pos - item.height
                 if self.reversed:
                     item.y += item.height
                 item.x = 0
