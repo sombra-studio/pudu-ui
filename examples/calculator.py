@@ -1,64 +1,62 @@
 from pudu_ui import (
-    App, Button, ButtonParams
+    App, Button, ButtonParams, Frame, FrameParams
 )
 from pudu_ui.layouts import (
-    GridLayout, GridLayoutParams, ListLayout,
+    GridLayout, GridLayoutParams, ListDirection, ListLayout,
     ListLayoutParams
 )
+import pudu_ui
+import pyglet
+
 
 SYMBOLS = [
-    ["1", "2", "3", "+"],
-    ["4", "5", "6", "-"],
+    ["C", "⌫", "%", "^"],
     ["7", "8", "9", "x"],
-    [".", "0", "﹣", "/"],
-    ["C", "⌫", "="]
+    ["4", "5", "6", "-"],
+    ["1", "2", "3", "+"],
+    [".", "0", "﹣", "="]
 ]
 WIDTH = 350
 HEIGHT = 600
+GRID_HEIGHT = (WIDTH // 4) * 5
+DISPLAY_HEIGHT = HEIGHT - GRID_HEIGHT
 ITEM_GAP = 5
 M = len(SYMBOLS[0])
 N = len(SYMBOLS)
-BUTTON_SIZE = int(
-    round(
-        (WIDTH - 2 * M * ITEM_GAP) / M
-    )
-)
+BUTTON_SIZE = int((WIDTH - 2 * M * ITEM_GAP) / M)
+
+
+class Display(Frame):
+    def __init__(self, batch: pyglet.graphics.Batch):
+        style = pudu_ui.styles.frames.FrameStyle()
+        style.set_solid_color(pudu_ui.colors.LIGHTER_GRAY)
+        params = FrameParams(height=DISPLAY_HEIGHT, style=style)
+        super().__init__(params=params, batch=batch)
 
 
 class Calculator(App):
     def __init__(self):
         super().__init__(width=WIDTH, height=HEIGHT, caption="Calculator")
         # Container
-
-        # List
-        list_height = 2 * ITEM_GAP + BUTTON_SIZE
         params = ListLayoutParams(
-            x=ITEM_GAP, y=ITEM_GAP, width=WIDTH, height=list_height,
-            item_height=BUTTON_SIZE, inter_item_spacing=(2 * ITEM_GAP),
-            resizes_item_width=False
+            width=WIDTH, height=HEIGHT, focusable=False,
+            resizes_item_height=False, direction=ListDirection.VERTICAL
         )
-        list_layout = ListLayout(params, batch=self.batch)
-        for i, cell in enumerate(SYMBOLS[-1]):
-            button_size = BUTTON_SIZE
-            if i == (len(SYMBOLS[-1]) - 1):
-                button_size = 2 * BUTTON_SIZE
-            params = ButtonParams(width=button_size, text=cell)
-            params.set_uniform_radius(BUTTON_SIZE * 0.25)
-            button = Button(params, batch=self.batch)
-            list_layout.add(button)
-        list_layout.set_debug_mode()
-        self.current_screen.widgets.append(list_layout)
+        container = ListLayout(params, batch=self.batch)
+
+        # Display
+        display = Display(batch=self.batch)
+        container.add(display)
 
         # Grid
-        grid_width = WIDTH
-        grid_height = grid_width
+
         params = GridLayoutParams(
-            x=0, y=list_height, width=grid_width, height=grid_height,
-            rows=4, columns=4, item_gap=ITEM_GAP
+            width=WIDTH, height=GRID_HEIGHT,
+            rows=5, columns=4, item_gap=ITEM_GAP
         )
         grid = GridLayout(params, batch=self.batch)
 
-        for row in SYMBOLS[:-1]:
+        for row in SYMBOLS:
             for cell in row:
                 params = ButtonParams(text=cell)
                 params.set_uniform_radius(BUTTON_SIZE * 0.25)
@@ -66,7 +64,9 @@ class Calculator(App):
                 # button.set_debug_mode()
                 grid.add(button)
         # grid.set_debug_mode()
-        self.current_screen.widgets.append(grid)
+
+        container.add(grid)
+        self.current_screen.widgets.append(container)
 
 
 
