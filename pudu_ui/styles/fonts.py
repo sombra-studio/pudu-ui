@@ -29,7 +29,7 @@ class FontStyle:
 # Header Styles
 
 def h1():
-    return FontStyle(font_size=DEFAULT_FONT_SIZE, font_name=DEFAULT_FONT_NAME)
+    return FontStyle(font_size=32, font_name=DEFAULT_FONT_NAME)
 
 
 # Paragraph Styles
@@ -40,6 +40,11 @@ def p1():
 
 def p2():
     return FontStyle(font_size=18, font_name=DEFAULT_FONT_NAME)
+
+def p3():
+    style = p1()
+    style.font_size = 16
+    return style
 
 
 # Buttons Styles
