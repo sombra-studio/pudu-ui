@@ -1,5 +1,5 @@
 from pudu_ui import (
-    App, Button, ButtonParams, Frame, FrameParams
+    App, Button, ButtonParams, Frame, FrameParams, LabelParams
 )
 from pudu_ui.layouts import (
     GridLayout, GridLayoutParams, ListDirection, ListLayout,
@@ -27,11 +27,30 @@ BUTTON_SIZE = int((WIDTH - 2 * M * ITEM_GAP) / M)
 
 
 class Display(Frame):
+    LABEL_X_MARGIN = 20
     def __init__(self, batch: pyglet.graphics.Batch):
         style = pudu_ui.styles.frames.FrameStyle()
         style.set_solid_color(pudu_ui.colors.LIGHTER_GRAY)
         params = FrameParams(height=DISPLAY_HEIGHT, style=style)
         super().__init__(params=params, batch=batch)
+
+        fs = pudu_ui.styles.fonts.FontStyle(font_size=42)
+        params = LabelParams(
+            x=self.width - self.LABEL_X_MARGIN,
+            y=self.height // 2, text="0", anchor_x='right',
+            anchor_y='center', style=fs
+        )
+        self.label = pudu_ui.Label(params, batch=batch, parent=self)
+        self.children.append(self.label)
+
+    def recompute(self):
+        super().recompute()
+        self.label.x = self.width - self.LABEL_X_MARGIN
+        self.label.y = self.height // 2
+
+    def set_number(self, number: int):
+        self.label.text = f"{number}"
+        self.label.invalidate()
 
 
 class Calculator(App):
@@ -49,7 +68,6 @@ class Calculator(App):
         container.add(display)
 
         # Grid
-
         params = GridLayoutParams(
             width=WIDTH, height=GRID_HEIGHT,
             rows=5, columns=4, item_gap=ITEM_GAP
@@ -67,8 +85,6 @@ class Calculator(App):
 
         container.add(grid)
         self.current_screen.widgets.append(container)
-
-
 
 
 if __name__ == '__main__':
