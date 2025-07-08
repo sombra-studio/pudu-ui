@@ -1,6 +1,7 @@
 from pudu_ui import (
-    App, Button, ButtonParams, Frame, FrameParams, LabelParams
+    App, Button, ButtonParams, Frame, FrameParams, LabelParams, Label
 )
+from pudu_ui.label import LabelResizeType
 from pudu_ui.layouts import (
     GridLayout, GridLayoutParams, ListDirection, ListLayout,
     ListLayoutParams
@@ -37,16 +38,21 @@ class Display(Frame):
         fs = pudu_ui.styles.fonts.FontStyle(font_size=42)
         params = LabelParams(
             x=self.width - self.LABEL_X_MARGIN,
-            y=self.height // 2, text="0", anchor_x='right',
-            anchor_y='center', style=fs
+            y=self.height // 2,
+            width=self.width - 2 * self.LABEL_X_MARGIN,
+            text="0", anchor_x='right',
+            anchor_y='center', resize_type=LabelResizeType.FIT, style=fs
         )
-        self.label = pudu_ui.Label(params, batch=batch, parent=self)
+        self.label = Label(params, batch=batch, parent=self)
+        self.label.set_debug_mode()
         self.children.append(self.label)
 
     def recompute(self):
         super().recompute()
         self.label.x = self.width - self.LABEL_X_MARGIN
         self.label.y = self.height // 2
+        self.label.width = self.width - 2 * self.LABEL_X_MARGIN
+        self.label.invalidate()
 
     def set_number(self, number: int):
         self.label.text = f"{number}"
