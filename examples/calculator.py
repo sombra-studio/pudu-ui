@@ -19,9 +19,9 @@ SYMBOLS = [
 ]
 WIDTH = 350
 HEIGHT = 600
-GRID_HEIGHT = (WIDTH // 4) * 5
-DISPLAY_HEIGHT = HEIGHT - GRID_HEIGHT
 ITEM_GAP = 5
+GRID_HEIGHT = (WIDTH // 4) * 5
+DISPLAY_HEIGHT = HEIGHT - GRID_HEIGHT - 2 * ITEM_GAP
 M = len(SYMBOLS[0])
 N = len(SYMBOLS)
 BUTTON_SIZE = int((WIDTH - 2 * M * ITEM_GAP) / M)
@@ -31,11 +31,15 @@ class Display(Frame):
     LABEL_X_MARGIN = 20
     def __init__(self, batch: pyglet.graphics.Batch):
         style = pudu_ui.styles.frames.FrameStyle()
-        style.set_solid_color(pudu_ui.colors.LIGHTER_GRAY)
+        style.set_solid_color(pudu_ui.colors.DARK_GRAY)
+        style.border_width = 1
+        style.set_uniform_radius(10)
         params = FrameParams(height=DISPLAY_HEIGHT, style=style)
         super().__init__(params=params, batch=batch)
 
-        fs = pudu_ui.styles.fonts.FontStyle(font_size=42)
+        fs = pudu_ui.styles.fonts.FontStyle(
+            font_size=42, color=pudu_ui.colors.WHITE
+        )
         params = LabelParams(
             x=self.width - self.LABEL_X_MARGIN,
             y=self.height // 2,
@@ -59,19 +63,24 @@ class Display(Frame):
         self.label.invalidate()
 
 
+class OperationButton(Button):
+    def __init__(self, batch: pyglet.graphics.Batch):
+        params = ButtonParams()
+        super().__init__(batch=batch)
+
+
 class Calculator(App):
     def __init__(self):
         super().__init__(width=WIDTH, height=HEIGHT, caption="Calculator")
-        # Container
-        params = ListLayoutParams(
-            width=WIDTH, height=HEIGHT, focusable=False,
-            resizes_item_height=False, direction=ListDirection.VERTICAL
-        )
-        container = ListLayout(params, batch=self.batch)
-
         # Display
-        display = Display(batch=self.batch)
-        container.add(display)
+        display_width = self.width - 2 * ITEM_GAP
+        display = Display(
+            batch=self.batch
+        )
+        display.x = ITEM_GAP
+        display.y = HEIGHT - ITEM_GAP - display.height
+        display.width = display_width
+        display.invalidate()
 
         # Grid
         params = GridLayoutParams(
@@ -89,8 +98,8 @@ class Calculator(App):
                 grid.add(button)
         # grid.set_debug_mode()
 
-        container.add(grid)
-        self.current_screen.widgets.append(container)
+        self.current_screen.widgets.append(display)
+        self.current_screen.widgets.append(grid)
 
 
 if __name__ == '__main__':
