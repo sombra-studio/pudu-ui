@@ -2,10 +2,7 @@ from pudu_ui import (
     App, Button, ButtonParams, Frame, FrameParams, LabelParams, Label
 )
 from pudu_ui.label import LabelResizeType
-from pudu_ui.layouts import (
-    GridLayout, GridLayoutParams, ListDirection, ListLayout,
-    ListLayoutParams
-)
+from pudu_ui.layouts import GridLayout, GridLayoutParams
 import pudu_ui
 import pyglet
 
@@ -17,6 +14,7 @@ SYMBOLS = [
     ["1", "2", "3", "+"],
     [".", "0", "﹣", "="]
 ]
+number_strs = [str(i) for i in range(10)]
 WIDTH = 350
 HEIGHT = 600
 ITEM_GAP = 5
@@ -32,8 +30,8 @@ class Display(Frame):
     def __init__(self, batch: pyglet.graphics.Batch):
         style = pudu_ui.styles.frames.FrameStyle()
         style.set_solid_color(pudu_ui.colors.DARK_GRAY)
-        style.border_width = 1
-        style.set_uniform_radius(10)
+        style.border_width = 2
+        style.set_uniform_radius(8)
         params = FrameParams(height=DISPLAY_HEIGHT, style=style)
         super().__init__(params=params, batch=batch)
 
@@ -64,9 +62,45 @@ class Display(Frame):
 
 
 class OperationButton(Button):
-    def __init__(self, batch: pyglet.graphics.Batch):
-        params = ButtonParams()
-        super().__init__(batch=batch)
+    def __init__(
+        self,
+        text: str,
+        batch: pyglet.graphics.Batch
+    ):
+        params = ButtonParams(
+            text=text, on_press=lambda x: print(x.text)
+        )
+        super().__init__(params, batch=batch)
+
+
+class NumberButton(Button):
+    def __init__(
+        self,
+        text: str,
+        batch: pyglet.graphics.Batch
+    ):
+        # unhover style
+        style = pudu_ui.styles.buttons.default_button_style()
+        style.set_solid_color(pudu_ui.colors.DARK_GRAY)
+
+        # hover style
+        hover_style = pudu_ui.styles.buttons.dft_btn_hover_style()
+        hover_style.set_solid_color(pudu_ui.colors.GRAY)
+
+        # focus style
+        focus_style = pudu_ui.styles.buttons.dft_btn_focus_style()
+        focus_style.set_solid_color(pudu_ui.colors.GRAY)
+
+        # press style
+        press_style = pudu_ui.styles.buttons.dft_btn_press_style()
+        press_style.set_solid_color(pudu_ui.colors.DARKER_GRAY)
+
+        params = ButtonParams(
+            text=text, on_press=lambda x: print(x.text),
+            style=style, hover_style=hover_style, focus_style=focus_style,
+            press_style=press_style
+        )
+        super().__init__(params, batch=batch)
 
 
 class Calculator(App):
@@ -91,9 +125,12 @@ class Calculator(App):
 
         for row in SYMBOLS:
             for cell in row:
-                params = ButtonParams(text=cell)
-                params.set_uniform_radius(BUTTON_SIZE * 0.25)
-                button = Button(params, batch=self.batch)
+                if cell in number_strs:
+                    button = NumberButton(cell, batch=self.batch)
+                else:
+                    params = ButtonParams(text=cell)
+                    params.set_uniform_radius(BUTTON_SIZE * 0.25)
+                    button = Button(params, batch=self.batch)
                 # button.set_debug_mode()
                 grid.add(button)
         # grid.set_debug_mode()
