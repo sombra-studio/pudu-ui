@@ -1,3 +1,5 @@
+from collections.abc import Callable
+from enum import StrEnum
 from pudu_ui import (
     App, Button, ButtonParams, Frame, FrameParams, LabelParams, Label
 )
@@ -5,6 +7,14 @@ from pudu_ui.label import LabelResizeType
 from pudu_ui.layouts import GridLayout, GridLayoutParams
 import pudu_ui
 import pyglet
+
+
+class Operators(StrEnum):
+    ADD = "+"
+    SUBTRACT = "-"
+    MULTIPLY = "*"
+    DIVIDE = "/"
+    MODULO = "%"
 
 
 SYMBOLS = [
@@ -15,6 +25,8 @@ SYMBOLS = [
     [".", "0", "﹣", "="]
 ]
 number_strs = [str(i) for i in range(10)]
+secondary_strs = [".", "﹣"] + number_strs
+operator_strs = ["+", "-", "*", "/", "%"]
 WIDTH = 350
 HEIGHT = 600
 ITEM_GAP = 5
@@ -46,7 +58,6 @@ class Display(Frame):
             anchor_y='center', resize_type=LabelResizeType.FIT, style=fs
         )
         self.label = Label(params, batch=batch, parent=self)
-        self.label.set_debug_mode()
         self.children.append(self.label)
 
     def recompute(self):
@@ -56,27 +67,27 @@ class Display(Frame):
         self.label.width = self.width - 2 * self.LABEL_X_MARGIN
         self.label.invalidate()
 
-    def set_number(self, number: int):
+    def set_number(self, number: float):
         self.label.text = f"{number}"
-        self.label.invalidate()
+        self.invalidate()
 
 
 class OperationButton(Button):
     def __init__(
         self,
         text: str,
+        on_press: Callable[[...], None],
         batch: pyglet.graphics.Batch
     ):
-        params = ButtonParams(
-            text=text, on_press=lambda x: print(x.text)
-        )
+        params = ButtonParams(text=text, on_press=on_press)
         super().__init__(params, batch=batch)
 
 
-class NumberButton(Button):
+class SecondaryButton(Button):
     def __init__(
         self,
         text: str,
+        on_press: Callable[[...], None],
         batch: pyglet.graphics.Batch
     ):
         # unhover style
@@ -96,7 +107,7 @@ class NumberButton(Button):
         press_style.set_solid_color(pudu_ui.colors.DARKER_GRAY)
 
         params = ButtonParams(
-            text=text, on_press=lambda x: print(x.text),
+            text=text, on_press=on_press,
             style=style, hover_style=hover_style, focus_style=focus_style,
             press_style=press_style
         )
@@ -106,15 +117,22 @@ class NumberButton(Button):
 class Calculator(App):
     def __init__(self):
         super().__init__(width=WIDTH, height=HEIGHT, caption="Calculator")
+        self.current_number = 0
+        self.previous_number = 0
+        self.current_digit = 0
+        self.is_second_number = False
+        self.current_operator = None
+
+
         # Display
         display_width = self.width - 2 * ITEM_GAP
-        display = Display(
+        self.number_display = Display(
             batch=self.batch
         )
-        display.x = ITEM_GAP
-        display.y = HEIGHT - ITEM_GAP - display.height
-        display.width = display_width
-        display.invalidate()
+        self.number_display.x = ITEM_GAP
+        self.number_display.y = HEIGHT - ITEM_GAP - self.number_display.height
+        self.number_display.width = display_width
+        self.number_display.invalidate()
 
         # Grid
         params = GridLayoutParams(
@@ -125,18 +143,68 @@ class Calculator(App):
 
         for row in SYMBOLS:
             for cell in row:
-                if cell in number_strs:
-                    button = NumberButton(cell, batch=self.batch)
+                if cell in secondary_strs:
+                    button = SecondaryButton(
+                        cell,
+                        on_press=self.on_button_press,
+                        batch=self.batch
+                    )
                 else:
-                    params = ButtonParams(text=cell)
-                    params.set_uniform_radius(BUTTON_SIZE * 0.25)
-                    button = Button(params, batch=self.batch)
+                    button = OperationButton(
+                        cell,
+                        on_press=self.on_button_press,
+                        batch=self.batch
+                    )
                 # button.set_debug_mode()
                 grid.add(button)
         # grid.set_debug_mode()
 
-        self.current_screen.widgets.append(display)
+        self.current_screen.widgets.append(self.number_display)
         self.current_screen.widgets.append(grid)
+
+    def set_number(self):
+        self.number_display.set_number(self.current_number)
+
+    def on_button_press(self, button: Button):
+        if button.text in number_strs:
+            # Pressed a number
+            new_digit = int(button.text)
+            self.current_number = self.current_number * 10 + new_digit
+            self.current_digit += 1
+            if self.current_digit > -1:
+                self.set_number()
+        elif button.text in operator_strs:
+            if self.current_operator:
+                # we already have an operator
+                if self.is_second_number:
+                    # let's calculate the result for now and put it in the
+                    # number
+                    if self.current_operator == Operators.ADD:
+                        self.current_number += self.previous_number
+                    elif self.current_operator == Operators.SUBTRACT:
+                        self.current_number = (
+                            self.previous_number - self.current_number
+                        )
+                    elif self.current_operator == Operators.MULTIPLY:
+                        self.current_number *= self.previous_number
+                    elif self.current_operator == Operators.DIVIDE:
+                        self.current_number = (
+                            self.previous_number / self.current_number
+                        )
+                else:
+                    self.is_second_number = True
+                    self.current_number = 0
+
+                self.previous_number = self.current_number
+
+                self.set_number()
+            else:
+                # we are just adding this operator
+                self.is_second_number = True
+                self.current_number = 0
+                self.set_number()
+            self.current_operator = button.text
+        print(button.text)
 
 
 if __name__ == '__main__':
