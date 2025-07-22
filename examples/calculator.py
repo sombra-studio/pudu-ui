@@ -12,8 +12,9 @@ import pyglet
 class Operators(StrEnum):
     ADD = "+"
     SUBTRACT = "-"
-    MULTIPLY = "*"
+    MULTIPLY = "x"
     DIVIDE = "/"
+    POWER = "^"
     MODULO = "%"
 
 
@@ -26,7 +27,7 @@ SYMBOLS = [
 ]
 number_strs = [str(i) for i in range(10)]
 secondary_strs = [".", "﹣"] + number_strs
-operator_strs = ["+", "-", "*", "/", "%"]
+operator_strs = ["+", "-", "x", "/", "^", "%"]
 WIDTH = 350
 HEIGHT = 600
 ITEM_GAP = 5
@@ -165,46 +166,100 @@ class Calculator(App):
     def set_number(self):
         self.number_display.set_number(self.current_number)
 
+    def use_operator(self, operator: str):
+        temp = self.current_number
+        match operator:
+            case Operators.ADD:
+                self.current_number += self.previous_number
+            case Operators.SUBTRACT:
+                self.current_number = (
+                    self.previous_number - self.current_number
+                )
+            case Operators.MULTIPLY:
+                self.current_number *= self.previous_number
+            case Operators.DIVIDE:
+                self.current_number = (
+                    self.previous_number / self.current_number
+                )
+            case Operators.POWER:
+                self.current_number = (
+                    self.previous_number ** self.current_number
+                )
+            case Operators.MODULO:
+                self.current_number = (
+                    self.previous_number % self.current_number
+                )
+            case _:
+                raise Exception(f"{operator} is not valid")
+
+        self.previous_number = temp
+        self.set_number()
+        self.current_operator = None
+
+    def clear_result(self):
+        self.current_number = 0
+        self.previous_number = 0
+        self.current_digit = 0
+        self.is_second_number = False
+        self.current_operator = None
+        self.set_number()
+
+    def result(self):
+        self.use_operator(self.current_operator)
+        self.previous_number = 0
+        self.current_digit = 0
+        self.is_second_number = False
+        self.current_operator = None
+
     def on_button_press(self, button: Button):
+        print(f"\n{button.text}")
+        print(self)
         if button.text in number_strs:
             # Pressed a number
             new_digit = int(button.text)
-            self.current_number = self.current_number * 10 + new_digit
-            self.current_digit += 1
-            if self.current_digit > -1:
-                self.set_number()
+            if self.current_digit > 0:
+                self.current_number = self.current_number * 10 + new_digit
+                self.current_digit += 1
+            elif self.current_digit == 0:
+                self.current_number = new_digit
+                self.current_digit += 1
+            else:
+                decimal_part = new_digit * (10 ** self.current_digit)
+                self.current_number = self.current_number + decimal_part
+                self.current_digit -= 1
+            self.set_number()
         elif button.text in operator_strs:
             if self.current_operator:
                 # we already have an operator
                 if self.is_second_number:
                     # let's calculate the result for now and put it in the
                     # number
-                    if self.current_operator == Operators.ADD:
-                        self.current_number += self.previous_number
-                    elif self.current_operator == Operators.SUBTRACT:
-                        self.current_number = (
-                            self.previous_number - self.current_number
-                        )
-                    elif self.current_operator == Operators.MULTIPLY:
-                        self.current_number *= self.previous_number
-                    elif self.current_operator == Operators.DIVIDE:
-                        self.current_number = (
-                            self.previous_number / self.current_number
-                        )
+                    self.use_operator(self.current_operator)
+                    self.previous_number = self.current_number
                 else:
                     self.is_second_number = True
-                    self.current_number = 0
-
-                self.previous_number = self.current_number
-
-                self.set_number()
             else:
                 # we are just adding this operator
                 self.is_second_number = True
-                self.current_number = 0
-                self.set_number()
+                self.previous_number = self.current_number
+
+            self.current_digit = 0
             self.current_operator = button.text
-        print(button.text)
+        elif button.text == "C":
+            # clear
+            self.clear_result()
+        else:
+            # get the result
+            self.result()
+        print(self)
+
+    def __repr__(self):
+        return (
+            f"prev: {self.previous_number} curr: {self.current_number} "
+            f"is_second: {self.is_second_number} "
+            f"curr_op: {self.current_operator} "
+            f"curr_digit: {self.current_digit}"
+        )
 
 
 if __name__ == '__main__':
