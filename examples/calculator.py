@@ -68,10 +68,6 @@ class Display(Frame):
         self.label.width = self.width - 2 * self.LABEL_X_MARGIN
         self.label.invalidate()
 
-    def set_number(self, number: float):
-        self.label.text = f"{number}"
-        self.invalidate()
-
 
 class OperationButton(Button):
     def __init__(
@@ -121,6 +117,7 @@ class Calculator(App):
         self.current_number = 0
         self.previous_number = 0
         self.current_digit = 0
+        self.previous_digit = 0
         self.is_second_number = False
         self.current_operator = None
 
@@ -164,7 +161,16 @@ class Calculator(App):
         self.current_screen.widgets.append(grid)
 
     def set_number(self):
-        self.number_display.set_number(self.current_number)
+        if self.current_digit < 0:
+            decimal_digits = abs(self.current_digit) - 1
+            self.current_number = round(self.current_number, decimal_digits)
+            decimals_format = f".{decimal_digits}f"
+            self.number_display.label.text = (
+                f"{self.current_number:{decimals_format}}"
+            )
+        else:
+            self.number_display.label.text = f"{self.current_number}"
+        self.number_display.invalidate()
 
     def use_operator(self, operator: str):
         temp = self.current_number
@@ -193,8 +199,55 @@ class Calculator(App):
                 raise Exception(f"{operator} is not valid")
 
         self.previous_number = temp
+        self.current_digit = min(self.previous_digit, self.current_digit)
         self.set_number()
         self.current_operator = None
+
+    def enter_digit(self, new_digit: int):
+        if self.current_digit > 0:
+            self.current_number = self.current_number * 10 + new_digit
+            self.current_digit += 1
+        elif self.current_digit == 0:
+            self.current_number = new_digit
+            self.current_digit += 1
+        else:
+            decimal_part = new_digit * (10 ** self.current_digit)
+            self.current_number = self.current_number + decimal_part
+            self.current_digit -= 1
+        self.set_number()
+
+    def enter_operator(self, operator_str: str):
+        if self.current_operator:
+            # we already have an operator
+            if self.is_second_number:
+                # let's calculate the result for now and put it in the
+                # number
+                self.use_operator(self.current_operator)
+                self.previous_number = self.current_number
+            else:
+                self.is_second_number = True
+
+        else:
+            # we are just adding this operator
+            self.is_second_number = True
+            self.previous_number = self.current_number
+            self.current_number = 0
+
+        self.previous_digit = self.current_digit
+        self.current_digit = 0
+        self.current_operator = operator_str
+
+    def delete(self):
+        if self.current_digit > 0:
+            self.current_number = self.current_number // 10
+        elif self.current_digit == -1:
+            self.current_number = int(self.current_number)
+        elif self.current_digit < -1:
+            self.current_digit += 1
+            self.current_number -= self.current_number % (
+                10 ** self.current_digit
+            )
+        self.set_number()
 
     def clear_result(self):
         self.current_number = 0
@@ -205,6 +258,8 @@ class Calculator(App):
         self.set_number()
 
     def result(self):
+        if not self.current_operator:
+            return
         self.use_operator(self.current_operator)
         self.previous_number = 0
         self.current_digit = 0
@@ -215,47 +270,31 @@ class Calculator(App):
         print(f"\n{button.text}")
         print(self)
         if button.text in number_strs:
-            # Pressed a number
             new_digit = int(button.text)
-            if self.current_digit > 0:
-                self.current_number = self.current_number * 10 + new_digit
-                self.current_digit += 1
-            elif self.current_digit == 0:
-                self.current_number = new_digit
-                self.current_digit += 1
-            else:
-                decimal_part = new_digit * (10 ** self.current_digit)
-                self.current_number = self.current_number + decimal_part
-                self.current_digit -= 1
-            self.set_number()
-        elif button.text in operator_strs:
-            if self.current_operator:
-                # we already have an operator
-                if self.is_second_number:
-                    # let's calculate the result for now and put it in the
-                    # number
-                    self.use_operator(self.current_operator)
-                    self.previous_number = self.current_number
-                else:
-                    self.is_second_number = True
-            else:
-                # we are just adding this operator
-                self.is_second_number = True
-                self.previous_number = self.current_number
+            if self.current_number < 0:
+                new_digit *= -1
 
-            self.current_digit = 0
-            self.current_operator = button.text
-        elif button.text == "C":
-            # clear
+            self.enter_digit(new_digit)
+        elif button.text in operator_strs:
+            self.enter_operator(button.text)
+        elif button.text == '⌫':
+            self.delete()
+        elif button.text == 'C':
             self.clear_result()
+        elif button.text == '﹣':
+            if self.current_number > 0:
+                self.current_number *= -1
+            self.set_number()
+        elif button.text == '.':
+            self.current_digit = -1
         else:
-            # get the result
             self.result()
         print(self)
 
     def __repr__(self):
         return (
-            f"prev: {self.previous_number} curr: {self.current_number} "
+            f"prev: {self.previous_number} "
+            f"curr: {self.current_number} "
             f"is_second: {self.is_second_number} "
             f"curr_op: {self.current_operator} "
             f"curr_digit: {self.current_digit}"
