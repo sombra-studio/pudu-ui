@@ -6,6 +6,8 @@ from pudu_ui import (
 from pudu_ui.label import LabelResizeType
 from pudu_ui.layouts import GridLayout, GridLayoutParams
 import pudu_ui
+from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
+from pyglet.window import key
 import pyglet
 
 
@@ -15,11 +17,10 @@ class Operators(StrEnum):
     MULTIPLY = "x"
     DIVIDE = "/"
     POWER = "^"
-    MODULO = "%"
 
 
 SYMBOLS = [
-    ["C", "⌫", "%", "^"],
+    ["C", "⌫", "^", "/"],
     ["7", "8", "9", "x"],
     ["4", "5", "6", "-"],
     ["1", "2", "3", "+"],
@@ -27,7 +28,7 @@ SYMBOLS = [
 ]
 number_strs = [str(i) for i in range(10)]
 secondary_strs = [".", "﹣"] + number_strs
-operator_strs = ["+", "-", "x", "/", "^", "%"]
+operator_strs = ["+", "-", "x", "/", "^"]
 WIDTH = 350
 HEIGHT = 600
 ITEM_GAP = 5
@@ -36,6 +37,33 @@ DISPLAY_HEIGHT = HEIGHT - GRID_HEIGHT - 2 * ITEM_GAP
 M = len(SYMBOLS[0])
 N = len(SYMBOLS)
 BUTTON_SIZE = int((WIDTH - 2 * M * ITEM_GAP) / M)
+KEY_MAP = {
+    key.C: "C",
+    key.BACKSPACE: "⌫",
+    key.X: "x",
+    key.ASTERISK: "x",
+    key.NUM_MULTIPLY: "x",
+    key.SLASH: "/",
+    key.NUM_DIVIDE: "/",
+    key.MINUS: "-",
+    key.NUM_SUBTRACT: "-",
+    key.PLUS: "+",
+    key.NUM_ADD: "+",
+    key.EQUAL: "=",
+    key.NUM_EQUAL: "=",
+    key.NUM_ENTER: "=",
+    key.ENTER: "=",
+    key.RETURN: "=",
+    key.PERIOD: ".",
+    key.NUM_DECIMAL: "."
+}
+
+for i in range(10):
+    key_val = key._0 + i
+    num_key_val = key.NUM_0 + i
+    value = chr(ord('0') + i)
+    KEY_MAP[key_val] = value
+    KEY_MAP[num_key_val] = value
 
 
 class Display(Frame):
@@ -120,19 +148,18 @@ class Calculator(App):
         self.previous_digit = 0
         self.is_second_number = False
         self.current_operator = None
-
+        self.buttons_map = {}
 
         # Display
-        display_width = self.width - 2 * ITEM_GAP
-        self.number_display = Display(
-            batch=self.batch
-        )
-        self.number_display.x = ITEM_GAP
-        self.number_display.y = HEIGHT - ITEM_GAP - self.number_display.height
-        self.number_display.width = display_width
-        self.number_display.invalidate()
+        self.number_display = self.create_number_display()
 
         # Grid
+        self.grid = self.create_grid()
+
+        self.current_screen.widgets.append(self.number_display)
+        self.current_screen.widgets.append(self.grid)
+
+    def create_grid(self) -> GridLayout:
         params = GridLayoutParams(
             width=WIDTH, height=GRID_HEIGHT,
             rows=5, columns=4, item_gap=ITEM_GAP
@@ -141,6 +168,9 @@ class Calculator(App):
 
         for row in SYMBOLS:
             for cell in row:
+                # use the index of the button in the grid as the value in the
+                # map
+                self.buttons_map[cell] = len(grid.children)
                 if cell in secondary_strs:
                     button = SecondaryButton(
                         cell,
@@ -153,12 +183,17 @@ class Calculator(App):
                         on_press=self.on_button_press,
                         batch=self.batch
                     )
-                # button.set_debug_mode()
                 grid.add(button)
-        # grid.set_debug_mode()
+        return grid
 
-        self.current_screen.widgets.append(self.number_display)
-        self.current_screen.widgets.append(grid)
+    def create_number_display(self) -> Display:
+        display_width = self.width - 2 * ITEM_GAP
+        number_display = Display(batch=self.batch)
+        number_display.x = ITEM_GAP
+        number_display.y = HEIGHT - ITEM_GAP - number_display.height
+        number_display.width = display_width
+        number_display.invalidate()
+        return number_display
 
     def set_number(self):
         if self.current_digit < 0:
@@ -191,10 +226,6 @@ class Calculator(App):
                 self.current_number = (
                     self.previous_number ** self.current_number
                 )
-            case Operators.MODULO:
-                self.current_number = (
-                    self.previous_number % self.current_number
-                )
             case _:
                 raise Exception(f"{operator} is not valid")
 
@@ -203,7 +234,31 @@ class Calculator(App):
         self.set_number()
         self.current_operator = None
 
-    def enter_digit(self, new_digit: int):
+    def clear_result(self):
+        self.current_number = 0
+        self.previous_number = 0
+        self.current_digit = 0
+        self.is_second_number = False
+        self.current_operator = None
+        self.set_number()
+
+    def delete(self):
+        if self.current_digit > 0:
+            self.current_number = self.current_number // 10
+        elif self.current_digit == -1:
+            self.current_number = int(self.current_number)
+        elif self.current_digit < -1:
+            self.current_digit += 1
+            self.current_number -= self.current_number % (
+                10 ** self.current_digit
+            )
+        self.set_number()
+
+    def enter_digit(self, new_digit_str: str):
+        new_digit = int(new_digit_str)
+        if self.current_number < 0:
+            new_digit *= -1
+
         if self.current_digit > 0:
             self.current_number = self.current_number * 10 + new_digit
             self.current_digit += 1
@@ -237,24 +292,13 @@ class Calculator(App):
         self.current_digit = 0
         self.current_operator = operator_str
 
-    def delete(self):
-        if self.current_digit > 0:
-            self.current_number = self.current_number // 10
-        elif self.current_digit == -1:
-            self.current_number = int(self.current_number)
-        elif self.current_digit < -1:
-            self.current_digit += 1
-            self.current_number -= self.current_number % (
-                10 ** self.current_digit
-            )
-        self.set_number()
+    def floating_point(self):
+        if self.current_digit > - 1:
+            self.current_digit = -1
 
-    def clear_result(self):
-        self.current_number = 0
-        self.previous_number = 0
-        self.current_digit = 0
-        self.is_second_number = False
-        self.current_operator = None
+    def negative(self):
+        if self.current_number > 0:
+            self.current_number *= -1
         self.set_number()
 
     def result(self):
@@ -266,30 +310,45 @@ class Calculator(App):
         self.is_second_number = False
         self.current_operator = None
 
-    def on_button_press(self, button: Button):
-        print(f"\n{button.text}")
-        print(self)
-        if button.text in number_strs:
-            new_digit = int(button.text)
-            if self.current_number < 0:
-                new_digit *= -1
-
-            self.enter_digit(new_digit)
-        elif button.text in operator_strs:
-            self.enter_operator(button.text)
-        elif button.text == '⌫':
+    def map_button_str(self, button_str: str):
+        if button_str in number_strs:
+            self.enter_digit(button_str)
+        elif button_str in operator_strs:
+            self.enter_operator(button_str)
+        elif button_str == '⌫':
             self.delete()
-        elif button.text == 'C':
+        elif button_str == 'C':
             self.clear_result()
-        elif button.text == '﹣':
-            if self.current_number > 0:
-                self.current_number *= -1
-            self.set_number()
-        elif button.text == '.':
-            self.current_digit = -1
+        elif button_str == '﹣':
+            self.negative()
+        elif button_str == '.':
+            self.floating_point()
         else:
             self.result()
-        print(self)
+
+    def on_button_press(self, button: Button):
+        self.map_button_str(button.text)
+
+    def on_key_press(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+        super().on_key_press(symbol, modifiers)
+        if symbol in KEY_MAP:
+            button_text = KEY_MAP[symbol]
+            button_idx = self.buttons_map[button_text]
+            button = self.grid.children[button_idx]
+            if isinstance(button, Button):
+                button.press()
+                return EVENT_HANDLED
+        return EVENT_UNHANDLED
+
+    def on_key_release(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+        if symbol in KEY_MAP:
+            button_text = KEY_MAP[symbol]
+            button_idx = self.buttons_map[button_text]
+            button = self.grid.children[button_idx]
+            if isinstance(button, Button):
+                button.release(False)
+                return EVENT_HANDLED
+        return EVENT_UNHANDLED
 
     def __repr__(self):
         return (
