@@ -14,6 +14,9 @@ class Color:
     def as_vec3(self) -> tuple[float, float, float]:
         return self.r / 255.0, self.g / 255.0, self.b / 255.0
 
+    def as_vec4(self):
+        return self.r / 255.0, self.g / 255.0, self.b / 255.0, 1.0
+
 
 class GradientDirection(Enum):
     VERTICAL = 1

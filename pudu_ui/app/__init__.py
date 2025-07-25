@@ -1,10 +1,11 @@
 from pyglet.event import EVENT_HANDLE_STATE
-from pyglet.gl import glEnable, GL_BLEND
+from pyglet.gl import glClearColor, glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
 import pyglet
 
 
+from pudu_ui.colors import Color, BLACK
 from pudu_ui.screen import Screen
 
 
@@ -14,7 +15,8 @@ class App(Window):
         width: int | None = None,
         height: int | None = None,
         caption: str = "Pudu UI",
-        update_rate: float = 1.0 / 60.0
+        update_rate: float = 1.0 / 60.0,
+        background_color: Color = BLACK
     ):
         super().__init__(width=width, height=height, caption=caption)
         self.screens: list[Screen] = []
@@ -22,6 +24,7 @@ class App(Window):
         self.screens.append(default_screen)
         self.current_screen = default_screen
         self.update_rate = update_rate
+        self.background_color = background_color
         pyglet.clock.schedule_interval(self.update, update_rate)
 
 
@@ -38,6 +41,8 @@ class App(Window):
 
     def on_draw(self):
         glEnable(GL_BLEND)
+        if self.background_color != BLACK:
+            glClearColor(*self.background_color.as_vec4())
         self.clear()
         self.current_screen.draw()
 
