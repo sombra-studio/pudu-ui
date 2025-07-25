@@ -86,7 +86,7 @@ class Widget:
         label_x = x - DEBUG_LABEL_OFFSET_X
         label_y = y - DEBUG_LABEL_OFFSET_Y
         self.debug_label = pyglet.text.Label(
-            debug_str, x=label_x, y=label_y, font_size=9,
+            debug_str, x=label_x, y=label_y, font_size=10,
             color=params.debug_label_color.as_tuple(),
             batch=self.batch, group=self.debug_front_group
         )
@@ -94,10 +94,7 @@ class Widget:
         self.set_normal_mode()
 
     def get_debug_string(self) -> str:
-        return (
-            f"x={self.x}, y={self.y}, width={self.width}, height"
-            f"={self.height}"
-        )
+        return f"{self}"
 
     def get_position(self) -> tuple[float, float]:
         if self.parent:
@@ -207,8 +204,8 @@ class Widget:
 
     def __repr__(self) -> str:
         return (
-            f"{self.__class__.__name__}(x: {self.x}, y: {self.y}, width:"
-            f" {self.width}, height: {self.height})"
+            f"{self.__class__.__name__}(x: {self.x}, y: {self.y},"
+            f" w: {self.width}, h: {self.height})"
         )
 
 
