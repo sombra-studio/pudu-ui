@@ -1,6 +1,6 @@
 import pudu_ui
 from pudu_ui import Button, ButtonParams
-from pudu_ui.layouts import ListLayoutParams, VerticalListLayout
+from pudu_ui.layouts import ListDirection, ListLayoutParams, ListLayout
 import pyglet
 
 
@@ -19,9 +19,11 @@ class SimpleMenuScreen(pudu_ui.Screen):
             y=vertical_margin,
             width=width,
             height=height,
-            inter_item_spacing=25
+            inter_item_spacing=25,
+            direction=ListDirection.VERTICAL
+
         )
-        self.layout = VerticalListLayout(list_params)
+        self.layout = ListLayout(list_params)
 
         button_names = ["New Game", "Continue", "Load Game", "Settings", "Quit"]
         button_params = ButtonParams()

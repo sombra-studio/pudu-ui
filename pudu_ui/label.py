@@ -93,11 +93,21 @@ class Label(Widget):
         self.impl.font_size = self.style.font_size
         self.rescale()
 
+        super().recompute()
+
         if self.anchor_x == 'center':
             self.debug_background.x = -(self.width / 2.0)
+            self.debug_label.x += -(self.width / 2.0)
         if self.anchor_y == 'center':
             self.debug_background.y = -(self.height / 2.0)
-        super().recompute()
+            self.debug_label.y += -(self.height / 2.0)
+        if self.anchor_x == 'right':
+            self.debug_background.x = -self.width
+            self.debug_label.x += -self.width
+        if self.anchor_y == 'right':
+            self.debug_background.y = -self.height
+            self.debug_label.x += -self.height
+        self.debug_background.recompute()
 
     def rescale(self):
         if self.resize_type == LabelResizeType.FIT:

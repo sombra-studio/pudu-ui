@@ -1,6 +1,8 @@
+from pyglet.event import EVENT_HANDLE_STATE
 from pyglet.gl import glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
+import pyglet
 
 
 from pudu_ui.screen import Screen
@@ -11,13 +13,17 @@ class App(Window):
         self,
         width: int | None = None,
         height: int | None = None,
-        caption: str = "Pudu UI"
+        caption: str = "Pudu UI",
+        update_rate: float = 1.0 / 60.0
     ):
         super().__init__(width=width, height=height, caption=caption)
         self.screens: list[Screen] = []
         default_screen = Screen("default screen")
         self.screens.append(default_screen)
         self.current_screen = default_screen
+        self.update_rate = update_rate
+        pyglet.clock.schedule_interval(self.update, update_rate)
+
 
     @property
     def batch(self):
@@ -35,5 +41,28 @@ class App(Window):
         self.clear()
         self.current_screen.draw()
 
+    def on_mouse_press(
+        self, x: int, y: int, button: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_release(
+        self, x: int, y: int, button: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_release(x, y, button, modifiers)
+
+    def on_mouse_motion(
+        self, x: int, y: int, dx: int, dy: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_motion(x, y, dx, dy)
+
+    def on_mouse_drag(
+        self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
+    ) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_mouse_drag(x, y, dx, dy)
+
     def update(self, dt):
         self.current_screen.update(dt)
+
+    def run(self):
+        pyglet.app.run(self.update_rate)
