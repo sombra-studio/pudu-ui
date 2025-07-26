@@ -64,7 +64,9 @@ class App(Window):
     def on_mouse_drag(
         self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
     ) -> EVENT_HANDLE_STATE:
-        return self.current_screen.on_mouse_drag(x, y, dx, dy)
+        return self.current_screen.on_mouse_drag(
+            x, y, dx, dy, buttons, modifiers
+        )
 
     def update(self, dt):
         self.current_screen.update(dt)
