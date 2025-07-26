@@ -1,17 +1,18 @@
-import pyglet
-from pyglet.gl import glClearColor
-
+from pudu_ui import App
 from pudu_ui.image import ImageParams, Image, ImageScaleType
 from pudu_ui.layouts import ListLayout, ListLayoutParams
+import pudu_ui
+import pyglet
+
 
 ITEM_WIDTH = 250
 ITEM_HEIGHT = 250
 INTER_ITEM_SPACING = 50
 LAYOUTS_VERTICAL_SPACING = 80 + ITEM_HEIGHT
 
-window = pyglet.window.Window(height=1000)
-batch = pyglet.graphics.Batch()
-glClearColor(1.0, 1.0, 1.0, 1.0)
+
+app = App(height=1000, background_color=pudu_ui.colors.WHITE)
+
 
 # Define Pudu Widgets
 img_paths = [
@@ -32,7 +33,7 @@ imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.FIT)
 for img in img_textures:
     img_params.texture = img
-    new_img = Image(img_params, batch=batch)
+    new_img = Image(img_params, batch=app.batch)
     # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
@@ -43,7 +44,7 @@ list_params = ListLayoutParams(
     inter_item_spacing=INTER_ITEM_SPACING
 )
 
-new_list_layout = ListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=app.batch)
 new_list_layout.set_debug_mode()
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
@@ -54,12 +55,12 @@ imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.FILL)
 for img in img_textures:
     img_params.texture = img
-    new_img = Image(img_params, batch=batch)
+    new_img = Image(img_params, batch=app.batch)
     # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = ListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=app.batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
@@ -70,43 +71,30 @@ imgs.append([])
 img_params = ImageParams(scale_type=ImageScaleType.CROP)
 for img in img_textures:
     img_params.texture = img
-    new_img = Image(img_params, batch=batch)
+    new_img = Image(img_params, batch=app.batch)
     # new_img.set_debug_mode()
     imgs[-1].append(new_img)
 
 list_params.y += LAYOUTS_VERTICAL_SPACING
-new_list_layout = ListLayout(list_params, batch=batch)
+new_list_layout = ListLayout(list_params, batch=app.batch)
 list_layouts.append(new_list_layout)
 for img in imgs[-1]:
     list_layouts[-1].add(img)
 
-def update(dt: float):
-    for list_layout in list_layouts:
-        list_layout.update(dt)
-    for img_list in imgs:
-        for img_widget in img_list:
-            img_widget.update(dt)
+
+for list_layout in list_layouts:
+    app.current_screen.widgets.append(list_layout)
 
 
-@window.event
-def on_draw():
-    window.clear()
-    batch.draw()
-
-
-def on_key_press(symbol, modifiers):
+def on_key_press(symbol, _):
     if symbol == pyglet.window.key.S:
         pyglet.image.get_buffer_manager().get_color_buffer().save(
             'screenshot.png'
         )
 
 
-window.push_handlers(on_key_press)
-
-def main():
-    pyglet.clock.schedule_interval(update, 1 / 60)
-    pyglet.app.run()
+app.push_handlers(on_key_press)
 
 
 if __name__ == '__main__':
-    main()
+    app.run()

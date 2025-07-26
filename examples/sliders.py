@@ -1,9 +1,5 @@
-from pudu_ui import Label, LabelParams, Screen, Slider, SliderParams
+from pudu_ui import App, Label, LabelParams, Screen, Slider, SliderParams
 import pudu_ui
-from pyglet.gl import (
-    GL_BLEND, glClearColor, glEnable
-)
-import pyglet
 
 
 def format_slider_value(slider: Slider) -> str:
@@ -44,25 +40,10 @@ class DebugScreen(Screen):
             self.widgets.append(label)
 
 
-window = pyglet.window.Window(caption="Pudu UI")
+app = App(background_color=pudu_ui.colors.WHITE)
 screen = DebugScreen()
-
-
-@window.event
-def on_draw():
-    glEnable(GL_BLEND)
-    glClearColor(1.0, 1.0, 1.0, 1.0)
-    window.clear()
-    screen.draw()
-
-
-def update(dt: float):
-    screen.update(dt)
+app.current_screen = screen
 
 
 if __name__ == '__main__':
-    for widget in screen.widgets:
-        if isinstance(widget, Slider):
-            window.push_handlers(widget)
-    pyglet.clock.schedule_interval(update, 1 / 60.0)
-    pyglet.app.run()
+    app.run()

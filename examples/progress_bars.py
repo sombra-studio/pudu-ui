@@ -1,7 +1,5 @@
 from pudu_ui import ProgressBar, ProgressBarParams, Screen
 import pudu_ui
-from pyglet.gl import *
-import pyglet
 
 
 class DebugScreen(Screen):
@@ -35,27 +33,14 @@ class DebugScreen(Screen):
             bar = ProgressBar(params=params, batch=self.batch)
             self.bars.append(bar)
 
-    def update(self, dt: float):
         for bar in self.bars:
-            bar.update(dt)
+            self.widgets.append(bar)
 
 
-window = pyglet.window.Window(caption="Pudu UI")
+app = pudu_ui.App()
 screen = DebugScreen()
-
-
-@window.event
-def on_draw():
-    window.clear()
-    glEnable(GL_BLEND)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    screen.draw()
-
-
-def update(dt: float):
-    screen.update(dt)
+app.current_screen = screen
 
 
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1 / 60.0)
-    pyglet.app.run()
+    app.run()

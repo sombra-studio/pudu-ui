@@ -1,11 +1,12 @@
-import pudu_ui
-from pudu_ui import Button, ButtonParams
+from pudu_ui import App, Button, ButtonParams
+from pudu_ui.colors import WHITE
 from pudu_ui.layouts import ListDirection, ListLayoutParams, ListLayout
-import pyglet
+import pudu_ui
 
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
+
 
 class SimpleMenuScreen(pudu_ui.Screen):
     def __init__(self):
@@ -23,7 +24,7 @@ class SimpleMenuScreen(pudu_ui.Screen):
             direction=ListDirection.VERTICAL
 
         )
-        self.layout = ListLayout(list_params)
+        self.layout = ListLayout(list_params, batch=self.batch)
 
         button_names = ["New Game", "Continue", "Load Game", "Settings", "Quit"]
         button_params = ButtonParams()
@@ -35,29 +36,17 @@ class SimpleMenuScreen(pudu_ui.Screen):
             button = Button(button_params, batch=self.batch)
             self.buttons.append(button)
             self.layout.add(button)
-            window.push_handlers(button)
 
-    def update(self, dt: float):
-        self.layout.update(dt)
-        for button in self.buttons:
-            button.update(dt)
+        self.widgets.append(self.layout)
 
-window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="example")
+
+
+app = App(
+    SCREEN_WIDTH, SCREEN_HEIGHT, caption="example", background_color=WHITE
+)
 screen = SimpleMenuScreen()
-
-
-@window.event
-def on_draw():
-    pyglet.gl.glEnable(pyglet.gl.GL_BLEND)
-    pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
-    window.clear()
-    screen.draw()
-
-
-def update(dt: float):
-    screen.update(dt)
+app.current_screen = screen
 
 
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1.0 / 60.0)
-    pyglet.app.run()
+    app.run()
