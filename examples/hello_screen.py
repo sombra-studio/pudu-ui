@@ -1,24 +1,16 @@
-from pyglet.gl import glClearColor
-
 from pudu_ui import App, Label, LabelParams
 import pudu_ui
 
 
-app = App()
-
-
-@app.event
-def on_draw():
-    glClearColor(1.0, 1.0, 1.0, 1.0)
-    app.clear()
-    app.batch.draw()
+app = App(background_color=pudu_ui.colors.WHITE)
 
 
 if __name__ == '__main__':
-
+    # Regular text
     params = LabelParams(x=50, y=200, text="Hello World")
     label = Label(params, batch=app.batch)
 
+    # Text anchored right
     fs = pudu_ui.styles.fonts.p2()
     fs.color = pudu_ui.colors.GRAY
     params = LabelParams(
@@ -26,6 +18,7 @@ if __name__ == '__main__':
     )
     l2 = Label(params, batch=app.batch)
 
+    # Centered text
     fs = pudu_ui.styles.fonts.p3()
     params = LabelParams(
         x=(50 + 150 // 2), y=100, text="Centered text", anchor_x='center',
@@ -36,6 +29,5 @@ if __name__ == '__main__':
     label.set_debug_mode()
     l2.set_debug_mode()
     l3.set_debug_mode()
-
 
     app.run()

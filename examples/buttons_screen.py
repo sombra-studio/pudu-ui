@@ -1,8 +1,5 @@
-from pyglet.gl import glEnable, GL_BLEND
-
+from pudu_ui import App, Button, ButtonParams, Label, LabelParams
 import pudu_ui
-from pudu_ui import Button, ButtonParams, Label, LabelParams
-import pyglet
 
 
 SCREEN_WIDTH = 640
@@ -13,7 +10,6 @@ DATA_UPDATE = 0
 class ButtonsScreen(pudu_ui.Screen):
     def __init__(self):
         super().__init__("buttons")
-
         button_params = ButtonParams(text="+")
         button_params.x = SCREEN_WIDTH / 4 - button_params.width / 2
         button_params.y = SCREEN_HEIGHT / 2 - button_params.height / 2
@@ -24,11 +20,17 @@ class ButtonsScreen(pudu_ui.Screen):
             x=SCREEN_WIDTH / 2, y=y,
             anchor_x='center', anchor_y='center'
         )
+        label_params.style.color = pudu_ui.colors.GRAY
         self.label = Label(label_params, batch=self.batch)
 
         button_params.x = SCREEN_WIDTH - button_params.x - button_params.width
         button_params.text = "-"
         self.subtract_button = Button(button_params, batch=self.batch)
+
+        # Add widgets
+        self.widgets.append(self.add_button)
+        self.widgets.append(self.label)
+        self.widgets.append(self.subtract_button)
 
     def handle_event(self, event_type: int, data: int):
         """
@@ -45,10 +47,10 @@ class ButtonsScreen(pudu_ui.Screen):
 
 
 class NumberController(pudu_ui.controller.Controller):
-    def __init__(self, name: str):
-        super().__init__(name)
+    def __init__(self, app: pudu_ui.App, name: str):
+        super().__init__(app, name)
         self.number: int = 0
-        self.screen = ButtonsScreen()
+        self.screen = self.app.current_screen
         self.screen.label.text = str(self.number)
         self.screen.label.invalidate()
         self.screen.add_button.on_press = self.add
@@ -63,25 +65,10 @@ class NumberController(pudu_ui.controller.Controller):
         self.screen.handle_event(DATA_UPDATE, self.number)
 
 
-window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, caption="Test")
-controller = NumberController(name="example controller")
-window.push_handlers(controller.screen.add_button)
-window.push_handlers(controller.screen.subtract_button)
-
-@window.event
-def on_draw():
-    glEnable(GL_BLEND)
-    pyglet.gl.glClearColor(1.0, 1.0, 1.0, 1.0)
-    window.clear()
-    controller.screen.draw()
-
-
-def update(dt):
-    # need to call update on label, so that it's value is recomputed after
-    # invalidating
-    controller.screen.label.update(dt)
+app = App(SCREEN_WIDTH, SCREEN_HEIGHT)
+app.current_screen = ButtonsScreen()
+controller = NumberController(app, name="example controller")
 
 
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1.0 / 60.0)
-    pyglet.app.run()
+    app.run()

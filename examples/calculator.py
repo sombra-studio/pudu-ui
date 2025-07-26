@@ -357,6 +357,7 @@ class Calculator(App):
             f"is_second: {self.is_second_number} "
             f"curr_op: {self.current_operator} "
             f"curr_digit: {self.current_digit}"
+            f"prev_digit: {self.previous_digit}"
         )
 
 
