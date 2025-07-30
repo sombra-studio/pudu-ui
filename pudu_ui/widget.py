@@ -5,16 +5,16 @@ from pyglet.graphics import Batch, Group
 import pyglet
 
 from pudu_ui import Color
-from pudu_ui.colors import LIGHT_GRAY
 from pudu_ui.primitives.quad import SolidBordersQuad
+import pudu_ui
 
 
-DEBUG_LABEL_OFFSET_X = 10
+DEBUG_LABEL_OFFSET_X = 0
 DEBUG_LABEL_OFFSET_Y = 20
 
 
 def default_debug_label_color():
-    return LIGHT_GRAY
+    return pudu_ui.colors.DEBUG_TEXT_COLOR
 
 
 class Mode(Enum):
@@ -83,11 +83,12 @@ class Widget:
         # Debug label
         debug_str = self.get_debug_string()
         x, y = self.get_position()
-        label_x = x - DEBUG_LABEL_OFFSET_X
-        label_y = y - DEBUG_LABEL_OFFSET_Y
+        label_x = x + DEBUG_LABEL_OFFSET_X
+        label_y = y + DEBUG_LABEL_OFFSET_Y
         self.debug_label = pyglet.text.Label(
             debug_str, x=label_x, y=label_y, font_size=10,
             color=params.debug_label_color.as_tuple(),
+            weight=pyglet.text.Weight.BOLD,
             batch=self.batch, group=self.debug_front_group
         )
 
