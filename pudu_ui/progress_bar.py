@@ -83,7 +83,12 @@ class ProgressBar(Widget):
         return quad
 
     def get_limit_x(self) -> int:
-        limit_x: int = int(round(self.width * (self.value / self.max_value)))
+        progress = (
+            (self.value - self.min_value) / (self.max_value - self.min_value)
+        )
+        limit_x: int = int(
+            round(self.width * progress)
+        )
         return limit_x
 
     def recompute(self):

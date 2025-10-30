@@ -18,9 +18,12 @@ class DebugScreen(Screen):
     def __init__(self):
         super().__init__(name="home")
 
-        values = [0.0, 75, 33.3, 100.0]
+        values = [0.0, 75, 33.3, 100.0, 2.0]
         for i in range(len(values)):
             params = SliderParams(x=300, y=100 + i * 120, value=values[i])
+            if i == len(values) - 1:
+                params.min_value = 1.0
+                params.max_value = 10.0
             slider = Slider(params=params, batch=self.batch)
             # slider.set_debug_mode()
 
