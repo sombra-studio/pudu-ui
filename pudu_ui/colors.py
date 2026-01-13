@@ -23,24 +23,36 @@ class GradientDirection(Enum):
     HORIZONTAL = 2
 
 
-WHITE = Color(r=255, g=255, b=255)
+WHITE = Color(255, 255, 255)
 LIGHTER_GRAY = Color(220, 220, 220)
 LIGHT_GRAY = Color(180, 180, 180)
-GRAY = Color(r=122, g=122, b=122)
-DARK_GRAY = Color(r=65, g=65, b=65)
+GRAY = Color(122, 122, 122)
+DARK_GRAY = Color(65, 65, 65)
 DARKER_GRAY = Color(38, 38, 38)
-BLACK = Color(r=0, g=0, b=0)
+BLACK = Color(0, 0, 0)
 
-DARK_PURPLE = Color(75, 16, 80)
+VIOLET = Color(240, 10, 178)
+
+LIGHTER_PURPLE = Color(122, 27, 131)
+LIGHT_PURPLE = Color(108, 24, 116)
 PURPLE = Color(94, 21, 101)
-LIGHT_PURPLE = Color(r=108, g=24, b=116)
-LIGHTER_PURPLE = Color(r=122, g=27, b=131)
+DARK_PURPLE = Color(75, 16, 80)
 
 MEDIUM_BLUE = Color(0, 91, 150)
-LIGHT_BLUE_GREEN = Color(100, 151, 177)
+BLUE = Color(14, 14, 232)
 
-DARK_RED = Color(r=125, g=0, b=0)
-RED = Color(r=180, g=0, b=5)
+LIGHT_BLUE_GREEN = Color(100, 151, 177)
+BLUE_GREEN = Color(3, 248, 252)
+
+GREEN = Color(4, 194, 17)
+
+YELLOW = Color(247, 235, 10)
+
+ORANGE = Color(237, 151, 12)
+
+RED = Color(230, 16, 15)
+DARK_RED = Color(125, 0, 0)
+
 
 PRIMARY_BTN_BG_COLOR = PURPLE
 PRIMARY_BTN_HOVER_BG_COLOR = LIGHT_PURPLE
