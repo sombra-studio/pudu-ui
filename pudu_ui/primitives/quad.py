@@ -1,3 +1,4 @@
+from pyglet.enums import GeometryMode
 from pyglet.graphics import Shader, ShaderProgram
 from pyglet.math import Vec2, Vec3
 import pyglet
@@ -85,9 +86,7 @@ class SolidBordersQuad:
         ).read_text()
         vs = Shader(vertex_src, 'vertex')
         fs = Shader(fragment_src, 'fragment')
-        self.program = pyglet.graphics.shader.ShaderProgram(
-            vs, fs
-        )
+        self.program = ShaderProgram(vs, fs)
         self.attributes = {}
         self.set_attributes()
         self.set_uniforms()
@@ -97,7 +96,7 @@ class SolidBordersQuad:
         )
         self.vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
-            mode=pyglet.gl.GL_TRIANGLES,
+            mode=GeometryMode.TRIANGLES,
             indices=indices,
             batch=batch,
             group=shader_group,

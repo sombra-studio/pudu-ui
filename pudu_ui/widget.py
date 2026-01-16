@@ -88,7 +88,7 @@ class Widget:
         self.debug_label = pyglet.text.Label(
             debug_str, x=label_x, y=label_y, font_size=10,
             color=params.debug_label_color.as_tuple(),
-            weight=pyglet.text.Weight.BOLD,
+            weight="bold",
             batch=self.batch, group=self.debug_front_group
         )
 
