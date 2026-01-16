@@ -1,7 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from pyglet.image import Texture
-from pyglet.graphics import Batch, Group
+from pyglet.graphics import Batch, Group, Texture
 from pyglet.sprite import Sprite
 
 from pudu_ui import Color, Params, Widget

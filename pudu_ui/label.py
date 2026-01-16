@@ -60,7 +60,7 @@ class Label(Widget):
             font_name=params.style.font_name,
             font_size=params.style.font_size,
             weight=params.style.weight,
-            italic=params.style.italic,
+            # italic=params.style.italic,
             color=self.get_color_tuple(),
             batch=batch,
             group=group
