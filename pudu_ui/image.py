@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from pyglet.image import AbstractImage, Texture
+from pyglet.image import Texture
 from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 
@@ -63,13 +63,13 @@ class Image(Widget):
         )
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
 
-    def copy_img(self) -> AbstractImage:
+    def copy_img(self) -> Texture:
         img = self.texture.get_region(
             0, 0, self.texture.width, self.texture.height
         )
         return img
 
-    def crop(self) -> AbstractImage:
+    def crop(self) -> Texture:
         center_x = int(self.texture.width / 2.0)
         center_y = int(self.texture.height / 2.0)
 
@@ -89,7 +89,7 @@ class Image(Widget):
             return self.texture.get_region(x, y, self.texture.width, self.height)
         return self.copy_img()
 
-    def fit(self) -> AbstractImage:
+    def fit(self) -> Texture:
         img = self.copy_img()
         if (
             (self.texture.width - self.width) > 0 or
@@ -104,13 +104,13 @@ class Image(Widget):
             self.sprite_offset_y = (self.height - img.height) / 2.0
         return img
 
-    def fill(self) -> AbstractImage:
+    def fill(self) -> Texture:
         img = self.copy_img()
         img.width = self.width
         img.height = self.height
         return img
 
-    def wrap(self) -> AbstractImage:
+    def wrap(self) -> Texture:
         self.sprite_offset_x = 0
         self.sprite_offset_y = 0
         img = self.copy_img()
@@ -134,7 +134,7 @@ class Image(Widget):
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
         self.sprite.image = new_image
 
-    def rescale(self) -> AbstractImage:
+    def rescale(self) -> Texture:
         if self.scale_type == ImageScaleType.CROP:
             return self.crop()
         elif self.scale_type == ImageScaleType.FIT:

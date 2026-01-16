@@ -1,5 +1,4 @@
-from pyglet.graphics.vertexdomain import IndexedVertexList
-from pyglet.graphics.shader import Shader, ShaderProgram
+from pyglet.graphics import Shader, ShaderProgram
 from pyglet.math import Vec2, Vec3
 import pyglet
 from collections.abc import Sequence
@@ -28,20 +27,21 @@ textured_fragment_src = files('pudu_ui.shaders').joinpath(
     'textured_quad.frag'
 ).read_text()
 
-default_vs = Shader(default_vertex_src, 'vertex')
-textured_vs = Shader(textured_vertex_src, 'vertex')
-rounded_fs = Shader(rounded_fragment_src, 'fragment')
-progress_fs = Shader(progress_fragment_src, 'fragment')
-textured_fs = Shader(textured_fragment_src, 'fragment')
 
 
 def rounded_program():
+    default_vs = Shader(default_vertex_src, 'vertex')
+    rounded_fs = Shader(rounded_fragment_src, 'fragment')
     return ShaderProgram(default_vs, rounded_fs)
 
 def progress_program():
+    default_vs = Shader(default_vertex_src, 'vertex')
+    progress_fs = Shader(progress_fragment_src, 'fragment')
     return ShaderProgram(default_vs, progress_fs)
 
 def textured_program():
+    textured_vs = Shader(textured_vertex_src, 'vertex')
+    textured_fs = Shader(textured_fragment_src, 'fragment')
     return ShaderProgram(textured_vs, textured_fs)
 
 
@@ -190,7 +190,7 @@ class Quad:
             self.indices, **self.attributes
         )
 
-    def create_vertex_list(self, indices, **attributes) -> IndexedVertexList:
+    def create_vertex_list(self, indices, **attributes):
         group = pyglet.graphics.ShaderGroup(
             self.program, parent=self.group
         )
