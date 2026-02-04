@@ -156,7 +156,7 @@ class Quad:
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
         border_width: int = 3,
         border_color: Color = pudu_ui.colors.WHITE,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent = None
@@ -176,7 +176,7 @@ class Quad:
         self.border_color = border_color
         if not program:
             program = rounded_program()
-        self.program: pyglet.graphics.shader.ShaderProgram = program
+        self.program: pyglet.graphics.ShaderProgram = program
         self.batch: pyglet.graphics.Batch = batch
         self.group: pyglet.graphics.Group = group
         self.parent = parent
@@ -195,7 +195,7 @@ class Quad:
         )
         vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
-            mode=pyglet.gl.GL_TRIANGLES,
+            mode=GeometryMode.TRIANGLES,
             indices=indices,
             batch=self.batch,
             group=group,
@@ -277,7 +277,7 @@ class ProgressQuad(Quad):
         border_width: int = 0,
         border_color: Color = pudu_ui.colors.WHITE,
         limit_x: int = DEFAULT_WIDTH,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent=None
@@ -328,14 +328,14 @@ class TexturedQuad(Quad):
         radius_top_right: float = 0,
         radius_bottom_left: float = 0,
         radius_bottom_right: float = 0,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent = None
     ):
         if not program:
             program = textured_program()
-        self.program: pyglet.graphics.shader.ShaderProgram = program
+        self.program: pyglet.graphics.ShaderProgram = program
         super().__init__(
             x=x, y=y, width=width, height=height,
             colors=colors, opacity=opacity,
