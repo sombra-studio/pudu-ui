@@ -10,11 +10,11 @@ from pudu_ui import (
     Frame, FrameParams, Params, ProgressBar, ProgressBarParams,
     Widget, WidgetGroup
 )
-from pudu_ui.styles.sliders import SliderStyle
+from pudu_ui.styles.sliders import DEFAULT_THUMB_RADIUS, SliderStyle
 import pudu_ui
 
 
-DEFAULT_THUMB_SIZE = 20
+DEFAULT_THUMB_SIZE = 2 * DEFAULT_THUMB_RADIUS
 DEFAULT_BAR_HEIGHT = 12
 
 
