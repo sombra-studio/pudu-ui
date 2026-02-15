@@ -127,12 +127,16 @@ class Slider(Widget):
         self.thumb.invalidate()
 
     # Event function
-    def on_mouse_drag(self, _, __, dx, ___, buttons, ____) -> bool:
-        if buttons & mouse.LEFT and self.is_on_press:
-            value_delta = (dx / self.width) * (self.max_value - self.min_value)
-            self.value += value_delta
-            self.value = min(self.max_value, self.value)
-            self.value = max(self.min_value, self.value)
+    def on_mouse_drag(self, x, _, dx, __, buttons, ___) -> bool:
+        slider_x = self.get_position()[0]
+        if buttons & mouse.LEFT and self.is_on_press and (
+            x >= slider_x and x <= slider_x + self.width
+        ):
+            relative_x = min(x - slider_x - self.bar.x, self.bar.width)
+            relative_x = max(0, relative_x)
+            value_t = relative_x / self.bar.width
+            value_difference = (self.max_value - self.min_value)
+            self.value = self.min_value + value_t * value_difference
             self.invalidate()
             self.on_value_changed(self)
             return pyglet.event.EVENT_HANDLED
@@ -147,7 +151,8 @@ class Slider(Widget):
             relative_x = min(x - start_x - self.bar.x, self.bar.width)
             relative_x = max(0, relative_x)
             value_t = relative_x / self.bar.width
-            self.value = self.min_value + value_t * self.max_value
+            value_difference = (self.max_value - self.min_value)
+            self.value = self.min_value + value_t * value_difference
             self.invalidate()
             self.on_value_changed(self)
             return pyglet.event.EVENT_HANDLED

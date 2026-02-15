@@ -149,8 +149,11 @@ class Widget:
 
     def invalidate(self):
         self.is_valid = False
-        for child in self.children:
-            child.invalidate()
+
+        if self.parent:
+            # Invalidate the parent so that it will update and recompute
+            # recursively
+            self.parent.invalidate()
 
     def recompute(self):
         # Debug borders
@@ -252,7 +255,7 @@ class CollectionWidget(Widget):
             if hasattr(widget, event_name):
                 widget_func = getattr(widget, event_name)
                 if widget_func(*args) == EVENT_HANDLED:
-                    return EVENT_HANDLED
+                    return True
         return EVENT_UNHANDLED
 
     def on_mouse_press(self, *args) -> EVENT_HANDLE_STATE:
