@@ -17,6 +17,11 @@ class Color:
     def as_vec4(self):
         return self.r / 255.0, self.g / 255.0, self.b / 255.0, 1.0
 
+    def __eq__(self, other):
+        if isinstance(other, Color):
+            return self.r == other.r and self.g == other.g and self.b == other.b
+        return False
+
 
 class GradientDirection(Enum):
     VERTICAL = 1
