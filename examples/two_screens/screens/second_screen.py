@@ -23,3 +23,5 @@ class SecondScreen(pudu_ui.Screen):
             x=100, y=(3 * WINDOW_HEIGHT) // 4, text="Back"
         )
         self.button = Button(button_params, batch=self.batch)
+
+        self.widgets.append(self.button)

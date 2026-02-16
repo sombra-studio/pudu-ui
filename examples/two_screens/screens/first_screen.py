@@ -22,3 +22,5 @@ class FirstScreen(pudu_ui.Screen):
             x=100, y=(3 * WINDOW_HEIGHT) // 4, text="Continue"
         )
         self.button = Button(button_params, batch=self.batch)
+
+        self.widgets.append(self.button)
