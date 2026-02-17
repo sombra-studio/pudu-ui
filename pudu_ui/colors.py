@@ -22,6 +22,17 @@ class Color:
             return self.r == other.r and self.g == other.g and self.b == other.b
         return False
 
+    def __mul__(self, other):
+        if isinstance(other, (float, int)):
+            r = int(round(self.r * other))
+            g = int(round(self.g * other))
+            b = int(round(self.b * other))
+            return Color(r=r, g=g, b=b)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
 
 class GradientDirection(Enum):
     VERTICAL = 1
