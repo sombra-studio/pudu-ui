@@ -123,29 +123,21 @@ class Widget:
         if self.focusable:
             self.is_on_focus = True
             self.on_focus()
-            for child in self.children:
-                child.focus()
 
     def unfocus(self):
         if self.focusable:
             self.is_on_focus = False
             self.on_unfocus()
-            for child in self.children:
-                child.unfocus()
 
     def hover(self):
         if self.focusable:
             self.is_on_hover = True
             self.on_hover()
-            for child in self.children:
-                child.hover()
 
     def unhover(self):
         if self.focusable:
             self.is_on_hover = False
             self.on_unhover()
-            for child in self.children:
-                child.unhover()
 
     def invalidate(self):
         self.is_valid = False
