@@ -13,11 +13,23 @@ class State(Enum):
 
 class Controller:
     def __init__(
-        self, app: App, name: str
+        self, app: App, name: str | None = None
     ):
         self.app: App = app
+        if not name:
+            name = self.__class__.__name__
         self.name: str = name
-        self.state: State = State.LOADING
+        self.load()
+
+    def load(self):
+        self.on_load()
+        self.state = State.ACTIVE
+
+    def pause(self):
+        self.on_pause()
+
+    def close(self):
+        self.on_close()
 
     def on_load(self):
         self.state = State.LOADING
