@@ -68,6 +68,7 @@ ORANGE = Color(237, 151, 12)
 
 RED = Color(230, 16, 15)
 DARK_RED = Color(125, 0, 0)
+MAROON = Color(85, 0, 0)
 
 
 PRIMARY_BTN_BG_COLOR = PURPLE
