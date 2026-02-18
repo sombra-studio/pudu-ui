@@ -44,3 +44,13 @@ class Screen:
         return self.handle_input_event(
             'on_mouse_drag', *args
         )
+
+    def on_key_press(self, *args) -> EVENT_HANDLE_STATE:
+        return self.handle_input_event(
+            'on_key_press', *args
+        )
+
+    def on_key_release(self, *args) -> EVENT_HANDLE_STATE:
+        return self.handle_input_event(
+            'on_key_release', *args
+        )
