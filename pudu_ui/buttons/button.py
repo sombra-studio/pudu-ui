@@ -17,7 +17,7 @@ from pudu_ui.styles.buttons import (
 @dataclass
 class ButtonParams(Params):
     """
-    Here you can define parameters for initialising a button.
+    Here you can define parameters for initializing a button.
 
     Args:
         text: The text that will be displayed in the button (optional)
@@ -156,14 +156,14 @@ class Button(Widget):
         self.label.invalidate()
 
     # Override function
-    def on_mouse_press(self, x, y, buttons, modifiers):
+    def on_mouse_press(self, x, y, buttons, _):
         if self.is_inside(x, y) and buttons & mouse.LEFT:
             self.press()
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED
 
     # Override function
-    def on_mouse_release(self, x, y, buttons, modifiers):
+    def on_mouse_release(self, x, y, buttons, _):
         if not self.is_on_press or not (buttons & mouse.LEFT):
             return pyglet.event.EVENT_UNHANDLED
         self.release(self.is_inside(x, y))
