@@ -3,25 +3,25 @@ import pyglet
 
 def create_color_img(
     width: int, height: int, color: tuple[int, int, int, int]
-) -> pyglet.image.AbstractImage:
+):
     color_pattern = pyglet.image.SolidColorImagePattern(color)
     img = color_pattern.create_image(width, height)
     return img
 
 
-def create_black_img(width: int, height: int) -> pyglet.image.AbstractImage:
+def create_black_img(width: int, height: int):
     return create_color_img(width, height, (0, 0, 0, 255))
 
 
-def create_white_img(width: int, height: int) -> pyglet.image.AbstractImage:
+def create_white_img(width: int, height: int):
     return create_color_img(width, height, (255, 255, 255, 255))
 
 
-def create_gray_img(width: int, height: int) -> pyglet.image.AbstractImage:
+def create_gray_img(width: int, height: int):
     return create_color_img(width, height, (123, 123, 123, 255))
 
 
-def get_grid_pos_from_idx(index: int, columns: int) -> [int, int]:
+def get_grid_pos_from_idx(index: int, columns: int) -> tuple[int, int]:
     j = index // columns
     i = index % columns
     return j, i

@@ -63,7 +63,7 @@ class Widget:
         self.batch: Batch = batch
         self.group: Group = group
         self.parent: Widget | None = parent
-        self.focusable: bool = params.focusable
+        self.is_focusable: bool = params.focusable
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
         self.index: int = 0
@@ -120,22 +120,22 @@ class Widget:
         self.invalidate()
 
     def focus(self):
-        if self.focusable:
+        if self.is_focusable and not self.is_on_focus:
             self.is_on_focus = True
             self.on_focus()
 
     def unfocus(self):
-        if self.focusable:
+        if self.is_focusable and self.is_on_focus:
             self.is_on_focus = False
             self.on_unfocus()
 
     def hover(self):
-        if self.focusable:
+        if self.is_focusable and not self.is_on_hover and not self.is_on_focus:
             self.is_on_hover = True
             self.on_hover()
 
     def unhover(self):
-        if self.focusable:
+        if self.is_focusable and self.is_on_hover:
             self.is_on_hover = False
             self.on_unhover()
 
