@@ -30,4 +30,5 @@ from .app import App
 
 from . import navigation
 
+from .controller import Controller
 from . import controller
