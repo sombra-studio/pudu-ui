@@ -138,8 +138,8 @@ class SolidBordersQuad:
         x, y = self.get_position()
         self.program['x'] = x
         self.program['y'] = y
-        self.program['width'] = self.width
-        self.program['height'] = self.height
+        self.program['width'] = int(self.width)
+        self.program['height'] = int(self.height)
 
 
 class Quad:
@@ -246,8 +246,8 @@ class Quad:
 
         x, y = self.get_position()
         self.program['position'] = Vec2(x, y)
-        self.program['width'] = self.width
-        self.program['height'] = self.height
+        self.program['width'] = int(self.width)
+        self.program['height'] = int(self.height)
 
         # Set highlight
         self.program['border_width'] = self.border_width
