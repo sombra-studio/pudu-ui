@@ -1,4 +1,4 @@
-from pyglet.event import EVENT_HANDLE_STATE
+from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
 from pyglet.gl import glClearColor, glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
@@ -68,7 +68,12 @@ class App(Window):
             x, y, dx, dy, buttons, modifiers
         )
 
-    def update(self, dt):
+    def on_key_press(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+        if super().on_key_press(symbol, modifiers) == EVENT_UNHANDLED:
+            return self.current_screen.on_key_press(symbol, modifiers)
+        return EVENT_HANDLED
+
+    def update(self, dt: float):
         self.current_screen.update(dt)
 
     def run(self):

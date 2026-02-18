@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from pyglet.graphics import Batch, Group
+from pyglet.window import key
 
 
 from pudu_ui import CollectionWidget, Params, Widget
@@ -38,6 +39,7 @@ class ListLayout(CollectionWidget):
         self.resizes_item_width = params.resizes_item_width
         self.resizes_item_height = params.resizes_item_height
         self.direction = params.direction
+        self.current_item = -1
 
     def calculate_item_height(self) -> int:
         n = len(self.children)
@@ -114,3 +116,59 @@ class ListLayout(CollectionWidget):
             curr_pos += offset
 
             item.invalidate()
+
+    def on_focus(self):
+        if self.children:
+            self.children[0].focus()
+            self.current_item = 0
+
+    def get_current_item(self) -> Widget | None:
+        if self.current_item >= 0 and self.current_item < len(self.children):
+            return self.children[self.current_item]
+        return None
+
+    def on_key_press(self, symbol, modifiers):
+        if not self.is_on_focus:
+            return
+
+        if self.direction == ListDirection.HORIZONTAL:
+            if (symbol == key.LEFT or symbol == key.A) and not modifiers:
+                item = self.get_current_item()
+                item.unfocus()
+
+                self.current_item -= 1
+                new_item = self.get_current_item()
+                if new_item:
+                    new_item.focus()
+
+            elif (symbol == key.RIGHT or symbol == key.D) and not modifiers:
+                item = self.get_current_item()
+                item.unfocus()
+
+                self.current_item += 1
+                new_item = self.get_current_item()
+                if new_item:
+                    new_item.focus()
+
+        if self.direction == ListDirection.VERTICAL:
+            if (symbol == key.UP or symbol == key.W) and not modifiers:
+                item = self.get_current_item()
+                item.unfocus()
+
+                self.current_item -= 1
+                new_item = self.get_current_item()
+                if new_item:
+                    new_item.focus()
+
+            elif (symbol == key.DOWN or symbol == key.S) and not modifiers:
+                item = self.get_current_item()
+                item.unfocus()
+
+                self.current_item += 1
+                new_item = self.get_current_item()
+                if new_item:
+                    new_item.focus()
+
+        if self.current_item < 0 or self.current_item >= len(self.children):
+            self.current_item = -1
+            self.unfocus()
