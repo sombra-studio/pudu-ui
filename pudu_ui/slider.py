@@ -14,7 +14,7 @@ from pudu_ui.styles.sliders import DEFAULT_THUMB_RADIUS, SliderStyle
 import pudu_ui
 
 
-DEFAULT_THUMB_SIZE = 2 * DEFAULT_THUMB_RADIUS
+DEFAULT_THUMB_SIZE = int(round(2 * DEFAULT_THUMB_RADIUS))
 DEFAULT_BAR_HEIGHT = 12
 
 
