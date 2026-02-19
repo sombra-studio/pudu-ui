@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
+
+from pyglet.event import EVENT_HANDLED, EVENT_HANDLE_STATE, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
 from pyglet.window import key
 
@@ -117,58 +119,26 @@ class ListLayout(CollectionWidget):
 
             item.invalidate()
 
-    def on_focus(self):
-        if self.children:
-            self.children[0].focus()
-            self.current_item = 0
-
-    def get_current_item(self) -> Widget | None:
-        if self.current_item >= 0 and self.current_item < len(self.children):
-            return self.children[self.current_item]
-        return None
-
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
         if not self.is_on_focus:
-            return
+            return EVENT_UNHANDLED
 
         if self.direction == ListDirection.HORIZONTAL:
             if (symbol == key.LEFT or symbol == key.A) and not modifiers:
-                item = self.get_current_item()
-                item.unfocus()
-
-                self.current_item -= 1
-                new_item = self.get_current_item()
-                if new_item:
-                    new_item.focus()
+                self.move_focus(-1)
+                return EVENT_HANDLED
 
             elif (symbol == key.RIGHT or symbol == key.D) and not modifiers:
-                item = self.get_current_item()
-                item.unfocus()
-
-                self.current_item += 1
-                new_item = self.get_current_item()
-                if new_item:
-                    new_item.focus()
+                self.move_focus(1)
+                return EVENT_HANDLED
 
         if self.direction == ListDirection.VERTICAL:
             if (symbol == key.UP or symbol == key.W) and not modifiers:
-                item = self.get_current_item()
-                item.unfocus()
-
-                self.current_item -= 1
-                new_item = self.get_current_item()
-                if new_item:
-                    new_item.focus()
+                self.move_focus(-1)
+                return EVENT_HANDLED
 
             elif (symbol == key.DOWN or symbol == key.S) and not modifiers:
-                item = self.get_current_item()
-                item.unfocus()
+                self.move_focus(1)
+                return EVENT_HANDLED
 
-                self.current_item += 1
-                new_item = self.get_current_item()
-                if new_item:
-                    new_item.focus()
-
-        if self.current_item < 0 or self.current_item >= len(self.children):
-            self.current_item = -1
-            self.unfocus()
+        return EVENT_UNHANDLED

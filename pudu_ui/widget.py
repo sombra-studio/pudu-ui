@@ -241,6 +241,29 @@ class CollectionWidget(Widget):
 
         self.invalidate()
 
+    def on_focus(self):
+        if self.children:
+            self.children[0].focus()
+            self.current_item = 0
+
+    def get_current_item(self) -> Widget | None:
+        if self.current_item >= 0 and self.current_item < len(self.children):
+            return self.children[self.current_item]
+        return None
+
+    def move_focus(self, amount: int):
+        item = self.get_current_item()
+        item.unfocus()
+
+        self.current_item += amount
+        new_item = self.get_current_item()
+        if new_item:
+            new_item.focus()
+        else:
+            # the focus was moved out of the collection
+            self.current_item = -1
+            self.unfocus()
+
     def handle_input_event(self, event_name: str, *args) -> EVENT_HANDLE_STATE:
         for widget in self.children:
             # The first widget that handles this event will return
