@@ -38,11 +38,12 @@ class SimpleMenuScreen(pudu_ui.Screen):
             self.layout.add(button)
 
         self.widgets.append(self.layout)
+        self.layout.focus()
 
 
 
 app = App(
-    SCREEN_WIDTH, SCREEN_HEIGHT, caption="example", background_color=WHITE
+    SCREEN_WIDTH, SCREEN_HEIGHT, caption="example"
 )
 screen = SimpleMenuScreen()
 app.current_screen = screen

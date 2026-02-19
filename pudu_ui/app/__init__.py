@@ -73,6 +73,9 @@ class App(Window):
             return self.current_screen.on_key_press(symbol, modifiers)
         return EVENT_HANDLED
 
+    def on_key_release(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_key_release(symbol, modifiers)
+
     def update(self, dt: float):
         self.current_screen.update(dt)
 

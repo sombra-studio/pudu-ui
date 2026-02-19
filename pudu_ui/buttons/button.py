@@ -2,7 +2,7 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
 import pyglet
-from pyglet.window import mouse
+from pyglet.window import key, mouse
 
 
 from pudu_ui import Params, Widget
@@ -168,3 +168,23 @@ class Button(Widget):
             return pyglet.event.EVENT_UNHANDLED
         self.release(self.is_inside(x, y))
         return pyglet.event.EVENT_HANDLED
+
+    # Override function
+    def on_key_press(self, symbol, modifiers):
+        if (
+            self.is_on_focus and
+            (symbol == key.ENTER or symbol == key.RETURN)
+        ):
+            self.press()
+            return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED
+
+    # Override function
+    def on_key_release(self, symbol, modifiers):
+        if (
+            self.is_on_focus and
+            (symbol == key.ENTER or symbol == key.RETURN)
+        ):
+            self.release(False)
+            return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED
