@@ -120,42 +120,32 @@ class ListLayout(CollectionWidget):
             item.invalidate()
 
     def on_key_press(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
-        if not self.is_on_focus:
-            return EVENT_UNHANDLED
-
-        # Enter
-        if symbol == key.ENTER or symbol == key.RETURN:
-            item = self.get_current_item()
-            if hasattr(item, 'on_key_press'):
-                return item.on_key_press(symbol, modifiers)
+        if super().on_key_press(symbol, modifiers):
+            return EVENT_HANDLED
 
         # Directions
-        if self.direction == ListDirection.HORIZONTAL:
-            if (symbol == key.LEFT or symbol == key.A):
-                self.move_focus(-1)
-                return EVENT_HANDLED
+        if symbol in [key.LEFT, key.RIGHT, key.DOWN, key.UP]:
+            if self.current_item == -1:
+                return EVENT_UNHANDLED
 
-            elif (symbol == key.RIGHT or symbol == key.D):
-                self.move_focus(1)
-                return EVENT_HANDLED
+            if self.direction == ListDirection.HORIZONTAL:
+                if (symbol == key.LEFT or symbol == key.A):
+                    self.move_focus(-1)
+                    return EVENT_HANDLED
 
-        if self.direction == ListDirection.VERTICAL:
-            if (symbol == key.UP or symbol == key.W):
-                self.move_focus(-1)
-                return EVENT_HANDLED
+                elif (symbol == key.RIGHT or symbol == key.D):
+                    self.move_focus(1)
+                    return EVENT_HANDLED
 
-            elif (symbol == key.DOWN or symbol == key.S):
-                self.move_focus(1)
-                return EVENT_HANDLED
+            if self.direction == ListDirection.VERTICAL:
+                if (symbol == key.UP or symbol == key.W):
+                    self.move_focus(-1)
+                    return EVENT_HANDLED
+
+                elif (symbol == key.DOWN or symbol == key.S):
+                    self.move_focus(1)
+                    return EVENT_HANDLED
 
         return EVENT_UNHANDLED
 
-    def on_key_release(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
-        if not self.is_on_focus:
-            return EVENT_UNHANDLED
 
-        # Enter
-        if symbol == key.ENTER or symbol == key.RETURN:
-            item = self.get_current_item()
-            if hasattr(item, 'on_key_release'):
-                return item.on_key_release(symbol, modifiers)

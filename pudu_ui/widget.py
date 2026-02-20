@@ -3,6 +3,7 @@ from enum import Enum
 from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
 import pyglet
+from pyglet.window import key
 
 from pudu_ui import Color
 from pudu_ui.primitives.quad import SolidBordersQuad
@@ -292,3 +293,23 @@ class CollectionWidget(Widget):
         return self.handle_input_event(
             'on_mouse_drag', *args
         )
+
+    def on_key_press(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
+        if not self.is_on_focus:
+            return EVENT_UNHANDLED
+
+        # Enter
+        if symbol == key.ENTER or symbol == key.RETURN:
+            item = self.get_current_item()
+            if hasattr(item, 'on_key_press'):
+                return item.on_key_press(symbol, modifiers)
+
+    def on_key_release(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
+        if not self.is_on_focus:
+            return EVENT_UNHANDLED
+
+        # Enter
+        if symbol == key.ENTER or symbol == key.RETURN:
+            item = self.get_current_item()
+            if hasattr(item, 'on_key_release'):
+                return item.on_key_release(symbol, modifiers)
