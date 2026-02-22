@@ -49,6 +49,12 @@ class CollectionWidget(Widget):
 
         self.invalidate()
 
+    def recompute(self):
+        super().recompute()
+        for i, item in enumerate(self.children):
+            # Recompute item index in case children have changed order
+            item.index = i
+
     def on_focus(self):
         if self.children:
             self.children[0].focus()
