@@ -4,7 +4,9 @@ from . import utils
 
 from .colors import Color
 
-from .widget import CollectionWidget, Widget, WidgetGroup, Params
+from .widget import Widget, WidgetGroup, Params
+
+from .collection_widget import CollectionWidget
 
 from . import primitives
 
