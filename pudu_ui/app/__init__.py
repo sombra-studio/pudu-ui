@@ -41,8 +41,7 @@ class App(Window):
 
     def on_draw(self):
         glEnable(GL_BLEND)
-        if self.background_color != BLACK:
-            glClearColor(*self.background_color.as_vec4())
+        glClearColor(*self.background_color.as_vec4())
         self.clear()
         self.current_screen.draw()
 
