@@ -37,6 +37,9 @@ class Controller:
 
     def close(self):
         self.on_close()
+        # Removing the reference to the screen at the end should make the
+        # garbage collector delete it
+        self.screen = None
 
     def on_load(self, *_, **__):
         self.state = State.LOADING
