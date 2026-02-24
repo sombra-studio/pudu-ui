@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 
-from pudu_ui import App, Screen
+from pudu_ui import App
 
 
 class State(Enum):
@@ -23,10 +23,10 @@ class Controller:
             name = self.__class__.__name__
         self.name: str = name
         self.state = State.INITIALIZED
-        self.screen: Screen | None = None
+        self.screen = None
 
-    def load(self):
-        self.on_load()
+    def load(self, *args, **kwargs):
+        self.on_load(*args, **kwargs)
         self.resume()
 
     def pause(self):
@@ -38,7 +38,7 @@ class Controller:
     def close(self):
         self.on_close()
 
-    def on_load(self):
+    def on_load(self, *_, **__):
         self.state = State.LOADING
 
     def on_pause(self):
