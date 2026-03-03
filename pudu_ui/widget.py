@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
 import pyglet
-from pyglet.window import key
+from pyglet.math import Vec2
+
 
 from pudu_ui import Color
 from pudu_ui.primitives.quad import SolidBordersQuad
@@ -34,7 +34,9 @@ class Params:
 
 
 class WidgetGroup(Group):
-    def __init__(self, widget, order: int = 0, parent: Group | None = None) -> None:
+    def __init__(
+        self, widget, order: int = 0, parent: Group | None = None
+    ) -> None:
         super().__init__(order, parent)
         self.widget = widget
 
@@ -52,7 +54,10 @@ class WidgetGroup(Group):
 
 class Widget:
     def __init__(
-        self, params: Params = None, batch: Batch = None, group: Group = None,
+        self,
+        params: Params | None = None,
+        batch: Batch | None = None,
+        group: Group | None = None,
         parent=None
     ):
         if not params:
@@ -61,17 +66,21 @@ class Widget:
         self.y: float = params.y
         self.width: int = params.width
         self.height: int = params.height
+        self.animation_offset_x: float = 0.0
+        self.animation_offset_y: float = 0.0
+        self.animation_velocity: Vec2 = Vec2()
+        self.animation_timer: float = 0.0
         self.batch: Batch = batch
         self.group: Group = group
         self.parent: Widget | None = parent
         self.is_focusable: bool = params.focusable
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
-        self.index: int = 0
+        self.is_in_animation: bool = False
         self.is_valid: bool = True
+        self.index: int = 0
         self.children: list[Widget] = []
         self.mode: Mode = Mode.NORMAL
-
 
         # Create borders to debug
         self.debug_front_group = WidgetGroup(self,4, parent=group)
@@ -104,9 +113,25 @@ class Widget:
         else:
             x_offset = 0.0
             y_offset = 0.0
+
+        if self.is_in_animation:
+            x_offset += self.animation_offset_x
+            y_offset += self.animation_offset_y
+
         x = self.x + x_offset
         y = self.y + y_offset
         return x, y
+
+    def lerp_from_position(self, x: float, y: float, secs: float):
+        curr_x, curr_y = self.get_position()
+        dx = curr_x - x
+        dy = curr_y - y
+        v = Vec2(dx / secs, dy / secs)
+        self.animation_velocity = v
+        self.is_in_animation = True
+        self.animation_offset_x = -dx
+        self.animation_offset_y = -dy
+        self.animation_timer = secs
 
     def on_focus(self):
         self.invalidate()
@@ -164,11 +189,27 @@ class Widget:
         self.debug_label.y = label_y
 
     def update(self, dt: float):
-        if not self.is_valid:
+        # Animate
+        if self.is_in_animation:
+            self.animation_timer -= dt
+            if self.animation_timer <= 0.0:
+                # Animation finished, reset everything
+                self.animation_timer = 0.0
+                self.is_in_animation = False
+                self.animation_offset_x = 0.0
+                self.animation_offset_y = 0.0
+
+            self.animation_offset_x += self.animation_velocity.x * dt
+            self.animation_offset_y += self.animation_velocity.y * dt
+            self.recompute()
+
+        elif not self.is_valid:
             self.recompute()
             self.is_valid = True
-            for child in self.children:
-                child.update(dt)
+
+        # Always call update on every child
+        for child in self.children:
+            child.update(dt)
 
     def is_inside(self, x: float, y: float) -> bool:
         x_pos, y_pos = self.get_position()
