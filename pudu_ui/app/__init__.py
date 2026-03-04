@@ -19,9 +19,7 @@ class App(Window):
         background_color: Color = BLACK
     ):
         super().__init__(width=width, height=height, caption=caption)
-        self.screens: list[Screen] = []
         default_screen = Screen("default screen")
-        self.screens.append(default_screen)
         self.current_screen = default_screen
         self.update_rate = update_rate
         self.background_color = background_color
@@ -67,7 +65,7 @@ class App(Window):
             x, y, dx, dy, buttons, modifiers
         )
 
-    def on_key_press(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+    def on_key_press(self, symbol: int, modifiers: int):
         if super().on_key_press(symbol, modifiers) == EVENT_UNHANDLED:
             return self.current_screen.on_key_press(symbol, modifiers)
         return EVENT_HANDLED
