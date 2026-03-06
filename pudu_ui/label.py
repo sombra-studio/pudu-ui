@@ -21,6 +21,7 @@ class LabelParams(Params):
     text: str = ""
     anchor_x: Literal['left', 'center', 'right'] = 'left'
     anchor_y: Literal['top', 'bottom', 'center', 'baseline'] = 'baseline'
+    multiline: bool = False
     resize_type: LabelResizeType = LabelResizeType.NONE
     rotation: float = 0.0
     style: FontStyle = field(default_factory=styles.fonts.p1)
@@ -57,6 +58,7 @@ class Label(Widget):
             anchor_x=params.anchor_x,
             anchor_y=params.anchor_y,
             rotation=params.rotation,
+            multiline=params.multiline,
             font_name=params.style.font_name,
             font_size=params.style.font_size,
             weight=params.style.weight,
@@ -126,6 +128,7 @@ class Label(Widget):
             )
         ):
             self.impl.font_size += 1
+        self.impl.font_size -= 1
 
     def fit(self):
         while self.width and self.impl.content_width > self.width:
