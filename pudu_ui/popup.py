@@ -1,12 +1,14 @@
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+from pyglet.graphics import Batch, Group
+
+from pudu_ui import FrameParams, Frame, Label, LabelParams, Params, Widget
+from pudu_ui.styles.fonts import h2
 from pudu_ui.styles.popups import PopUpStyle, default_popup_style
-from pyglet.graphics import Batch
 
 
-from pudu_ui import FrameParams, Frame, Params, Widget
-
+TITLE_MARGIN_Y = 12
 
 
 @dataclass
@@ -24,9 +26,10 @@ class PopUp(Widget):
     def __init__(
         self,
         params: PopUpParams | None = None,
-        batch: Batch | None = None
+        batch: Batch | None = None,
+        group: Group | None = None
     ):
-        super().__init__(params=params, batch=batch)
+        super().__init__(params=params, batch=batch, group=group)
         if not params:
             params = PopUpParams()
         frame_params = FrameParams(
@@ -34,3 +37,11 @@ class PopUp(Widget):
             style=params.style.background_style
         )
         self.frame = Frame(params=frame_params, batch=batch)
+        title_params = LabelParams(
+            x=params.width//2, y=TITLE_MARGIN_Y,
+            anchor_x='center', anchor_y='center',
+            style=h2()
+        )
+        self.title = Label(
+            params=title_params, batch=batch, group=group, parent=self
+        )
