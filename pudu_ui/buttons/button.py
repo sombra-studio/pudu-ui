@@ -14,6 +14,9 @@ from pudu_ui.styles.buttons import (
 )
 
 
+PERCENT_OF_WIDTH = 0.8  # Labels use 80% of the button width max
+
+
 @dataclass
 class ButtonParams(Params):
     """
@@ -93,10 +96,11 @@ class Button(Widget):
     def create_label(self) -> Label:
         label_x = self.width / 2.0
         label_y = self.height / 2.0
+        label_width = int(self.width * PERCENT_OF_WIDTH)     # Use 80% of the width
         label_params = LabelParams(
             label_x,
             label_y,
-            width=self.width,
+            width=label_width,
             text=self.text,
             anchor_x='center',
             anchor_y='center',
@@ -153,7 +157,7 @@ class Button(Widget):
         self.label.x = self.width / 2.0
         self.label.y = self.height / 2.0
         self.label.text = self.text
-        self.label.width = self.width
+        self.label.width = int(self.width * PERCENT_OF_WIDTH)
         self.label.height = self.height
         self.label.invalidate()
 
