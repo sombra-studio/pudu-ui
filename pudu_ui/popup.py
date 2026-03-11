@@ -55,11 +55,12 @@ class PopUp(Widget):
             style=params.style.background_style
         )
         self.frame = Frame(params=frame_params, batch=batch, group=self.group)
+
         title_params = LabelParams(
-            x=params.width//2, y=TITLE_MARGIN_Y,
+            x=params.width//2, y=params.height - TITLE_MARGIN_Y,
             width=int(params.width * 0.8),  # Max. width set to 80%
             text=params.title,
-            anchor_x='center', anchor_y='center',
+            anchor_x='center', anchor_y='top',
             resize_type=LabelResizeType.FIT,
             style=h2()
         )
@@ -89,7 +90,7 @@ class PopUp(Widget):
             if params.opt2_callback:
                 # Make two buttons
                 left_x = (
-                    params.width // 2 - BUTTON_MARGIN_X // 2 - BUTTON_WIDTH // 2
+                    params.width // 2 - BUTTON_MARGIN_X // 2 - BUTTON_WIDTH
                 )
                 btn_params = ButtonParams(
                     x=left_x, y=BUTTON_MARGIN_Y,
@@ -104,7 +105,7 @@ class PopUp(Widget):
                 self.children.append(btn_left)
 
                 right_x = (
-                    params.width // 2 - BUTTON_MARGIN_X // 2 - BUTTON_WIDTH // 2
+                    params.width // 2 + BUTTON_MARGIN_X // 2
                 )
                 btn_params.x = right_x
                 btn_params.text = params.opt2_text

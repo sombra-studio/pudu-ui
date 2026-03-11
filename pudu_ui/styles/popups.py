@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from pudu_ui.colors import LIGHT_GRAY
+from pudu_ui.colors import WHITE
 from pudu_ui.styles.buttons import ButtonStyle, default_button_style
 from pudu_ui.styles.fonts import FontStyle, h2, p1
 from pudu_ui.styles.frames import FrameStyle
@@ -8,7 +8,7 @@ from pudu_ui.styles.frames import FrameStyle
 
 def dft_bg_style():
     style = FrameStyle(
-        start_color=LIGHT_GRAY,
+        start_color=WHITE,
     )
     return style
 

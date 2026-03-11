@@ -85,7 +85,7 @@ class Widget:
         self.group.visible = params.visible
 
         # Create borders to debug
-        self.debug_front_group = WidgetGroup(self, order=4)
+        self.debug_front_group = WidgetGroup(self, order=4, parent=group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
             batch=batch, group=self.debug_front_group,
