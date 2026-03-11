@@ -65,7 +65,7 @@ class Label(Widget):
             italic=params.style.italic,
             color=self.get_color_tuple(),
             batch=batch,
-            group=group
+            group=self.group
         )
         self.recompute()
 

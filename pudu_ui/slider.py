@@ -58,8 +58,8 @@ class Slider(Widget):
         self.style = deepcopy(params.style)
         self.hover_style = deepcopy(params.hover_style)
         self.focus_style = deepcopy(params.focus_style)
-        self.back_group = WidgetGroup(widget=self, order=0, parent=group)
-        self.front_group = WidgetGroup(widget=self, order=1, parent=group)
+        self.back_group = WidgetGroup(widget=self, order=0, parent=self.group)
+        self.front_group = WidgetGroup(widget=self, order=1, parent=self.group)
         self.bar = self.create_bar()
         self.children.append(self.bar)
 
@@ -130,7 +130,7 @@ class Slider(Widget):
     def on_mouse_drag(self, x, _, dx, __, buttons, ___) -> bool:
         slider_x = self.get_position()[0]
         if buttons & mouse.LEFT and self.is_on_press and (
-            x >= slider_x and x <= slider_x + self.width
+            slider_x <= x <= slider_x + self.width
         ):
             relative_x = min(x - slider_x - self.bar.x, self.bar.width)
             relative_x = max(0, relative_x)

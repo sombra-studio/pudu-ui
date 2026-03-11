@@ -30,6 +30,7 @@ class Params:
     width: int = 100
     height: int = 100
     focusable: bool = True
+    visible: bool = True
     debug_label_color: Color = field(default_factory=default_debug_label_color)
 
 
@@ -71,7 +72,7 @@ class Widget:
         self.animation_velocity: Vec2 = Vec2()
         self.animation_timer: float = 0.0
         self.batch: Batch = batch
-        self.group: Group = group
+        self.group: WidgetGroup = WidgetGroup(self, parent=group)
         self.parent: Widget | None = parent
         self.is_focusable: bool = params.focusable
         self.is_on_focus: bool = False
@@ -81,9 +82,10 @@ class Widget:
         self.index: int = 0
         self.children: list[Widget] = []
         self.mode: Mode = Mode.NORMAL
+        self.group.visible = params.visible
 
         # Create borders to debug
-        self.debug_front_group = WidgetGroup(self,4, parent=group)
+        self.debug_front_group = WidgetGroup(self, order=4)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
             batch=batch, group=self.debug_front_group,
@@ -103,6 +105,14 @@ class Widget:
         )
 
         self.set_normal_mode()
+
+    @property
+    def visible(self):
+        return self.group.visible
+
+    @visible.setter
+    def visible(self, value):
+        self.group.visible = value
 
     def get_debug_string(self) -> str:
         return f"{self}"
