@@ -8,13 +8,20 @@ class Screen:
         self.name: str = name
         self.batch: pyglet.graphics.Batch = pyglet.graphics.Batch()
         self.widgets: list[Widget] = []
+        self.is_ready: bool = False
 
     def update(self, dt):
         for widget in self.widgets:
             widget.update(dt)
 
+        # This screen would be ready after the first update
+        if not self.is_ready:
+            self.is_ready = True
+
     def draw(self):
-        self.batch.draw()
+        # Only draw after the screen has been updated
+        if self.is_ready:
+            self.batch.draw()
 
     def handle_input_event(self, event_name: str, *args) -> EVENT_HANDLE_STATE:
         for widget in self.widgets:
