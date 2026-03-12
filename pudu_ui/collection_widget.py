@@ -79,6 +79,9 @@ class CollectionWidget(Widget):
             self.unfocus()
 
     def handle_input_event(self, event_name: str, *args) -> EVENT_HANDLE_STATE:
+        if not self.is_focusable:
+            return EVENT_UNHANDLED
+
         for widget in self.children:
             # The first widget that handles this event will return
             if hasattr(widget, event_name):
@@ -108,7 +111,7 @@ class CollectionWidget(Widget):
         )
 
     def on_key_press(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
-        if not self.is_on_focus:
+        if not self.is_on_focus or not self.is_focusable:
             return EVENT_UNHANDLED
 
         # Enter
@@ -119,7 +122,7 @@ class CollectionWidget(Widget):
         return EVENT_UNHANDLED
 
     def on_key_release(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
-        if not self.is_on_focus:
+        if not self.is_on_focus or not self.is_focusable:
             return EVENT_UNHANDLED
 
         # Enter

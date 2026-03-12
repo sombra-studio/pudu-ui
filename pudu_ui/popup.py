@@ -16,8 +16,8 @@ from pudu_ui.styles.popups import PopUpStyle, default_popup_style
 DEFAULT_WIDTH = 400
 DEFAULT_HEIGHT = 380
 TITLE_MARGIN_Y = 12
-BUTTON_WIDTH = 100
-BUTTON_HEIGHT = 40
+BUTTON_WIDTH = 120
+BUTTON_HEIGHT = 64
 BUTTON_MARGIN_Y = 12
 BUTTON_MARGIN_X = 32
 POPUP_GROUP_ORDER = 100     # Arbitrarily large number
