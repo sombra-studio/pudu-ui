@@ -47,7 +47,3 @@ class ImageButton(Button):
     def change_style(self, style: ImageButtonStyle):
         super().change_style(style)
         self.image.color = style.color
-
-    def recompute(self):
-        super().recompute()
-        self.image.invalidate()

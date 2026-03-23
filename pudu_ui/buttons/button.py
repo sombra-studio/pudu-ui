@@ -150,7 +150,6 @@ class Button(Widget):
         # Recompute background
         self.background.width = self.width
         self.background.height = self.height
-        self.background.invalidate()
 
         # Recompute label
         # This will keep the label centered in the button
@@ -159,7 +158,6 @@ class Button(Widget):
         self.label.text = self.text
         self.label.width = int(self.width * PERCENT_OF_WIDTH)
         self.label.height = self.height
-        self.label.invalidate()
 
     # Override function
     def on_mouse_press(self, x, y, buttons, _):

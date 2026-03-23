@@ -116,7 +116,6 @@ class Slider(Widget):
         self.bar.width = self.width - self.height
         self.bar.heigh = self.bar_height
         self.bar.value = self.value
-        self.bar.invalidate()
 
         # Update thumb
         self.thumb.height = self.height
@@ -124,7 +123,6 @@ class Slider(Widget):
         self.thumb.style.set_uniform_radius(self.height / 2.0)
         value_pos = self.get_value_pos()
         self.thumb.x = value_pos
-        self.thumb.invalidate()
 
     # Event function
     def on_mouse_drag(self, x, _, dx, __, buttons, ___) -> bool:

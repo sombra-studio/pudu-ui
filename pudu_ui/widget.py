@@ -198,6 +198,9 @@ class Widget:
         self.debug_label.x = label_x
         self.debug_label.y = label_y
 
+        for child in self.children:
+            child.invalidate()
+
     def update(self, dt: float):
         # Animate
         if self.is_in_animation:
