@@ -29,7 +29,7 @@ class Screen:
             if hasattr(widget, event_name):
                 widget_func = getattr(widget, event_name)
                 if widget_func(*args) == EVENT_HANDLED:
-                    return EVENT_HANDLED
+                    return True
         return EVENT_UNHANDLED
 
     def on_mouse_press(self, *args) -> EVENT_HANDLE_STATE:
