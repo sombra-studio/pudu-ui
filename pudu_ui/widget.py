@@ -134,6 +134,10 @@ class Widget:
 
     def lerp_from_position(self, x: float, y: float, secs: float):
         curr_x, curr_y = self.get_position()
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+            x += x_offset
+            y += y_offset
         dx = curr_x - x
         dy = curr_y - y
         v = Vec2(dx / secs, dy / secs)
