@@ -44,7 +44,7 @@ LIGHTER_GRAY = Color(220, 220, 220)
 LIGHT_GRAY = Color(180, 180, 180)
 GRAY = Color(122, 122, 122)
 DARK_GRAY = Color(65, 65, 65)
-DARKER_GRAY = Color(38, 38, 38)
+DARKER_GRAY = Color(35, 35, 35)
 BLACK = Color(0, 0, 0)
 
 VIOLET = Color(240, 10, 178)

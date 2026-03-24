@@ -12,18 +12,18 @@ from pudu_ui.styles.toggles import (
 )
 
 
-DEFAULT_TOGGLE_WIDTH = 80
+DEFAULT_TOGGLE_WIDTH = 56
 TOGGLE_MARGIN_X = 2
 TOGGLE_MARGIN_Y = 2
 DEFAULT_TOGGLE_HEIGHT = 2 * TOGGLE_MARGIN_Y + 2 * DEFAULT_TOGGLE_THUMB_RADIUS
-TOGGLE_ANIMATION_TIME = 0.5
+TOGGLE_ANIMATION_TIME = 0.15
 
 
 @dataclass
 class ToggleParams(Params):
     width: int = DEFAULT_TOGGLE_WIDTH
     height: int = DEFAULT_TOGGLE_HEIGHT
-    is_on: bool = False
+    is_on: bool = True
     on_style: ToggleStyle = field(default_factory=dft_on_toggle_style)
     off_style:  ToggleStyle = field(default_factory=dft_off_toggle_style)
     on_focus_style: ToggleStyle = field(
@@ -69,29 +69,34 @@ class Toggle(Widget):
             style=self.style.background_style
         )
         frame = Frame(
-            params=frame_params, batch=self.batch, group=self.back_group
+            params=frame_params, batch=self.batch, group=self.back_group,
+            parent=self
         )
         return frame
 
     def create_thumb(self) -> Frame:
         thumb_size = self.height - 2 * TOGGLE_MARGIN_Y
+        thumb_x = self.width - thumb_size - TOGGLE_MARGIN_X
         frame_params = FrameParams(
-            x=TOGGLE_MARGIN_X, y=TOGGLE_MARGIN_Y,
+            x=thumb_x, y=TOGGLE_MARGIN_Y,
             width=thumb_size, height=thumb_size,
             style=self.style.thumb_style
         )
         frame = Frame(
-            params=frame_params, batch=self.batch, group=self.front_group
+            params=frame_params, batch=self.batch, group=self.front_group,
+            parent=self
         )
         return frame
 
     def change_style(self, style: ToggleStyle):
+        self.style = deepcopy(style)
         self.background.change_style(style.background_style)
         self.thumb.change_style(style.thumb_style)
 
     def on(self):
         self.is_on = True
-        self.change_style(self.on_style)
+        new_style = self.on_focus_style if self.is_on_focus else self.on_style
+        self.change_style(new_style)
         previous_x = self.thumb.x
         # Move thumb to the right
         self.thumb.x = self.width - TOGGLE_MARGIN_X - self.thumb.width
@@ -102,7 +107,8 @@ class Toggle(Widget):
 
     def off(self):
         self.is_on = False
-        self.change_style(self.off_style)
+        new_style = self.off_focus_style if self.is_on_focus else self.off_style
+        self.change_style(new_style)
         previous_x = self.thumb.x
         # Move thumb to the right
         self.thumb.x = TOGGLE_MARGIN_X
@@ -128,6 +134,7 @@ class Toggle(Widget):
         self.thumb.x = thumb_x
         self.thumb.width = thumb_size
         self.thumb.height = thumb_size
+        self.thumb.style.set_uniform_radius(thumb_size / 2.0)
 
     # Events
 
