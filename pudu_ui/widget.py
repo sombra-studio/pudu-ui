@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
 import pyglet
+from pyglet.math import Vec2
+
 
 from pudu_ui import Color
 from pudu_ui.primitives.quad import SolidBordersQuad
@@ -29,11 +30,14 @@ class Params:
     width: int = 100
     height: int = 100
     focusable: bool = True
+    visible: bool = True
     debug_label_color: Color = field(default_factory=default_debug_label_color)
 
 
 class WidgetGroup(Group):
-    def __init__(self, widget, order: int = 0, parent: Group | None = None) -> None:
+    def __init__(
+        self, widget, order: int = 0, parent: Group | None = None
+    ) -> None:
         super().__init__(order, parent)
         self.widget = widget
 
@@ -51,7 +55,10 @@ class WidgetGroup(Group):
 
 class Widget:
     def __init__(
-        self, params: Params = None, batch: Batch = None, group: Group = None,
+        self,
+        params: Params | None = None,
+        batch: Batch | None = None,
+        group: Group | None = None,
         parent=None
     ):
         if not params:
@@ -60,20 +67,25 @@ class Widget:
         self.y: float = params.y
         self.width: int = params.width
         self.height: int = params.height
+        self.animation_offset_x: float = 0.0
+        self.animation_offset_y: float = 0.0
+        self.animation_velocity: Vec2 = Vec2()
+        self.animation_timer: float = 0.0
         self.batch: Batch = batch
-        self.group: Group = group
+        self.group: WidgetGroup = WidgetGroup(self, parent=group)
         self.parent: Widget | None = parent
         self.is_focusable: bool = params.focusable
         self.is_on_focus: bool = False
         self.is_on_hover: bool = False
-        self.index: int = 0
+        self.is_in_animation: bool = False
         self.is_valid: bool = True
+        self.index: int = 0
         self.children: list[Widget] = []
         self.mode: Mode = Mode.NORMAL
-
+        self.group.visible = params.visible
 
         # Create borders to debug
-        self.debug_front_group = WidgetGroup(self,4, parent=group)
+        self.debug_front_group = WidgetGroup(self, order=4, parent=group)
         self.debug_background: SolidBordersQuad = SolidBordersQuad(
             0, 0, self.width, self.height,
             batch=batch, group=self.debug_front_group,
@@ -94,6 +106,14 @@ class Widget:
 
         self.set_normal_mode()
 
+    @property
+    def visible(self):
+        return self.group.visible
+
+    @visible.setter
+    def visible(self, value):
+        self.group.visible = value
+
     def get_debug_string(self) -> str:
         return f"{self}"
 
@@ -103,9 +123,29 @@ class Widget:
         else:
             x_offset = 0.0
             y_offset = 0.0
+
+        if self.is_in_animation:
+            x_offset += self.animation_offset_x
+            y_offset += self.animation_offset_y
+
         x = self.x + x_offset
         y = self.y + y_offset
         return x, y
+
+    def lerp_from_position(self, x: float, y: float, secs: float):
+        curr_x, curr_y = self.get_position()
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+            x += x_offset
+            y += y_offset
+        dx = curr_x - x
+        dy = curr_y - y
+        v = Vec2(dx / secs, dy / secs)
+        self.animation_velocity = v
+        self.is_in_animation = True
+        self.animation_offset_x = -dx
+        self.animation_offset_y = -dy
+        self.animation_timer = secs
 
     def on_focus(self):
         self.invalidate()
@@ -162,12 +202,31 @@ class Widget:
         self.debug_label.x = label_x
         self.debug_label.y = label_y
 
+        for child in self.children:
+            child.invalidate()
+
     def update(self, dt: float):
-        if not self.is_valid:
+        # Animate
+        if self.is_in_animation:
+            self.animation_timer -= dt
+            if self.animation_timer <= 0.0:
+                # Animation finished, reset everything
+                self.animation_timer = 0.0
+                self.is_in_animation = False
+                self.animation_offset_x = 0.0
+                self.animation_offset_y = 0.0
+
+            self.animation_offset_x += self.animation_velocity.x * dt
+            self.animation_offset_y += self.animation_velocity.y * dt
+            self.recompute()
+
+        elif not self.is_valid:
             self.recompute()
             self.is_valid = True
-            for child in self.children:
-                child.update(dt)
+
+        # Always call update on every child
+        for child in self.children:
+            child.update(dt)
 
     def is_inside(self, x: float, y: float) -> bool:
         x_pos, y_pos = self.get_position()
@@ -202,70 +261,4 @@ class Widget:
         return (
             f"{self.__class__.__name__}(x: {self.x}, y: {self.y},"
             f" w: {self.width}, h: {self.height})"
-        )
-
-
-class CollectionWidget(Widget):
-    def add(self, widget: Widget):
-        widget.index = len(self.children)
-        widget.parent = self
-        self.children.append(widget)
-        self.invalidate()
-
-    def insert(self, index: int, widget: Widget):
-        count = len(self.children)
-        widget.index = index
-        widget.parent = self
-        self.children.insert(index, widget)
-        # Update the rest of children
-        for i in range(index + 1, count):
-            self.children[i].index = i
-        self.invalidate()
-
-    def remove_at(self, index: int):
-        count = len(self.children)
-        if index >= count:
-            raise IndexError(
-                f"Index {index} is out of bounds for {self.__class__.__name__}"
-                f" with count {count}"
-            )
-        reminder = self.children[index:]
-        new_idx = index
-        for elem in reminder:
-            elem.index = new_idx
-            new_idx += 1
-        removed_widget = self.children[index]
-        removed_widget.parent = None
-        removed_widget.invalidate()
-        del self.children[index]
-
-        self.invalidate()
-
-    def handle_input_event(self, event_name: str, *args) -> EVENT_HANDLE_STATE:
-        for widget in self.children:
-            # The first widget that handles this event will return
-            if hasattr(widget, event_name):
-                widget_func = getattr(widget, event_name)
-                if widget_func(*args) == EVENT_HANDLED:
-                    return True
-        return EVENT_UNHANDLED
-
-    def on_mouse_press(self, *args) -> EVENT_HANDLE_STATE:
-        return self.handle_input_event(
-            'on_mouse_press', *args
-        )
-
-    def on_mouse_release(self, *args) -> EVENT_HANDLE_STATE:
-        return self.handle_input_event(
-            'on_mouse_release', *args
-        )
-
-    def on_mouse_motion(self, *args) -> EVENT_HANDLE_STATE:
-        return self.handle_input_event(
-            'on_mouse_motion', *args
-        )
-
-    def on_mouse_drag(self, *args) -> EVENT_HANDLE_STATE:
-        return self.handle_input_event(
-            'on_mouse_drag', *args
         )

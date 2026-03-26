@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
+
+from pyglet.event import EVENT_HANDLED, EVENT_HANDLE_STATE, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
+from pyglet.window import key
 
 
 from pudu_ui import CollectionWidget, Params, Widget
@@ -38,6 +41,7 @@ class ListLayout(CollectionWidget):
         self.resizes_item_width = params.resizes_item_width
         self.resizes_item_height = params.resizes_item_height
         self.direction = params.direction
+        self.current_item = -1
 
     def calculate_item_height(self) -> int:
         n = len(self.children)
@@ -114,3 +118,34 @@ class ListLayout(CollectionWidget):
             curr_pos += offset
 
             item.invalidate()
+
+    def on_key_press(self, symbol, modifiers) -> EVENT_HANDLE_STATE:
+        if super().on_key_press(symbol, modifiers):
+            return EVENT_HANDLED
+
+        # Directions
+        if symbol in [key.LEFT, key.RIGHT, key.DOWN, key.UP]:
+            if self.current_item == -1:
+                return EVENT_UNHANDLED
+
+            if self.direction == ListDirection.HORIZONTAL:
+                if (symbol == key.LEFT or symbol == key.A):
+                    self.move_focus(-1)
+                    return EVENT_HANDLED
+
+                elif (symbol == key.RIGHT or symbol == key.D):
+                    self.move_focus(1)
+                    return EVENT_HANDLED
+
+            if self.direction == ListDirection.VERTICAL:
+                if (symbol == key.UP or symbol == key.W):
+                    self.move_focus(-1)
+                    return EVENT_HANDLED
+
+                elif (symbol == key.DOWN or symbol == key.S):
+                    self.move_focus(1)
+                    return EVENT_HANDLED
+
+        return EVENT_UNHANDLED
+
+

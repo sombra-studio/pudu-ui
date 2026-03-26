@@ -43,7 +43,7 @@ class Frame(Widget):
             border_width=params.style.border_width,
             border_color=params.style.border_color,
             batch=batch,
-            group=group,
+            group=self.group,
             parent=self
         )
 

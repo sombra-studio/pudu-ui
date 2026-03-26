@@ -4,7 +4,9 @@ from . import utils
 
 from .colors import Color
 
-from .widget import CollectionWidget, Widget, WidgetGroup, Params
+from .widget import Widget, WidgetGroup, Params
+
+from .collection_widget import CollectionWidget
 
 from . import primitives
 
@@ -23,6 +25,10 @@ from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 from .progress_bar import ProgressBar, ProgressBarParams
 
 from .slider import Slider, SliderParams
+
+from .toggle import Toggle, ToggleParams
+
+from .popup import PopUpParams, PopUp
 
 from . import layouts
 

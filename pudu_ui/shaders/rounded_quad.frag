@@ -28,7 +28,7 @@ bool is_inside_box(vec2 box_origin, vec2 pos, float side) {
 vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
     float dist = distance(pos, center);
 
-    if (dist > radius + 1.5) {
+    if (dist > radius + 0.5) {
         discard;
     }
 

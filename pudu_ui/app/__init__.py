@@ -1,4 +1,4 @@
-from pyglet.event import EVENT_HANDLE_STATE
+from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
 from pyglet.graphics.api.gl.gl import glClearColor, glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
@@ -19,9 +19,7 @@ class App(Window):
         background_color: Color = BLACK
     ):
         super().__init__(width=width, height=height, caption=caption)
-        self.screens: list[Screen] = []
         default_screen = Screen("default screen")
-        self.screens.append(default_screen)
         self.current_screen = default_screen
         self.update_rate = update_rate
         self.background_color = background_color
@@ -41,8 +39,7 @@ class App(Window):
 
     def on_draw(self):
         glEnable(GL_BLEND)
-        if self.background_color != BLACK:
-            glClearColor(*self.background_color.as_vec4())
+        glClearColor(*self.background_color.as_vec4())
         self.clear()
         self.current_screen.draw()
 
@@ -68,7 +65,15 @@ class App(Window):
             x, y, dx, dy, buttons, modifiers
         )
 
-    def update(self, dt):
+    def on_key_press(self, symbol: int, modifiers: int):
+        if super().on_key_press(symbol, modifiers) == EVENT_UNHANDLED:
+            return self.current_screen.on_key_press(symbol, modifiers)
+        return EVENT_HANDLED
+
+    def on_key_release(self, symbol: int, modifiers: int) -> EVENT_HANDLE_STATE:
+        return self.current_screen.on_key_release(symbol, modifiers)
+
+    def update(self, dt: float):
         self.current_screen.update(dt)
 
     def run(self):

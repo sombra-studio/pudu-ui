@@ -2,7 +2,7 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, field
 import pyglet
-from pyglet.window import mouse
+from pyglet.window import key, mouse
 
 
 from pudu_ui import Params, Widget
@@ -12,6 +12,9 @@ from pudu_ui.styles.buttons import (
     ButtonStyle, default_button_style, dft_btn_hover_style,
     dft_btn_focus_style, dft_btn_press_style
 )
+
+
+PERCENT_OF_WIDTH = 0.8  # Labels use 80% of the button width max
 
 
 @dataclass
@@ -27,6 +30,8 @@ class ButtonParams(Params):
         focus_style: The style for the button when focused
         press_style: The style for the button when pressed
     """
+    width: int = 120
+    height: int = 64
     text: str = ""
     on_press: Callable[[...], None] = lambda *args: None
     style: ButtonStyle = field(default_factory=default_button_style)
@@ -57,10 +62,10 @@ class Button(Widget):
         self.on_press = params.on_press
         self.is_on_press = False
         self.front_group: pyglet.graphics.Group = pyglet.graphics.Group(
-            1, parent=group
+            order=1, parent=self.group
         )
         self.back_group: pyglet.graphics.Group = pyglet.graphics.Group(
-            parent=group
+            parent=self.group
         )
         self.style = deepcopy(params.style)
         self.hover_style = deepcopy(params.hover_style)
@@ -91,10 +96,11 @@ class Button(Widget):
     def create_label(self) -> Label:
         label_x = self.width / 2.0
         label_y = self.height / 2.0
+        label_width = int(self.width * PERCENT_OF_WIDTH)     # Use 80% of the width
         label_params = LabelParams(
             label_x,
             label_y,
-            width=self.width,
+            width=label_width,
             text=self.text,
             anchor_x='center',
             anchor_y='center',
@@ -144,16 +150,14 @@ class Button(Widget):
         # Recompute background
         self.background.width = self.width
         self.background.height = self.height
-        self.background.invalidate()
 
         # Recompute label
         # This will keep the label centered in the button
         self.label.x = self.width / 2.0
         self.label.y = self.height / 2.0
         self.label.text = self.text
-        self.label.width = self.width
+        self.label.width = int(self.width * PERCENT_OF_WIDTH)
         self.label.height = self.height
-        self.label.invalidate()
 
     # Override function
     def on_mouse_press(self, x, y, buttons, _):
@@ -168,3 +172,23 @@ class Button(Widget):
             return pyglet.event.EVENT_UNHANDLED
         self.release(self.is_inside(x, y))
         return pyglet.event.EVENT_HANDLED
+
+    # Override function
+    def on_key_press(self, symbol, modifiers):
+        if (
+            self.is_on_focus and
+            (symbol == key.ENTER or symbol == key.RETURN)
+        ):
+            self.press()
+            return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED
+
+    # Override function
+    def on_key_release(self, symbol, modifiers):
+        if (
+            self.is_on_focus and
+            (symbol == key.ENTER or symbol == key.RETURN)
+        ):
+            self.release(False)
+            return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_UNHANDLED

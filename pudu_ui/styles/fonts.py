@@ -31,6 +31,12 @@ def h1():
     return FontStyle(font_size=32, font_name=DEFAULT_FONT_NAME)
 
 
+def h2():
+    style = h1()
+    style.font_size = 24
+    return style
+
+
 # Paragraph Styles
 
 def p1():
@@ -39,6 +45,7 @@ def p1():
 
 def p2():
     return FontStyle(font_size=18, font_name=DEFAULT_FONT_NAME)
+
 
 def p3():
     style = p1()

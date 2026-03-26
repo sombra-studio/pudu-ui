@@ -38,8 +38,8 @@ class ProgressBar(Widget):
         self.max_value = params.max_value
         self.value = params.value
         self.style = deepcopy(params.style)
-        self.back_group = Group(order=0, parent=group)
-        self.front_group = Group(order=1, parent=group)
+        self.back_group = Group(order=0, parent=self.group)
+        self.front_group = Group(order=1, parent=self.group)
         self.quad = self.create_quad()
 
     def change_style(self, style: ProgressBarStyle):

@@ -42,6 +42,6 @@ if __name__ == '__main__':
         img_button = pudu_ui.ImageButton(params, batch=app.batch)
         list_layout.add(img_button)
 
-    list_layout.children[0].focus()
+    list_layout.focus()
 
     app.run()

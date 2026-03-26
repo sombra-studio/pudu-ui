@@ -16,7 +16,7 @@ class Navigator:
 
         self.controllers[controller.name] = controller
 
-    def change(self, name: str):
+    def change(self, name: str, *args, **kwargs):
         if self.current_controller:
             self.current_controller.close()
 
@@ -25,4 +25,4 @@ class Navigator:
                 f"change: Couldn't find a controller with name: {name}"
             )
         self.current_controller = self.controllers[name]
-        self.current_controller.load()
+        self.current_controller.load(*args, **kwargs)

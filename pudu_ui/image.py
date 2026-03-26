@@ -58,7 +58,7 @@ class Image(Widget):
         img = self.rescale()
         sprite_x, sprite_y = self.get_sprite_position()
         self.sprite = Sprite(
-            img, x=sprite_x, y=sprite_y, batch=batch, group=group
+            img, x=sprite_x, y=sprite_y, batch=batch, group=self.group
         )
         self.sprite.color = (*self.color.as_tuple(), self.opacity)
 
