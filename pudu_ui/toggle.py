@@ -48,7 +48,9 @@ class Toggle(Widget):
 
         self.is_on = params.is_on
 
-        self.style = deepcopy(params.on_style)
+        self.style = deepcopy(
+            params.on_style if self.is_on else params.off_style
+        )
         self.on_style = deepcopy(params.on_style)
         self.off_style = deepcopy(params.off_style)
         self.on_focus_style = deepcopy(params.on_focus_style)
@@ -141,6 +143,11 @@ class Toggle(Widget):
     def on_focus(self):
         super().on_focus()
         style = self.on_focus_style if self.is_on else self.off_focus_style
+        self.change_style(style)
+
+    def on_unfocus(self):
+        super().on_unfocus()
+        style = self.on_style if self.is_on else self.off_style
         self.change_style(style)
 
     def on_mouse_press(self, x, y, buttons, _) -> EVENT_HANDLE_STATE:
