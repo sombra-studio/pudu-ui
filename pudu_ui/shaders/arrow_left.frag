@@ -2,26 +2,27 @@
 
 
 uniform float thickness;
+uniform vec3 color;
 uniform float opacity;
-uniform int width;
-uniform int height;
+uniform float width;
+uniform float height;
+uniform vec2 position;
 
 
-in vec3 frag_color;
 out vec4 final_color;
 
 
 bool is_inside_top_triangle(float x, float y) {
-    float triangle_ratio = (height / 2.0) / width;
+    float triangle_ratio = (height / 2) / width;
     float triangle_line = x * triangle_ratio;
-    if (y - height / 2.0 > triangle_line) {
+    if (height / 2 - y > triangle_line) {
         return false;
     }
     return true;
 }
 
 bool is_inside_bottom_triangle(float x, float y) {
-    float triangle_ratio = (height / 2.0) / width;
+    float triangle_ratio = (height / 2) / width;
     float triangle_line = x * triangle_ratio;
     if (y > triangle_line) {
         return true;
@@ -30,18 +31,24 @@ bool is_inside_bottom_triangle(float x, float y) {
 }
 
 void main() {
-
     vec2 pos = gl_FragCoord.xy;
-    if (pos.y > height / 2.0) {
+    // Use positions relative to the widget local coordinates
+    float x = pos.x - position.x;
+    float y = pos.y - position.y;
+    if (y > height / 2.0) {
         // Top half
-        if (is_inside_bottom_triangle(pos.x, pos.y)) {
-
+        if (is_inside_bottom_triangle(x, y)) {
+            final_color = vec4(color, opacity);
+        } else {
+            final_color = vec4(0.0, 0.0, 1.0, 1.0);
         }
 
     } else {
         // Bottom half
+        if (is_inside_bottom_triangle(x, y)) {
+            final_color = vec4(color, opacity);
+        } else {
+            final_color = vec4(0.0, 0.0, 1.0, 1.0);
+        }
     }
-
-
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
