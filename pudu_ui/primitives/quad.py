@@ -147,11 +147,11 @@ class Arrow:
         self,
         x: float = 0.0,
         y: float = 0.0,
-        width: int = DEFAULT_WIDTH,
-        height: int = DEFAULT_HEIGHT,
+        width: int = 16,
+        height: int = 24,
         color: Color = pudu_ui.colors.PURPLE,
         opacity: int = 255,
-        thickness: float = 4.0,
+        thickness: float = 2.0,
         program: pyglet.graphics.shader.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -227,14 +227,14 @@ class Arrow:
         self.attributes['position'] = ('f', self.get_vertices())
 
     def set_uniforms(self):
+        self.program['thickness'] = self.thickness
         self.program['color'] = self.color.as_vec3()
         self.program['opacity'] = self.opacity / 255.0
 
+        self.program['width'] = float(self.width)
+        self.program['height'] = float(self.height)
         x, y = self.get_position()
         self.program['position'] = Vec2(x, y)
-        self.program['width'] = int(self.width)
-        self.program['height'] = int(self.height)
-        # self.program['thickness'] = self.thickness
 
 
 class Quad:
