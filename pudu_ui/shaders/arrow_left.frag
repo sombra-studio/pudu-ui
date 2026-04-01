@@ -27,20 +27,22 @@ void main() {
     float y = pos.y - position.y;
     float TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
     float total_opacity = 0.0;
+    // h1 is the height of the smaller triangle
+    float w1 = (width - thickness);
+    float h1 = w1 * (height / width);
 
     for (int j = 0; j < NUM_SAMPLES; j++) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
             float sample_x = -0.5 + x + float(i) / NUM_SAMPLES;
             float sample_y = -0.5 + y + float(j) / NUM_SAMPLES;
+
             if (sample_y > height / 2.0) {
                 // Top half
                 if (
                     is_inside_triangle(
                         sample_x, height - sample_y, width, height
                     ) &&
-                    !is_inside_triangle(
-                        x, height - thickness - y, width - thickness, height - thickness
-                    )
+                    !is_inside_triangle(sample_x, h1 - sample_y, w1, h1)
                 ) {
                     total_opacity += 1.0 / TOTAL_SAMPLES;
                 }
@@ -49,8 +51,7 @@ void main() {
                 if (
                     is_inside_triangle(sample_x, sample_y, width, height) &&
                     !is_inside_triangle(
-                        sample_x, sample_y - thickness, width - thickness,
-                        height - thickness
+                        sample_x, sample_y - (height - h1), w1, h1
                     )
                 ) {
                     total_opacity += 1.0 / TOTAL_SAMPLES;
