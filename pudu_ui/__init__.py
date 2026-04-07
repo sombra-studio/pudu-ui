@@ -12,6 +12,8 @@ from . import primitives
 
 from . import styles
 
+from .arrow import Arrow, ArrowParams
+
 from .screen import Screen
 
 from .label import Label, LabelParams
