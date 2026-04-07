@@ -38,11 +38,23 @@ textured_fs = Shader(textured_fragment_src, 'fragment')
 def rounded_program():
     return ShaderProgram(default_vs, rounded_fs)
 
+
 def progress_program():
     return ShaderProgram(default_vs, progress_fs)
 
+
 def textured_program():
     return ShaderProgram(textured_vs, textured_fs)
+
+
+def arrow_left_program():
+    vs_src = files('pudu_ui.shaders').joinpath('arrow.vert').read_text()
+    fs_src = files('pudu_ui.shaders').joinpath(
+        'arrow_left.frag'
+    ).read_text()
+    vs = Shader(vs_src, 'vertex')
+    fs = Shader(fs_src, 'fragment')
+    return ShaderProgram(vs, fs)
 
 
 default_colors = (
@@ -142,7 +154,7 @@ class SolidBordersQuad:
         self.program['height'] = int(self.height)
 
 
-class Arrow:
+class ArrowQuad:
     def __init__(
         self,
         x: float = 0.0,
@@ -152,9 +164,9 @@ class Arrow:
         color: Color = pudu_ui.colors.PURPLE,
         opacity: int = 255,
         thickness: float = 1.1,
-        program: pyglet.graphics.shader.ShaderProgram = None,
-        batch: pyglet.graphics.Batch = None,
-        group: pyglet.graphics.Group = None,
+        program: ShaderProgram = arrow_left_program(),
+        batch: pyglet.graphics.Batch | None = None,
+        group: pyglet.graphics.Group | None = None,
         parent = None
     ):
         self.x: float = x
@@ -165,17 +177,9 @@ class Arrow:
         self.color = color
         self.opacity = opacity
         self.thickness = thickness
-        if not program:
-            vs_src = files('pudu_ui.shaders').joinpath('arrow.vert').read_text()
-            fs_src = files('pudu_ui.shaders').joinpath(
-                'arrow_left.frag'
-            ).read_text()
-            vs = Shader(vs_src, 'vertex')
-            fs = Shader(fs_src, 'fragment')
-            program = ShaderProgram(vs, fs)
         self.program: pyglet.graphics.shader.ShaderProgram = program
-        self.batch: pyglet.graphics.Batch = batch
-        self.group: pyglet.graphics.Group = group
+        self.batch: pyglet.graphics.Batch | None = batch
+        self.group: pyglet.graphics.Group | None = group
         self.parent = parent
 
         self.attributes = {}
@@ -273,8 +277,8 @@ class Quad:
         if not program:
             program = rounded_program()
         self.program: pyglet.graphics.shader.ShaderProgram = program
-        self.batch: pyglet.graphics.Batch = batch
-        self.group: pyglet.graphics.Group = group
+        self.batch: pyglet.graphics.Batch | None = batch
+        self.group: pyglet.graphics.Group | None = group
         self.parent = parent
 
         self.attributes = {}

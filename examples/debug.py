@@ -1,6 +1,6 @@
 from pudu_ui import App
 from pudu_ui.colors import WHITE
-from pudu_ui.primitives import Arrow
+from pudu_ui.primitives import ArrowQuad
 
 
 app = App(background_color=WHITE)
@@ -8,7 +8,7 @@ app = App(background_color=WHITE)
 
 if __name__ == '__main__':
     # Quad
-    quad = Arrow(
+    quad = ArrowQuad(
         # x=400, y=100, width=100, height=300, thickness=10.0,
         x=400, y=100,
         batch=app.batch

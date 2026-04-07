@@ -1,2 +1,2 @@
-from .quad import Arrow
+from .quad import ArrowQuad
 from .quad import Quad
