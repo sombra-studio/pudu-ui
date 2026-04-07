@@ -5,7 +5,7 @@ from pyglet.graphics import Batch, Group
 
 from pudu_ui.enums import Direction
 from pudu_ui.primitives import ArrowQuad
-from pudu_ui.primitives.quad import arrow_left_program
+from pudu_ui.primitives.quad import arrow_left_program, arrow_up_program
 from pudu_ui.styles.arrows import ArrowStyle, default_arrow_style
 from pudu_ui import Params, Widget
 
@@ -26,6 +26,8 @@ class Arrow(Widget):
     ):
         super().__init__(params=params, batch=batch, group=group, parent=parent)
         match params.direction:
+            case Direction.UP:
+                program = arrow_up_program()
             case _:
                 program = arrow_left_program()
         self.style = deepcopy(params.style)

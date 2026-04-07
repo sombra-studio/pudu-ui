@@ -57,6 +57,16 @@ def arrow_left_program():
     return ShaderProgram(vs, fs)
 
 
+def arrow_up_program():
+    vs_src = files('pudu_ui.shaders').joinpath('arrow.vert').read_text()
+    fs_src = files('pudu_ui.shaders').joinpath(
+        'arrow_up.frag'
+    ).read_text()
+    vs = Shader(vs_src, 'vertex')
+    fs = Shader(fs_src, 'fragment')
+    return ShaderProgram(vs, fs)
+
+
 default_colors = (
     pudu_ui.colors.BLACK, pudu_ui.colors.BLACK,
     pudu_ui.colors.PURPLE, pudu_ui.colors.PURPLE

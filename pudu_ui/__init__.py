@@ -12,7 +12,7 @@ from . import primitives
 
 from . import styles
 
-from .arrow import Arrow, ArrowParams
+from . import arrow
 
 from .screen import Screen
 
