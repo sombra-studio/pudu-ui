@@ -8,10 +8,11 @@ app = App(background_color=WHITE)
 
 if __name__ == '__main__':
     params = ArrowParams(
-        x=400, y=200, width=16, height=8,
-        direction=Direction.UP
+        x=400, y=200, width=160, height=240,
+        direction=Direction.LEFT
     )
+    params.style.thickness = 20
     arrow = Arrow(params=params, batch=app.batch)
-    #arrow.set_debug_mode()
+    arrow.set_debug_mode()
 
     app.run()

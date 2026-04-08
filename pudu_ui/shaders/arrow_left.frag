@@ -12,12 +12,12 @@ const int NUM_SAMPLES = 3;
 out vec4 final_color;
 
 bool is_inside_triangle(float x, float y, float w, float h) {
-    float triangle_ratio = (h / 2) / w;
+    float triangle_ratio = h / w;
     float triangle_line = x * triangle_ratio;
     if (y < triangle_line) {
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 void main() {
@@ -28,8 +28,10 @@ void main() {
     float TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
     float total_opacity = 0.0;
     // h1 is the height of the smaller triangle
+    float h0 = height / 2.0;
+    float w0 = width;
     float w1 = (width - thickness);
-    float h1 = w1 * (height / width);
+    float h1 = w1 * (h0 / w0);
 
     for (int j = 0; j < NUM_SAMPLES; j++) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
@@ -38,21 +40,22 @@ void main() {
 
             if (sample_y > height / 2.0) {
                 // Top half
+                w1 = (width - thickness);
+                h1 = w1 * (h0 / w0);
+                float local_y = sample_y - height / 2.0;
                 if (
-                    is_inside_triangle(
-                        sample_x, height - sample_y, width, height
-                    ) &&
-                    !is_inside_triangle(sample_x, h1 - sample_y, w1, h1)
+                    is_inside_triangle(sample_x, local_y, w0, h0) &&
+                    !is_inside_triangle(sample_x - thickness, local_y, w1, h1)
                 ) {
                     total_opacity += 1.0 / TOTAL_SAMPLES;
                 }
             } else {
                 // Bottom half
+                w1 = (width + thickness);
+                h1 = w1 * (h0 / w0);
                 if (
-                    is_inside_triangle(sample_x, sample_y, width, height) &&
-                    !is_inside_triangle(
-                        sample_x, sample_y - (height - h1), w1, h1
-                    )
+                    is_inside_triangle(sample_x, h0 - sample_y, w0, h0) &&
+                    !is_inside_triangle(sample_x, h1 - sample_y, w1, h1)
                 ) {
                     total_opacity += 1.0 / TOTAL_SAMPLES;
                 }
