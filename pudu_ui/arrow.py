@@ -7,7 +7,7 @@ from pudu_ui.enums import Direction
 from pudu_ui.primitives import ArrowQuad
 from pudu_ui.primitives.quad import (
     arrow_down_program, arrow_left_program,
-    arrow_up_program
+    arrow_right_program, arrow_up_program
 )
 from pudu_ui.styles.arrows import ArrowStyle, default_arrow_style
 from pudu_ui import Params, Widget
@@ -31,6 +31,8 @@ class Arrow(Widget):
         match params.direction:
             case Direction.DOWN:
                 program = arrow_down_program()
+            case Direction.RIGHT:
+                program = arrow_right_program()
             case Direction.UP:
                 program = arrow_up_program()
             case _:
