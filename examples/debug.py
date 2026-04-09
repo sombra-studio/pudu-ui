@@ -8,8 +8,8 @@ app = App(background_color=WHITE)
 
 if __name__ == '__main__':
     params = ArrowParams(
-        x=400, y=200, width=160, height=240,
-        direction=Direction.LEFT
+        x=400, y=200, width=240, height=160,
+        direction=Direction.DOWN
     )
     params.style.thickness = 20
     arrow = Arrow(params=params, batch=app.batch)

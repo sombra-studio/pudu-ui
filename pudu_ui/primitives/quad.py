@@ -47,6 +47,16 @@ def textured_program():
     return ShaderProgram(textured_vs, textured_fs)
 
 
+def arrow_down_program():
+    vs_src = files('pudu_ui.shaders').joinpath('arrow.vert').read_text()
+    fs_src = files('pudu_ui.shaders').joinpath(
+        'arrow_down.frag'
+    ).read_text()
+    vs = Shader(vs_src, 'vertex')
+    fs = Shader(fs_src, 'fragment')
+    return ShaderProgram(vs, fs)
+
+
 def arrow_left_program():
     vs_src = files('pudu_ui.shaders').joinpath('arrow.vert').read_text()
     fs_src = files('pudu_ui.shaders').joinpath(
