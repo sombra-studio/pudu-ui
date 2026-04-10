@@ -79,6 +79,7 @@ def default_image_color() -> Color:
 @dataclass
 class ButtonStyle:
     frame_style: FrameStyle = field(default_factory=default_frame_style)
+    frame_visible: bool = True
     font_style: FontStyle = field(default_factory=p1)
 
     def set_solid_color(self, color: Color):

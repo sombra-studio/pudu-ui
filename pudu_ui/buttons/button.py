@@ -74,6 +74,7 @@ class Button(Widget):
 
         # Create background Frame
         self.background = self.create_background()
+        self.background.visible = params.style.frame_visible
         self.children.append(self.background)
 
         # Create Label
@@ -81,6 +82,7 @@ class Button(Widget):
         self.children.append(self.label)
 
     def change_style(self, style: ButtonStyle):
+        self.background.visible = style.frame_visible
         self.background.change_style(style.frame_style)
         self.label.change_style(style.font_style)
 
