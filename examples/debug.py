@@ -1,18 +1,14 @@
-from pudu_ui import App
-from pudu_ui.arrow import Arrow, ArrowParams
+from pudu_ui import App, DropdownParams, Dropdown
 from pudu_ui.colors import WHITE
-from pudu_ui.enums import Direction
+
 
 app = App(background_color=WHITE)
 
 
 if __name__ == '__main__':
-    params = ArrowParams(
-        x=400, y=200, width=160, height=240,
-        direction=Direction.RIGHT
+    params = DropdownParams(
+        x=400, y=200, width=160, height=300
     )
-    params.style.thickness = 20
-    arrow = Arrow(params=params, batch=app.batch)
-    arrow.set_debug_mode()
+    widget = Dropdown(params=params, batch=app.batch)
 
     app.run()

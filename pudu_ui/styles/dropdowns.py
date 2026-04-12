@@ -18,8 +18,7 @@ def default_caret_color() -> Color:
 
 
 @dataclass
-class TriggerStyle:
-    button_style: ButtonStyle = field(default_factory=default_button_style)
+class TriggerStyle(ButtonStyle):
     frame_visible: bool = False
     caret_color: Color = field(default_factory=default_caret_color)
 
@@ -58,7 +57,7 @@ def default_dropdown_style():
 def dft_dropdown_hover_style():
     style = DropdownStyle(
         trigger_style=dft_trigger_hover_style(),
-        items_style=dft_dpdwn_item_hvr_style()
+        items_style=dft_btn_hover_style()
     )
     return style
 
@@ -66,7 +65,7 @@ def dft_dropdown_hover_style():
 def dft_dropdown_focus_style():
     style = DropdownStyle(
         trigger_style=dft_trigger_focus_style(),
-        items_style=dft_dpdwn_item_focus_style()
+        items_style=dft_btn_focus_style()
     )
     return style
 
