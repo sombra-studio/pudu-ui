@@ -2,9 +2,14 @@ from dataclasses import dataclass, field
 
 
 from pudu_ui import Color
-from pudu_ui.colors import LIGHT_GRAY
+from pudu_ui.colors import (
+    LIGHT_GRAY, SECONDARY_BTN_FOCUS_BG_COLOR, SECONDARY_BTN_FOCUS_FONT_COLOR,
+    SECONDARY_BTN_FONT_COLOR,
+    SECONDARY_BTN_HOVER_BG_COLOR,
+    SECONDARY_BTN_HOVER_FONT_COLOR
+)
 from pudu_ui.styles.buttons import (
-    ButtonStyle, default_button_style,
+    ButtonStyle, DEFAULT_BTN_CORNER_RADIUS, default_button_style,
     dft_btn_focus_style, dft_btn_hover_style
 )
 from pudu_ui.styles.frames import FrameStyle, default_frame_style
@@ -24,20 +29,25 @@ class TriggerStyle(ButtonStyle):
 
 
 def dft_trigger_style() -> TriggerStyle:
-    return TriggerStyle()
+    style = TriggerStyle()
+    style.frame_style.set_uniform_radius(DEFAULT_BTN_CORNER_RADIUS)
+    style.font_style.color = SECONDARY_BTN_FONT_COLOR
+    return style
 
 
 def dft_trigger_hover_style() -> TriggerStyle:
-    style = TriggerStyle(
-        button_style=dft_btn_hover_style(), frame_visible=True
-    )
+    style = dft_trigger_style()
+    style.frame_visible = True
+    style.frame_style.start_color = SECONDARY_BTN_HOVER_BG_COLOR
+    style.font_style.color = SECONDARY_BTN_HOVER_FONT_COLOR
     return style
 
 
 def dft_trigger_focus_style() -> TriggerStyle:
-    style = TriggerStyle(
-        button_style=dft_btn_focus_style(), frame_visible=True
-    )
+    style = dft_trigger_style()
+    style.frame_visible = True
+    style.frame_style.start_color = SECONDARY_BTN_FOCUS_BG_COLOR
+    style.font_style.color = SECONDARY_BTN_FOCUS_FONT_COLOR
     return style
 
 
