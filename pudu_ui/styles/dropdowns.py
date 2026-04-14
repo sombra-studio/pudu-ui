@@ -12,6 +12,7 @@ from pudu_ui.styles.buttons import (
     ButtonStyle, DEFAULT_BTN_CORNER_RADIUS, default_button_style,
     dft_btn_focus_style, dft_btn_hover_style
 )
+from pudu_ui.styles.fonts import FontStyle, p1
 from pudu_ui.styles.frames import FrameStyle, default_frame_style
 
 
@@ -23,7 +24,9 @@ def default_caret_color() -> Color:
 
 
 @dataclass
-class TriggerStyle(ButtonStyle):
+class TriggerStyle:
+    frame_style: FrameStyle = field(default_factory=default_frame_style)
+    font_style: FontStyle = field(default_factory=p1)
     frame_visible: bool = False
     caret_color: Color = field(default_factory=default_caret_color)
 

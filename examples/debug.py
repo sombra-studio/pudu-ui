@@ -10,9 +10,7 @@ def on_trigger_press(_):
 
 
 if __name__ == '__main__':
-    trigger_params = DropdownTriggerParams(
-        text="English", on_press=on_trigger_press
-    )
+    trigger_params = DropdownTriggerParams(text="English")
     params = DropdownParams(
         x=400, y=200, width=160, height=300, trigger_params=trigger_params
     )
