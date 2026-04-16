@@ -18,13 +18,13 @@ if __name__ == '__main__':
         text="English", on_trigger=on_trigger_press
     )
     params = DropdownParams(
-        x=400, y=200, width=160, height=300,
+        x=400, y=200,
         options=["English", "Spanish", "French"],
         on_select=on_select,
         trigger_params=trigger_params
     )
     widget = Dropdown(params=params, batch=app.batch)
     app.current_screen.widgets.append(widget)
-    widget.set_debug_mode()
+    # widget.set_debug_mode()
 
     app.run()

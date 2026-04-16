@@ -31,7 +31,7 @@ class DropdownTriggerParams(Params):
     text: str = "undefined"
     label_width: int = DEFAULT_LABEL_WIDTH
     label_caret_margin: int = DEFAULT_LABEL_CARET_MARGIN
-    on_trigger: Callable[..., None] = lambda *args: None
+    on_trigger: Callable[[...], None] = lambda *args: None
     style: TriggerStyle = field(default_factory=dft_trigger_style)
     hover_style: TriggerStyle = field(default_factory=dft_trigger_hover_style)
     focus_style: TriggerStyle = field(default_factory=dft_trigger_focus_style)
