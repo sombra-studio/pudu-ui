@@ -163,7 +163,7 @@ class Button(Widget):
 
     # Override function
     def on_mouse_press(self, x, y, buttons, _):
-        if self.is_inside(x, y) and buttons & mouse.LEFT:
+        if self.is_inside(x, y) and self.visible and buttons & mouse.LEFT:
             self.press()
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED

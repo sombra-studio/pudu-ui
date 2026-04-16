@@ -238,6 +238,9 @@ class Widget:
         )
 
     def on_mouse_motion(self, x, y, _, __) -> bool:
+        if not self.visible:
+            return pyglet.event.EVENT_UNHANDLED
+
         if self.is_inside(x, y):
             if not self.is_on_hover:
                 self.hover()
