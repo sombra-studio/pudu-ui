@@ -74,6 +74,7 @@ class Button(Widget):
 
         # Create background Frame
         self.background = self.create_background()
+        self.background.visible = params.style.frame_visible
         self.children.append(self.background)
 
         # Create Label
@@ -81,6 +82,7 @@ class Button(Widget):
         self.children.append(self.label)
 
     def change_style(self, style: ButtonStyle):
+        self.background.visible = style.frame_visible
         self.background.change_style(style.frame_style)
         self.label.change_style(style.font_style)
 
@@ -161,7 +163,7 @@ class Button(Widget):
 
     # Override function
     def on_mouse_press(self, x, y, buttons, _):
-        if self.is_inside(x, y) and buttons & mouse.LEFT:
+        if self.is_inside(x, y) and self.visible and buttons & mouse.LEFT:
             self.press()
             return pyglet.event.EVENT_HANDLED
         return pyglet.event.EVENT_UNHANDLED

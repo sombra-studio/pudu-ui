@@ -1,34 +1,30 @@
-from pudu_ui import App, Frame, FrameParams, Slider, SliderParams
-from pudu_ui.colors import WHITE
-from pudu_ui.primitives import Quad
-from pudu_ui.slider import DEFAULT_THUMB_SIZE
-from pudu_ui.styles.sliders import default_thumb_style
+from pudu_ui import App, DropdownParams, Dropdown
+from pudu_ui.dropdown_trigger import DropdownTriggerParams
 
 
-app = App(background_color=WHITE)
+app = App()
+
+
+def on_trigger_press(_):
+    print("Trigger pressed")
+
+
+def on_select(option: str):
+    print(f"{option} selected")
 
 
 if __name__ == '__main__':
-    screen = app.current_screen
-    # Slider
-    # params = SliderParams(x=300, y=100)
-    # for i in range(3):
-    #     x = i * 300
-    #     params.x = x
-    #     new_slider = Slider(params, batch=app.batch)
-    #     screen.widgets.append(new_slider)
-    # slider = Slider(params, batch=screen.batch)
-    # screen.widgets.append(slider)
-
-    # Quad
-    # quad = Quad(batch=app.batch)
-
-    # Frame
-    style = default_thumb_style()
-    params = FrameParams(
-        width=DEFAULT_THUMB_SIZE, height=DEFAULT_THUMB_SIZE, focusable=True,
-        style=style
+    trigger_params = DropdownTriggerParams(
+        text="English", on_trigger=on_trigger_press
     )
-    frame = Frame(params, batch=app.batch)
+    params = DropdownParams(
+        x=400, y=200,
+        options=["English", "Spanish", "French"],
+        on_select=on_select,
+        trigger_params=trigger_params
+    )
+    widget = Dropdown(params=params, batch=app.batch)
+    app.current_screen.widgets.append(widget)
+    # widget.set_debug_mode()
 
     app.run()

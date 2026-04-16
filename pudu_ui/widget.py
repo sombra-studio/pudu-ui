@@ -56,13 +56,11 @@ class WidgetGroup(Group):
 class Widget:
     def __init__(
         self,
-        params: Params | None = None,
+        params: Params = Params(),
         batch: Batch | None = None,
         group: Group | None = None,
         parent=None
     ):
-        if not params:
-            params = Params()
         self.x: float = params.x
         self.y: float = params.y
         self.width: int = params.width
@@ -71,7 +69,7 @@ class Widget:
         self.animation_offset_y: float = 0.0
         self.animation_velocity: Vec2 = Vec2()
         self.animation_timer: float = 0.0
-        self.batch: Batch = batch
+        self.batch: Batch | None = batch
         self.group: WidgetGroup = WidgetGroup(self, parent=group)
         self.parent: Widget | None = parent
         self.is_focusable: bool = params.focusable
@@ -240,6 +238,9 @@ class Widget:
         )
 
     def on_mouse_motion(self, x, y, _, __) -> bool:
+        if not self.visible:
+            return pyglet.event.EVENT_UNHANDLED
+
         if self.is_inside(x, y):
             if not self.is_on_hover:
                 self.hover()
