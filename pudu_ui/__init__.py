@@ -24,6 +24,8 @@ from . import image
 
 from .buttons import Button, ButtonParams, ImageButton, ImageButtonParams
 
+from . import dropdown_trigger
+
 from .dropdown import Dropdown, DropdownParams
 
 from .progress_bar import ProgressBar, ProgressBarParams

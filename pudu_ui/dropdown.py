@@ -4,7 +4,7 @@ from pyglet.event import EVENT_HANDLED, EVENT_HANDLE_STATE, EVENT_UNHANDLED
 from pyglet.graphics import Batch, Group
 
 from pudu_ui import Params, Widget
-from pudu_ui.buttons import (
+from pudu_ui.dropdown_trigger import (
     default_trigger_params, DropdownTrigger, DropdownTriggerParams
 )
 from pudu_ui.styles.dropdowns import (

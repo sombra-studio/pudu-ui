@@ -1,5 +1,5 @@
 from pudu_ui import App, DropdownParams, Dropdown
-from pudu_ui.buttons import DropdownTriggerParams
+from pudu_ui.dropdown_trigger import DropdownTriggerParams
 
 
 app = App()
@@ -16,6 +16,6 @@ if __name__ == '__main__':
     )
     widget = Dropdown(params=params, batch=app.batch)
     app.current_screen.widgets.append(widget)
-    # widget.set_debug_mode()
+    widget.trigger.set_debug_mode()
 
     app.run()

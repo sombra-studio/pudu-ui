@@ -15,10 +15,10 @@ from pudu_ui.styles.dropdowns import (
 )
 
 
-DEFAULT_WIDTH = 120
+DEFAULT_WIDTH = 150
 DEFAULT_HEIGHT = 60
 DEFAULT_LABEL_WIDTH = 80
-DEFAULT_LABEL_CARET_MARGIN = 20
+DEFAULT_LABEL_CARET_MARGIN = 10
 CARET_WIDTH = 20
 CARET_HEIGHT = 12
 
@@ -113,6 +113,31 @@ class DropdownTrigger(Widget):
 
     def trigger(self):
         self.on_trigger(self)
+
+    def change_style(self, style: TriggerStyle):
+        self.background.change_style(style.frame_style)
+        self.label.change_style(style.font_style)
+        self.caret.change_style(style.arrow_style)
+        self.background.visible = style.frame_visible
+
+    def on_hover(self):
+        super().on_hover()
+        self.change_style(self.hover_style)
+
+    def on_unhover(self):
+        super().on_unhover()
+        if self.is_on_focus:
+            self.change_style(self.focus_style)
+        else:
+            self.change_style(self.style)
+
+    def on_focus(self):
+        super().on_focus()
+        self.change_style(self.focus_style)
+
+    def on_unfocus(self):
+        super().on_unfocus()
+        self.change_style(self.style)
 
     def recompute(self):
         super().recompute()
