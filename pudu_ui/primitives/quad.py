@@ -181,6 +181,95 @@ class SolidBordersQuad:
         self.program['height'] = int(self.height)
 
 
+class ArrowQuad:
+    def __init__(
+        self,
+        x: float = 0.0,
+        y: float = 0.0,
+        width: int = 8,
+        height: int = 16,
+        color: Color = pudu_ui.colors.PURPLE,
+        opacity: int = 255,
+        thickness: float = 1.1,
+        program: ShaderProgram = None,
+        batch: pyglet.graphics.Batch | None = None,
+        group: pyglet.graphics.Group | None = None,
+        parent = None
+    ):
+        self.x: float = x
+        self.y: float = y
+        self.width: int = width
+        self.height: int = height
+        self.indices = (0, 1, 2, 0, 2, 3)
+        self.color = color
+        self.opacity = opacity
+        self.thickness = thickness
+        if program is None:
+            program = arrow_left_program()
+        self.program: pyglet.graphics.ShaderProgram = program
+        self.batch: pyglet.graphics.Batch | None = batch
+        self.group: pyglet.graphics.Group | None = group
+        self.parent = parent
+
+        self.attributes = {}
+        self.set_attributes()
+        self.set_uniforms()
+
+        self.vertex_list = self.create_vertex_list(
+            self.indices, **self.attributes
+        )
+
+    def create_vertex_list(self, indices, **attributes):
+        group = pyglet.graphics.ShaderGroup(
+            self.program, parent=self.group
+        )
+        vertex_list = self.program.vertex_list_indexed(
+            count=NUM_VERTICES,
+            mode=GeometryMode.TRIANGLES,
+            indices=indices,
+            batch=self.batch,
+            group=group,
+            **attributes
+        )
+        return vertex_list
+
+    def get_position(self) -> tuple[float, float]:
+        if self.parent:
+            x_offset, y_offset = self.parent.get_position()
+        else:
+            x_offset = 0.0
+            y_offset = 0.0
+        x = self.x + x_offset
+        y = self.y + y_offset
+        return x, y
+
+    def get_vertices(self) -> Sequence[float]:
+        x, y = self.get_position()
+        x2 = x + self.width
+        y2 = y + self.height
+        vertices = (x, y, x2, y, x2, y2, x, y2)
+        return vertices
+
+    def recompute(self):
+        self.set_attributes()
+        self.set_uniforms()
+        self.vertex_list.position[:] = self.attributes['position'][1]
+
+    def set_attributes(self):
+        # Set position
+        self.attributes['position'] = ('f', self.get_vertices())
+
+    def set_uniforms(self):
+        self.program['thickness'] = self.thickness
+        self.program['color'] = self.color.as_vec3()
+        self.program['opacity'] = self.opacity / 255.0
+
+        self.program['width'] = float(self.width)
+        self.program['height'] = float(self.height)
+        x, y = self.get_position()
+        self.program['position'] = Vec2(x, y)
+
+
 class Quad:
     def __init__(
         self,
