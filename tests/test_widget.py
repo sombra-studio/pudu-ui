@@ -21,6 +21,7 @@ class WidgetTestCase(unittest.TestCase):
             self.widget.is_inside(x=x, y=y),
             msg=f"for widget {self.widget}, x: {x}, y: {y} is not inside"
         )
+        self.assertFalse(self.widget.is_inside(x=10.0, y=5.0))
 
 
 if __name__ == '__main__':
