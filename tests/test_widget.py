@@ -1,6 +1,12 @@
+from pyglet.window import Window
+import unittest
+
+
 from pudu_ui import Params, Widget
 
-import unittest
+
+
+window = Window()
 
 
 class WidgetTestCase(unittest.TestCase):

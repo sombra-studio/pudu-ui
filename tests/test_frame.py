@@ -1,5 +1,9 @@
 from pudu_ui import Frame
+from pyglet.window import Window
 import unittest
+
+
+window = Window()
 
 
 class FrameTestCase(unittest.TestCase):
