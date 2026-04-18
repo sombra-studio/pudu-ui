@@ -9,6 +9,10 @@ from pudu_ui import (
     Params, Widget
 )
 from pudu_ui.label import LabelResizeType
+from pudu_ui.styles.buttons import (
+    secondary_btn_focus_style, secondary_btn_hover_style,
+    secondary_btn_press_style, secondary_button_style
+)
 from pudu_ui.styles.fonts import h2, p1
 from pudu_ui.styles.popups import PopUpStyle, default_popup_style
 
@@ -40,7 +44,7 @@ class PopUpParams(Params):
 class PopUp(Widget):
     def __init__(
         self,
-        params: PopUpParams | None = None,
+        params: PopUpParams = PopUpParams(),
         batch: Batch | None = None,
         group: Group | None = None
     ):
@@ -48,8 +52,6 @@ class PopUp(Widget):
         # This should make the popup be on top of everything
         group = Group(order=POPUP_GROUP_ORDER, parent=group)
         super().__init__(params=params, batch=batch, group=group)
-        if not params:
-            params = PopUpParams()
         frame_params = FrameParams(
             x=params.x, y=params.y, width=params.width, height=params.height,
             style=params.style.background_style
@@ -95,8 +97,11 @@ class PopUp(Widget):
                 btn_params = ButtonParams(
                     x=left_x, y=BUTTON_MARGIN_Y,
                     width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
-                    text=params.opt1_text, on_press=params.opt1_callback
-                    # TODO: Add styles
+                    text=params.opt1_text, on_press=params.opt1_callback,
+                    style=secondary_button_style(),
+                    hover_style=secondary_btn_hover_style(),
+                    focus_style=secondary_btn_focus_style(),
+                    press_style=secondary_btn_press_style()
                 )
                 btn_left = Button(
                     params=btn_params, batch=batch, group=self.group,
@@ -107,10 +112,11 @@ class PopUp(Widget):
                 right_x = (
                     params.width // 2 + BUTTON_MARGIN_X // 2
                 )
-                btn_params.x = right_x
-                btn_params.text = params.opt2_text
-                btn_params.on_press = params.opt2_callback
-                # TODO: Add styles
+                btn_params = ButtonParams(
+                    x=right_x, y=BUTTON_MARGIN_Y,
+                    width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
+                    text=params.opt2_text, on_press=params.opt2_callback
+                )
                 btn_right = Button(
                     params=btn_params, batch=batch, group=self.group,
                     parent=self
@@ -122,7 +128,6 @@ class PopUp(Widget):
                     x=params.width // 2 - BUTTON_WIDTH // 2, y=BUTTON_MARGIN_Y,
                     width=BUTTON_WIDTH, height=BUTTON_HEIGHT,
                     text=params.opt1_text, on_press=params.opt1_callback
-                    # TODO: Add styles
                 )
                 btn = Button(
                     params=btn_params, batch=batch, group=self.group,
