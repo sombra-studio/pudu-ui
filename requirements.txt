@@ -1,1 +1,1 @@
-pyglet==2.1.13
+pyglet>=3.0.dev3
