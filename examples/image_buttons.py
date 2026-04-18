@@ -1,7 +1,9 @@
-import pudu_ui
 import pyglet
 
+
 from pudu_ui.layouts import ListLayoutParams
+import pudu_ui
+
 
 IMG_SIZE = 25
 BTN_SIZE = 50
@@ -38,7 +40,9 @@ if __name__ == '__main__':
     params.image_params.y = BTN_SIZE / 2.0 - IMG_SIZE / 2.0
 
     for img_path in img_paths:
-        params.image_params.texture = pyglet.resource.image(img_path)
+        params.image_params.texture = (
+            pyglet.resource.image(img_path).get_texture()
+        )
         img_button = pudu_ui.ImageButton(params, batch=app.batch)
         list_layout.add(img_button)
 

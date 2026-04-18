@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from pudu_ui.colors import Color, BLACK
-from pyglet.text import Weight
 from typing import Union
 
 
@@ -20,7 +19,7 @@ def default_font_color():
 class FontStyle:
     font_size: Union[float, int, str] = DEFAULT_FONT_SIZE
     font_name: str = DEFAULT_FONT_NAME
-    weight: Weight = Weight.NORMAL
+    weight: str = 'normal'
     italic: bool = False
     color: Color  = field(default_factory=default_font_color)
     opacity: int = 255

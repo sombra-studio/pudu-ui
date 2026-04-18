@@ -80,6 +80,8 @@ class Dropdown(Widget):
             params=container_bg_params, batch=batch, group=self.back_group,
             parent=self
         )
+        self.children.append(self.container_bg)
+
         list_width = self.container_bg.width - 2 * CONTAINER_PADDING
         list_height = self.container_bg.height - 2 * CONTAINER_PADDING
         list_params = ListLayoutParams(
@@ -118,8 +120,11 @@ class Dropdown(Widget):
             self.expand()
 
     def on_option_press(self, option: Button):
-        self.on_select(option.text)
+        selected_option = option.text
+        self.trigger.text = selected_option
+        self.on_select(selected_option)
         self.collapse()
+        self.invalidate()
 
     def expand(self):
         self.container_bg.visible = True

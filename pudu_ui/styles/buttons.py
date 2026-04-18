@@ -11,10 +11,20 @@ DEFAULT_BTN_BORDER_WIDTH = 3
 #------------------------------------------------------------------------------
 # Factory functions
 
+def dft_btn_frame_style():
+    style = FrameStyle(start_color=PRIMARY_BTN_BG_COLOR)
+    style.set_uniform_radius(DEFAULT_BTN_CORNER_RADIUS)
+    return style
+
+
+def dft_btn_font_style():
+    style = p1()
+    style.color = PRIMARY_BTN_FONT_COLOR
+    return style
+
+
 def default_button_style():
     style = ButtonStyle()
-    style.frame_style.set_uniform_radius(DEFAULT_BTN_CORNER_RADIUS)
-    style.font_style.color = PRIMARY_BTN_FONT_COLOR
     return style
 
 
@@ -28,7 +38,6 @@ def dft_btn_hover_style():
 def dft_btn_focus_style():
     style = default_button_style()
     style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
-    style.font_style.color = PRIMARY_BTN_FOCUS_FONT_COLOR
     style.frame_style.border_width = DEFAULT_BTN_BORDER_WIDTH
     return style
 
@@ -37,6 +46,34 @@ def dft_btn_press_style():
     style = default_button_style()
     style.frame_style.start_color = PRIMARY_BTN_PRESS_BG_COLOR
     style.font_style.color = PRIMARY_BTN_PRESS_FONT_COLOR
+    return style
+
+
+def secondary_button_style():
+    style = ButtonStyle()
+    style.frame_style.start_color = SECONDARY_BTN_BG_COLOR
+    style.font_style.color = SECONDARY_BTN_FONT_COLOR
+    return style
+
+
+def secondary_btn_hover_style():
+    style = secondary_button_style()
+    style.frame_style.start_color = SECONDARY_BTN_HOVER_BG_COLOR
+    style.font_style.color = SECONDARY_BTN_HOVER_FONT_COLOR
+    return style
+
+
+def secondary_btn_focus_style():
+    style = secondary_button_style()
+    style.font_style.color = SECONDARY_BTN_FOCUS_FONT_COLOR
+    style.frame_style.border_width = DEFAULT_BTN_BORDER_WIDTH
+    return style
+
+
+def secondary_btn_press_style():
+    style = secondary_button_style()
+    style.frame_style.start_color = SECONDARY_BTN_PRESS_BG_COLOR
+    style.font_style.color = SECONDARY_BTN_PRESS_FONT_COLOR
     return style
 
 
@@ -78,9 +115,9 @@ def default_image_color() -> Color:
 
 @dataclass
 class ButtonStyle:
-    frame_style: FrameStyle = field(default_factory=default_frame_style)
+    frame_style: FrameStyle = field(default_factory=dft_btn_frame_style)
     frame_visible: bool = True
-    font_style: FontStyle = field(default_factory=p1)
+    font_style: FontStyle = field(default_factory=dft_btn_font_style)
 
     def set_solid_color(self, color: Color):
         self.frame_style.set_solid_color(color)

@@ -1,5 +1,5 @@
 from pyglet.event import EVENT_HANDLE_STATE, EVENT_HANDLED, EVENT_UNHANDLED
-from pyglet.gl import glClearColor, glEnable, GL_BLEND
+from pyglet.graphics.api.gl.gl import glClearColor, glEnable, GL_BLEND
 from pyglet.graphics import Batch
 from pyglet.window import Window
 import pyglet

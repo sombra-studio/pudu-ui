@@ -1,5 +1,5 @@
-from pyglet.graphics.vertexdomain import IndexedVertexList
-from pyglet.graphics.shader import Shader, ShaderProgram
+from pyglet.enums import GeometryMode
+from pyglet.graphics import Shader, ShaderProgram
 from pyglet.math import Vec2, Vec3
 import pyglet
 from collections.abc import Sequence
@@ -28,22 +28,21 @@ textured_fragment_src = files('pudu_ui.shaders').joinpath(
     'textured_quad.frag'
 ).read_text()
 
-default_vs = Shader(default_vertex_src, 'vertex')
-textured_vs = Shader(textured_vertex_src, 'vertex')
-rounded_fs = Shader(rounded_fragment_src, 'fragment')
-progress_fs = Shader(progress_fragment_src, 'fragment')
-textured_fs = Shader(textured_fragment_src, 'fragment')
 
 
 def rounded_program():
+    default_vs = Shader(default_vertex_src, 'vertex')
+    rounded_fs = Shader(rounded_fragment_src, 'fragment')
     return ShaderProgram(default_vs, rounded_fs)
 
-
 def progress_program():
+    default_vs = Shader(default_vertex_src, 'vertex')
+    progress_fs = Shader(progress_fragment_src, 'fragment')
     return ShaderProgram(default_vs, progress_fs)
 
-
 def textured_program():
+    textured_vs = Shader(textured_vertex_src, 'vertex')
+    textured_fs = Shader(textured_fragment_src, 'fragment')
     return ShaderProgram(textured_vs, textured_fs)
 
 
@@ -127,9 +126,7 @@ class SolidBordersQuad:
         ).read_text()
         vs = Shader(vertex_src, 'vertex')
         fs = Shader(fragment_src, 'fragment')
-        self.program = pyglet.graphics.shader.ShaderProgram(
-            vs, fs
-        )
+        self.program = ShaderProgram(vs, fs)
         self.attributes = {}
         self.set_attributes()
         self.set_uniforms()
@@ -139,7 +136,7 @@ class SolidBordersQuad:
         )
         self.vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
-            mode=pyglet.gl.GL_TRIANGLES,
+            mode=GeometryMode.TRIANGLES,
             indices=indices,
             batch=batch,
             group=shader_group,
@@ -194,7 +191,7 @@ class ArrowQuad:
         color: Color = pudu_ui.colors.PURPLE,
         opacity: int = 255,
         thickness: float = 1.1,
-        program: ShaderProgram = arrow_left_program(),
+        program: ShaderProgram = None,
         batch: pyglet.graphics.Batch | None = None,
         group: pyglet.graphics.Group | None = None,
         parent = None
@@ -207,7 +204,9 @@ class ArrowQuad:
         self.color = color
         self.opacity = opacity
         self.thickness = thickness
-        self.program: pyglet.graphics.shader.ShaderProgram = program
+        if program is None:
+            program = arrow_left_program()
+        self.program: pyglet.graphics.ShaderProgram = program
         self.batch: pyglet.graphics.Batch | None = batch
         self.group: pyglet.graphics.Group | None = group
         self.parent = parent
@@ -220,13 +219,13 @@ class ArrowQuad:
             self.indices, **self.attributes
         )
 
-    def create_vertex_list(self, indices, **attributes) -> IndexedVertexList:
+    def create_vertex_list(self, indices, **attributes):
         group = pyglet.graphics.ShaderGroup(
             self.program, parent=self.group
         )
         vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
-            mode=pyglet.gl.GL_TRIANGLES,
+            mode=GeometryMode.TRIANGLES,
             indices=indices,
             batch=self.batch,
             group=group,
@@ -286,7 +285,7 @@ class Quad:
         radius_bottom_right: float = DEFAULT_BORDER_RADIUS,
         border_width: int = 3,
         border_color: Color = pudu_ui.colors.WHITE,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent = None
@@ -306,9 +305,9 @@ class Quad:
         self.border_color = border_color
         if not program:
             program = rounded_program()
-        self.program: pyglet.graphics.shader.ShaderProgram = program
-        self.batch: pyglet.graphics.Batch | None = batch
-        self.group: pyglet.graphics.Group | None = group
+        self.program: pyglet.graphics.ShaderProgram = program
+        self.batch: pyglet.graphics.Batch = batch
+        self.group: pyglet.graphics.Group = group
         self.parent = parent
 
         self.attributes = {}
@@ -319,13 +318,13 @@ class Quad:
             self.indices, **self.attributes
         )
 
-    def create_vertex_list(self, indices, **attributes) -> IndexedVertexList:
+    def create_vertex_list(self, indices, **attributes):
         group = pyglet.graphics.ShaderGroup(
             self.program, parent=self.group
         )
         vertex_list = self.program.vertex_list_indexed(
             count=NUM_VERTICES,
-            mode=pyglet.gl.GL_TRIANGLES,
+            mode=GeometryMode.TRIANGLES,
             indices=indices,
             batch=self.batch,
             group=group,
@@ -407,7 +406,7 @@ class ProgressQuad(Quad):
         border_width: int = 0,
         border_color: Color = pudu_ui.colors.WHITE,
         limit_x: int = DEFAULT_WIDTH,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent=None
@@ -458,14 +457,14 @@ class TexturedQuad(Quad):
         radius_top_right: float = 0,
         radius_bottom_left: float = 0,
         radius_bottom_right: float = 0,
-        program: pyglet.graphics.shader.ShaderProgram = None,
+        program: pyglet.graphics.ShaderProgram = None,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
         parent = None
     ):
         if not program:
             program = textured_program()
-        self.program: pyglet.graphics.shader.ShaderProgram = program
+        self.program: pyglet.graphics.ShaderProgram = program
         super().__init__(
             x=x, y=y, width=width, height=height,
             colors=colors, opacity=opacity,
