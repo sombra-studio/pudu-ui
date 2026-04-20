@@ -31,3 +31,4 @@ exclude = ["tests*", "examples*"]
 
 [tool.setuptools.package-data]
 "pudu_ui.shaders" = ["*"]
+"pudu_ui.images" = ["*"]
