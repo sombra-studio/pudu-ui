@@ -9,6 +9,9 @@ from pudu_ui.colors import Color, BLACK
 from pudu_ui.screen import Screen
 
 
+pyglet.resource.path = ['@pudu_ui']
+pyglet.resource.reindex()
+
 class App(Window):
     def __init__(
         self,
@@ -16,9 +19,14 @@ class App(Window):
         height: int | None = None,
         caption: str = "Pudu UI",
         update_rate: float = 1.0 / 60.0,
-        background_color: Color = BLACK
+        background_color: Color = BLACK,
+        vsync: bool = True
     ):
-        super().__init__(width=width, height=height, caption=caption)
+        super().__init__(
+            width=width, height=height, caption=caption, vsync=vsync
+        )
+        app_logo = pyglet.resource.image("images/logo-48x48.png")
+        self.set_icon(app_logo)
         default_screen = Screen("default screen")
         self.current_screen = default_screen
         self.update_rate = update_rate
