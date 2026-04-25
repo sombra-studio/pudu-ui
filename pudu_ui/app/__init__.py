@@ -12,6 +12,7 @@ from pudu_ui.screen import Screen
 pyglet.resource.path = ['@pudu_ui']
 pyglet.resource.reindex()
 
+
 class App(Window):
     def __init__(
         self,
@@ -25,8 +26,12 @@ class App(Window):
         super().__init__(
             width=width, height=height, caption=caption, vsync=vsync
         )
-        app_logo = pyglet.resource.image("images/logo-48x48.png")
-        self.set_icon(app_logo)
+        icon_filename = "images/logo.png"
+        try:
+            app_logo = pyglet.resource.image(icon_filename)
+            self.set_icon(app_logo)
+        except pyglet.resource.ResourceNotFoundException:
+            print(pyglet.resource.ResourceNotFoundException(icon_filename))
         default_screen = Screen("default screen")
         self.current_screen = default_screen
         self.update_rate = update_rate
