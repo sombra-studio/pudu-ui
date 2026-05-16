@@ -10,6 +10,8 @@ uniform float opacity;
 uniform vec2 position;
 uniform int width;
 uniform int height;
+uniform float scale_x;
+uniform float scale_y;
 
 in vec3 frag_color;
 out vec4 final_color;
@@ -65,10 +67,10 @@ vec4 color_rounded_corner(vec2 pos, vec2 center, float radius) {
 
 void main() {
     vec4 color;
-    float left = position.x;
-    float right = position.x + width;
-    float top = position.y + height;
-    float bottom = position.y;
+    float left = position.x * scale_x;
+    float right = (position.x + width) * scale_x;
+    float top = (position.y + height) * scale_y;
+    float bottom = position.y * scale_y;
     vec2 box3_origin = vec2(left, top - radius_v3);
     vec2 box2_origin = vec2(right - radius_v2, top - radius_v2);
     vec2 box1_origin = vec2(right - radius_v0, bottom);

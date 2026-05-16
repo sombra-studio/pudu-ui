@@ -105,6 +105,8 @@ class SolidBordersQuad:
         y: float = 0.0,
         width: int = DEFAULT_WIDTH,
         height: int = DEFAULT_HEIGHT,
+        scale_x: float = 1.0,
+        scale_y: float = 1.0,
         color: Color = pudu_ui.colors.DEBUG_BORDER_COLOR,
         batch: pyglet.graphics.Batch = None,
         group: pyglet.graphics.Group = None,
@@ -114,6 +116,8 @@ class SolidBordersQuad:
         self.y = y
         self.width = width
         self.height = height
+        self.scale_x = scale_x
+        self.scale_y = scale_y
         self.color = color
         self.parent = parent
         indices = (0, 1, 2, 0, 2, 3)
@@ -179,6 +183,8 @@ class SolidBordersQuad:
         self.program['y'] = y
         self.program['width'] = int(self.width)
         self.program['height'] = int(self.height)
+        self.program['scale_x'] = self.scale_x
+        self.program['scale_y'] = self.scale_y
 
 
 class ArrowQuad:
@@ -188,6 +194,8 @@ class ArrowQuad:
         y: float = 0.0,
         width: int = 8,
         height: int = 16,
+        scale_x: float = 1.0,
+        scale_y: float = 1.0,
         color: Color = pudu_ui.colors.PURPLE,
         opacity: int = 255,
         thickness: float = 1.1,
@@ -200,6 +208,8 @@ class ArrowQuad:
         self.y: float = y
         self.width: int = width
         self.height: int = height
+        self.scale_x = scale_x
+        self.scale_y = scale_y
         self.indices = (0, 1, 2, 0, 2, 3)
         self.color = color
         self.opacity = opacity
@@ -266,6 +276,8 @@ class ArrowQuad:
 
         self.program['width'] = float(self.width)
         self.program['height'] = float(self.height)
+        self.program['scale_x'] = self.scale_x
+        self.program['scale_y'] = self.scale_y
         x, y = self.get_position()
         self.program['position'] = Vec2(x, y)
 
@@ -277,6 +289,8 @@ class Quad:
         y: float = 0.0,
         width: int = DEFAULT_WIDTH,
         height: int = DEFAULT_HEIGHT,
+        scale_x: float = 1.0,
+        scale_y: float = 1.0,
         colors: tuple[Color, Color, Color, Color] = default_colors,
         opacity: float = 255,
         radius_top_left: float = DEFAULT_BORDER_RADIUS,
@@ -294,6 +308,8 @@ class Quad:
         self.y: float = y
         self.width: int = width
         self.height: int = height
+        self.scale_x = scale_x
+        self.scale_y = scale_y
         self.indices = (0, 1, 2, 0, 2, 3)
         self.opacity = opacity
         self.colors = colors
@@ -376,6 +392,8 @@ class Quad:
         self.program['position'] = Vec2(x, y)
         self.program['width'] = int(self.width)
         self.program['height'] = int(self.height)
+        self.program['scale_x'] = self.scale_x
+        self.program['scale_y'] = self.scale_y
 
         # Set highlight
         self.program['border_width'] = self.border_width

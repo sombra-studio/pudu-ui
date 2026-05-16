@@ -187,7 +187,7 @@ class Calculator(App):
         return grid
 
     def create_number_display(self) -> Display:
-        display_width = self.width - 2 * ITEM_GAP
+        display_width = WIDTH - 2 * ITEM_GAP
         number_display = Display(batch=self.batch)
         number_display.x = ITEM_GAP
         number_display.y = HEIGHT - ITEM_GAP - number_display.height
