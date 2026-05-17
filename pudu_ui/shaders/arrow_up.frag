@@ -5,6 +5,8 @@ uniform vec3 color;
 uniform float opacity;
 uniform float width;
 uniform float height;
+uniform float scale_x;
+uniform float scale_y;
 uniform vec2 position;
 
 const int NUM_SAMPLES = 3;
@@ -23,15 +25,15 @@ bool is_inside_triangle(float x, float y, float w, float h) {
 void main() {
     vec2 pos = gl_FragCoord.xy;
     // Use positions relative to the widget local coordinates
-    float x = pos.x - position.x;
-    float y = pos.y - position.y;
+    float x = (pos.x - position.x) * scale_x;
+    float y = (pos.y - position.y) * scale_y;
     float TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
     float total_opacity = 0.0;
     // h1 is the height of the smaller triangle
-    float w0 = width / 2.0;
-    float h0 = height;
-    float w1 = w0 - thickness;
-    float h1 = w1 * (h0 / w0);
+    float w0 = (width / 2.0) * scale_x;
+    float h0 = height * scale_y;
+    float w1 = (w0 - thickness) * scale_x;
+    float h1 = (w1 * (h0 / w0)) * scale_y;
 
     for (int j = 0; j < NUM_SAMPLES; j++) {
         for (int i = 0; i < NUM_SAMPLES; i++) {

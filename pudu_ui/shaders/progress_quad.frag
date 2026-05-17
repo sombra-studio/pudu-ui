@@ -14,6 +14,8 @@ uniform float limit_x;
 uniform vec2 position;
 uniform int width;
 uniform int height;
+uniform float scale_x;
+uniform float scale_y;
 
 in vec3 frag_color;
 out vec4 final_color;
@@ -87,6 +89,7 @@ void main() {
     float top = position.y + height;
     float bottom = position.y;
     vec2 pos = gl_FragCoord.xy;
+    pos *= vec2(scale_x, scale_y);
 
     // Corner top left
     if (

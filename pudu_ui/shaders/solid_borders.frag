@@ -6,6 +6,8 @@ uniform float x;
 uniform float y;
 uniform int width;
 uniform int height;
+uniform float scale_x;
+uniform float scale_y;
 
 out vec4 final_color;
 
@@ -29,6 +31,7 @@ bool in_right_col(vec2 pos) {
 
 void main() {
     vec2 pos = vec2(gl_FragCoord.x - x, gl_FragCoord.y - y);
+    pos *= vec2(scale_x, scale_y);
 
     if (in_left_col(pos) || in_right_col(pos)) {
         final_color = vec4(color, 1.0);

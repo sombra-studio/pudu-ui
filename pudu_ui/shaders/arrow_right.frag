@@ -5,6 +5,8 @@ uniform vec3 color;
 uniform float opacity;
 uniform float width;
 uniform float height;
+uniform float scale_x;
+uniform float scale_y;
 uniform vec2 position;
 
 const int NUM_SAMPLES = 3;
@@ -14,13 +16,13 @@ out vec4 final_color;
 void main() {
     vec2 pos = gl_FragCoord.xy;
     // Use positions relative to the widget local coordinates
-    float x = pos.x - position.x;
-    float y = pos.y - position.y;
+    float x = (pos.x - position.x) * scale_x;
+    float y = (pos.y - position.y) * scale_y;
     float TOTAL_SAMPLES = NUM_SAMPLES * NUM_SAMPLES;
     float total_opacity = 0.0;
-    float w0 = width;
-    float h0 = height / 2.0;
-    float h1 = h0 - thickness;
+    float w0 = width * scale_x;
+    float h0 = (height / 2.0) * scale_y;
+    float h1 = (h0 - thickness) * scale_y;
     vec2 pa = vec2(0, h0);
     vec2 pb = vec2(w0, 0);
     vec2 pap = vec2(0, h1);
