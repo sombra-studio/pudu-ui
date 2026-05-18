@@ -8,7 +8,7 @@ from pudu_ui.arrow import ArrowParams, Arrow
 if __name__ == '__main__':
     app = App()
     layout = ListLayout(
-        params=ListLayoutParams(width=400, inter_item_spacing=20),
+        params=ListLayoutParams(width=400, height=60, inter_item_spacing=20),
         batch=app.batch
     )
     layout.invalidate()
@@ -25,18 +25,18 @@ if __name__ == '__main__':
             batch=app.batch
         )
     )
-    # layout.add(
-    #     Arrow(
-    #         params=ArrowParams(direction=Direction.DOWN),
-    #         batch=app.batch
-    #     )
-    # )
-    # layout.add(
-    #     Arrow(
-    #         params=ArrowParams(direction=Direction.UP),
-    #         batch=app.batch
-    #     )
-    # )
+    layout.add(
+        Arrow(
+            params=ArrowParams(direction=Direction.DOWN),
+            batch=app.batch
+        )
+    )
+    layout.add(
+        Arrow(
+            params=ArrowParams(direction=Direction.UP),
+            batch=app.batch
+        )
+    )
 
     app.current_screen.widgets.append(layout)
 

@@ -46,7 +46,7 @@ class Arrow(Widget):
             program=program,
             batch=batch,
             group=group,
-            parent=parent
+            parent=self
         )
 
     def change_style(self, style: ArrowStyle):
