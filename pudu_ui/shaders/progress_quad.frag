@@ -6,7 +6,6 @@ uniform float radius_v0; // bottom-left
 uniform float radius_v1; // bottom-right
 uniform int border_width;
 uniform vec3 border_color;
-uniform float opacity;
 uniform float right_opacity;
 uniform vec3 left_color;
 uniform vec3 right_color;
@@ -18,6 +17,7 @@ uniform float scale_x;
 uniform float scale_y;
 
 in vec3 frag_color;
+in float opacity;
 out vec4 final_color;
 
 const int NUM_SAMPLES = 4;

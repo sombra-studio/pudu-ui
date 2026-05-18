@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pyglet", specifier = ">=3.0.0.dev3" }]
+requires-dist = [{ name = "pyglet", specifier = ">=3.0.dev3" }]
 
 [[package]]
 name = "pyglet"

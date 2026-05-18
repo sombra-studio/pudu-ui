@@ -6,11 +6,13 @@ uniform WindowBlock {
 } window;
 
 in vec2 position;
-in vec3 vertex_color;
+in vec4 vertex_color;
 
 out vec3 frag_color;
+out float opacity;
 
 void main() {
-    frag_color = vertex_color;
+    frag_color = vertex_color.rgb;
+    opacity = vertex_color.a;
     gl_Position = window.projection * window.view * vec4(position, 1, 1);
 }

@@ -378,11 +378,10 @@ class Quad:
         # Set vertex color
         vertex_color = []
         for color in self.colors:
-            vertex_color += [color.r, color.g, color.b]
+            vertex_color += [color.r, color.g, color.b, self.opacity]
         self.attributes['vertex_color'] = ('Bn', vertex_color)
 
     def set_uniforms(self):
-        self.program['opacity'] = self.opacity / 255.0
         self.program['radius_v3'] = self.radius_top_left
         self.program['radius_v2'] = self.radius_top_right
         self.program['radius_v0'] = self.radius_bottom_left
