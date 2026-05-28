@@ -40,7 +40,7 @@ class Arrow(Widget):
         self.style = deepcopy(params.style)
 
         self.quad = ArrowQuad(
-            x=params.x, y=params.y, width=params.width, height=params.height,
+            width=params.width, height=params.height,
             color=params.style.color, opacity=params.style.opacity,
             thickness=params.style.thickness,
             program=program,
