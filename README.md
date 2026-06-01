@@ -1,8 +1,10 @@
 # pudu-ui
 
-UI library and framework for creating games desktop apps with Python based in 
-pyglet.
-It has different components available.
+UI library and framework for creating games and desktop apps with Python and
+based in pyglet. The design is **retained mode** with an **imperative** 
+paradigm, allowing for complex and performant applications, and widgets with 
+different states that use an Object-Oriented Programming approach.
+It has different components available:
 
 ## Components
 
@@ -89,6 +91,11 @@ should be done in the *on_load* method.
 And you should implement a custom screen class that inherits from Screen 
 that creates all of its widgets and populates them with the data given on 
 the screen's *\__init__* method.
+
+## Objective
+
+The idea for this library is to be used in games and apps made at Sombra Studio.
+It should be able to work well in complex applications and to be cross-platform.
 
 ## Testing
 
