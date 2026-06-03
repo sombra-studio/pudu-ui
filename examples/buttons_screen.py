@@ -10,11 +10,13 @@ DATA_UPDATE = 0
 class ButtonsScreen(pudu_ui.Screen):
     def __init__(self):
         super().__init__("buttons")
+        # Add button
         button_params = ButtonParams(text="+")
         button_params.x = SCREEN_WIDTH / 4 - button_params.width / 2
         button_params.y = SCREEN_HEIGHT / 2 - button_params.height / 2
         self.add_button = Button(button_params, batch=self.batch)
 
+        # Center label
         y = button_params.y + button_params.height / 2.0
         label_params = LabelParams(
             x=SCREEN_WIDTH / 2, y=y,
@@ -23,6 +25,7 @@ class ButtonsScreen(pudu_ui.Screen):
         label_params.style.color = pudu_ui.colors.GRAY
         self.label = Label(label_params, batch=self.batch)
 
+        # Subtract button
         button_params.x = SCREEN_WIDTH - button_params.x - button_params.width
         button_params.text = "-"
         self.subtract_button = Button(button_params, batch=self.batch)
@@ -50,11 +53,15 @@ class NumberController(pudu_ui.controller.Controller):
     def __init__(self, app: pudu_ui.App, name: str):
         super().__init__(app, name)
         self.number: int = 0
-        self.screen = self.app.current_screen
+
+    def on_load(self):
+        super().on_load()
+        self.screen = ButtonsScreen()
         self.screen.label.text = str(self.number)
         self.screen.label.invalidate()
         self.screen.add_button.on_press = self.add
         self.screen.subtract_button.on_press = self.subtract
+        self.app.set_screen(self.screen)
 
     def add(self, _):
         self.number += 1
@@ -65,10 +72,8 @@ class NumberController(pudu_ui.controller.Controller):
         self.screen.handle_event(DATA_UPDATE, self.number)
 
 
-app = App(SCREEN_WIDTH, SCREEN_HEIGHT)
-app.current_screen = ButtonsScreen()
-controller = NumberController(app, name="example controller")
-
-
 if __name__ == '__main__':
+    app = App(SCREEN_WIDTH, SCREEN_HEIGHT)
+    controller = NumberController(app, name="example controller")
+    controller.load()
     app.run()
