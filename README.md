@@ -31,6 +31,10 @@ It has different components available:
 There are many examples using the UI components that you can find in the 
 _examples_ folder.
 
+You can run them like this:
+
+`uv run examples/hello_screen.py`
+
 ### Hello World
 
 Here's the hello screen example:
