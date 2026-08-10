@@ -17,7 +17,7 @@ def default_font_color():
 
 @dataclass
 class FontStyle:
-    font_size: Union[float, int, str] = DEFAULT_FONT_SIZE
+    font_size: Union[float, int, None] = DEFAULT_FONT_SIZE
     font_name: str = DEFAULT_FONT_NAME
     weight: str = 'normal'
     italic: bool = False

@@ -46,6 +46,10 @@ class Label(Widget):
         self.anchor_y = params.anchor_y
 
         x, y = self.get_position()
+        if params.style.italic:
+            pyglet_style = pyglet.font.Style.ITALIC
+        else:
+            pyglet_style = pyglet.font.Style.NORMAL
         self.impl = pyglet.text.Label(
             text=params.text,
             x=x,
@@ -62,7 +66,7 @@ class Label(Widget):
             font_name=params.style.font_name,
             font_size=params.style.font_size,
             weight=params.style.weight,
-            # italic=params.style.italic,
+            style=pyglet_style,
             color=self.get_color_tuple(),
             batch=batch,
             group=self.group
