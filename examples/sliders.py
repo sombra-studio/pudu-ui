@@ -43,7 +43,9 @@ class DebugScreen(Screen):
             self.widgets.append(label)
 
 
-app = App(background_color=pudu_ui.colors.WHITE)
+app = App(
+    background_color=pudu_ui.colors.WHITE, update_rate=0.0, is_debug=True
+)
 screen = DebugScreen()
 app.current_screen = screen
 
