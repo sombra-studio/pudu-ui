@@ -11,9 +11,9 @@ RADIUS = BTN_SIZE / 2.0
 
 app = pudu_ui.App()
 img_paths = [
-    "resources/play-solid.png",
-    "resources/plus-solid.png",
-    "resources/thumbs-up-solid.png",
+    "examples/resources/play-solid.png",
+    "examples/resources/plus-solid.png",
+    "examples/resources/thumbs-up-solid.png",
 ]
 
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     for img_path in img_paths:
         params.image_params.texture = (
-            pyglet.resource.image(img_path).get_texture()
+            pyglet.image.load(img_path).get_texture()
         )
         img_button = pudu_ui.ImageButton(params, batch=app.batch)
         list_layout.add(img_button)
