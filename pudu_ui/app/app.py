@@ -21,6 +21,9 @@ class App(Window):
         width: int | None = None,
         height: int | None = None,
         caption: str = "Pudu UI",
+        resizable: bool = False,
+        fullscreen: bool = False,
+        visible: bool = True,
         update_rate: float = 1.0 / 60.0,
         background_color: Color = BLACK,
         vsync: bool = True,
@@ -29,7 +32,13 @@ class App(Window):
         if is_debug:
             vsync = False
         super().__init__(
-            width=width, height=height, caption=caption, vsync=vsync
+            width=width,
+            height=height,
+            caption=caption,
+            resizable=resizable,
+            fullscreen=fullscreen,
+            visible=visible,
+            vsync=vsync
         )
         icon_filename = "images/logo.png"
         try:
