@@ -1,0 +1,58 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git Credentials
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --group docs
+
+      - name: Fetch gh-pages branch
+        run: |
+          git fetch origin gh-pages --depth=1 || true
+
+      - name: Deploy version docs with mike
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            uv run mike deploy --push --update-aliases --alias-type redirect -t "main (stable)" main latest
+            uv run mike set-default --push latest
+          elif [ "${{ github.ref_name }}" = "development" ]; then
+            uv run mike deploy --push --update-aliases --alias-type redirect -t "development (dev)" development dev
+            if ! uv run mike list | grep -q "latest"; then
+              uv run mike set-default --push dev
+            fi
+          fi

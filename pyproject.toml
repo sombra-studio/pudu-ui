@@ -26,6 +26,22 @@ license = "MIT"
 Homepage = "https://github.com/sombra-studio/pudu-ui"
 Issues = "https://github.com/sombra-studio/pudu-ui/issues"
 
+[project.optional-dependencies]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.27.0",
+    "mike>=2.1.0",
+]
+
+[dependency-groups]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.27.0",
+    "mike>=2.1.0",
+]
+
 [tool.setuptools.packages.find]
 include = ["pudu_ui*"]
 exclude = ["tests*", "examples*"]

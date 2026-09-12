@@ -1,0 +1,100 @@
+site_name: pudu-ui
+site_description: UI library and framework for creating games and desktop apps with Python based in pyglet
+site_author: Jesus Henriquez
+site_url: https://sombra-studio.github.io/pudu-ui/
+repo_url: https://github.com/sombra-studio/pudu-ui
+repo_name: sombra-studio/pudu-ui
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.instant
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+
+extra_css:
+  - stylesheets/monokai.css
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      pygments_style: monokai
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            show_root_heading: true
+            show_source: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+  - Core Concepts:
+      - Architecture: core-concepts/architecture.md
+      - Params & Styles: core-concepts/params-and-styles.md
+      - MVC Framework: core-concepts/mvc-framework.md
+      - Batches & Groups: core-concepts/batches-and-groups.md
+      - Debugging & Stats: core-concepts/debugging-and-stats.md
+  - Components:
+      - Overview: components/overview.md
+      - Label: components/labels.md
+      - Buttons: components/buttons.md
+      - Frame: components/frames.md
+      - Layouts: components/layouts.md
+      - Controls & Inputs: components/controls.md
+      - PopUp: components/popups.md
+      - Image & Shaders: components/images.md
+  - Examples:
+      - Catalog: examples/catalog.md
+  - API Reference:
+      - App & Window: reference/app.md
+      - Widgets & Base: reference/widgets.md
+      - Components: reference/components.md
+      - MVC & Navigation: reference/mvc.md
