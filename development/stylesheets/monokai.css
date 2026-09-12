@@ -1,0 +1,199 @@
+/* ==========================================================================
+   Monokai Syntax Highlighting for MkDocs Material
+   ========================================================================== */
+
+:root {
+  --md-code-bg-color: #272822;
+  --md-code-fg-color: #f8f8f2;
+  --md-code-hl-color: #3e3d32;
+  --md-code-hl-number-color: #75715e;
+  --md-code-hl-special-color: #f92672;
+  --md-code-hl-function-color: #a6e22e;
+  --md-code-hl-constant-color: #ae81ff;
+  --md-code-hl-string-color: #e6db74;
+  --md-code-hl-variable-color: #fd971f;
+  --md-code-hl-keyword-color: #f92672;
+  --md-code-hl-operator-color: #f92672;
+  --md-code-hl-punctuation-color: #f8f8f2;
+  --md-code-hl-comment-color: #75715e;
+  --md-code-hl-generic-color: #f8f8f2;
+  --md-code-hl-name-color: #f8f8f2;
+}
+
+/* Base Code Block Containers */
+.md-typeset pre,
+.md-typeset pre > code,
+.md-typeset .highlight,
+.md-typeset .highlighttable {
+  background-color: #272822 !important;
+  color: #f8f8f2 !important;
+  border-radius: 6px;
+}
+
+/* Light & Dark scheme overrides for code blocks */
+[data-md-color-scheme="default"] .md-typeset pre > code,
+[data-md-color-scheme="slate"] .md-typeset pre > code,
+[data-md-color-scheme="default"] .md-typeset .highlight,
+[data-md-color-scheme="slate"] .md-typeset .highlight {
+  background-color: #272822 !important;
+  color: #f8f8f2 !important;
+}
+
+/* Inline Code Elements */
+.md-typeset :not(pre) > code {
+  background-color: #272822 !important;
+  color: #e6db74 !important; /* Monokai yellow */
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  border: 1px solid #3e3d32;
+}
+
+/* Line Numbers */
+.md-typeset .linenos,
+.md-typeset .linenodiv,
+.md-typeset .normal-linenumber,
+.md-typeset [data-linenos]:before {
+  color: #75715e !important;
+}
+
+/* Selected / Highlighted Lines */
+.md-typeset .hll,
+.md-typeset mark {
+  background-color: #3e3d32 !important;
+  display: block;
+}
+
+/* Copy Button on Code Blocks */
+.md-clipboard {
+  color: #75715e !important;
+}
+.md-clipboard:hover {
+  color: #f8f8f2 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Monokai Pygments Token Styling
+   -------------------------------------------------------------------------- */
+
+/* Keywords */
+.highlight .k,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr {
+  color: #f92672 !important; /* Hot Pink */
+  font-weight: bold;
+}
+
+/* Types */
+.highlight .kt {
+  color: #66d9ef !important; /* Cyan */
+}
+
+/* Builtins & Constants */
+.highlight .kc {
+  color: #ae81ff !important; /* Purple */
+}
+.highlight .nb {
+  color: #66d9ef !important; /* Cyan */
+}
+.highlight .bp {
+  color: #fd971f !important; /* Orange (e.g. self) */
+  font-style: italic;
+}
+
+/* Functions & Methods */
+.highlight .nf,
+.highlight .fm {
+  color: #a6e22e !important; /* Bright Green */
+}
+
+/* Classes */
+.highlight .nc {
+  color: #a6e22e !important; /* Bright Green */
+  text-decoration: none;
+}
+
+/* Strings */
+.highlight .s,
+.highlight .sa,
+.highlight .sb,
+.highlight .sc,
+.highlight .dl,
+.highlight .sd,
+.highlight .s2,
+.highlight .se,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .sr,
+.highlight .s1,
+.highlight .ss {
+  color: #e6db74 !important; /* Soft Yellow */
+}
+
+/* Numbers & Literals */
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .il,
+.highlight .mo {
+  color: #ae81ff !important; /* Purple */
+}
+
+/* Comments */
+.highlight .c,
+.highlight .ch,
+.highlight .cm,
+.highlight .cpf,
+.highlight .c1,
+.highlight .cs {
+  color: #75715e !important; /* Olive Gray */
+  font-style: italic;
+}
+
+/* Operators */
+.highlight .o,
+.highlight .ow {
+  color: #f92672 !important; /* Hot Pink */
+}
+
+/* Punctuation & Names */
+.highlight .p {
+  color: #f8f8f2 !important; /* Off-white */
+}
+.highlight .n,
+.highlight .nx,
+.highlight .py {
+  color: #f8f8f2 !important;
+}
+
+/* Decorators & Attributes */
+.highlight .nd {
+  color: #a6e22e !important; /* Bright Green */
+}
+.highlight .na {
+  color: #a6e22e !important;
+}
+
+/* Variables */
+.highlight .nv,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi,
+.highlight .vm {
+  color: #f8f8f2 !important;
+}
+
+/* Tag names (HTML/XML/JSX) */
+.highlight .nt {
+  color: #f92672 !important;
+}
+
+/* Error */
+.highlight .err {
+  color: #960050 !important;
+  background-color: #1e0010 !important;
+}
