@@ -8,20 +8,16 @@ repo_name: sombra-studio/pudu-ui
 theme:
   name: material
   palette:
-    # Light mode
-    - scheme: default
-      primary: teal
-      accent: deep orange
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    # Dark mode
+    # Dark mode (default)
     - scheme: slate
-      primary: teal
-      accent: deep orange
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+    # Light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
   features:
     - navigation.tabs
     - navigation.sections

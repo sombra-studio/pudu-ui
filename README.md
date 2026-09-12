@@ -191,3 +191,21 @@ You can install the dependencies by running:
 or
 
 `python -m pip install -r requirements.txt`
+
+## Documentation
+
+You can see it at https://sombra.studio/pudu-ui/
+
+If you want to contribute to the documentation you can add it or edit the 
+Markdown files from the **/docs** folder.
+
+The project uses MkDocs, Material for MkDocs and mike to build the static 
+website for documentation.
+
+To build the documentation locally you can do:
+
+``uv run --group docs mkdocs build --strict``
+
+To run the documentation locally you do:
+
+`uv run --group docs mkdocs serve`
